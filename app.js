@@ -35,6 +35,7 @@ async function initSite() {
 
     if (content) {
         applyContentToDOM(content);
+        setupQuickOrderModal(content);
     }
 
     // Show quick admin button if logged in
@@ -176,9 +177,9 @@ function applyContentToDOM(data) {
                         <p>${item.description || ''}</p>
                         <div class="menu-card-bottom">
                             <div class="menu-price">${formatCurrency(item.price)}</div>
-                            <a href="${item.orderLink || 'https://www.facebook.com/profile.php?id=61594490844705'}" target="_blank" class="menu-order-btn">
+                            <button type="button" class="menu-order-btn btn-open-order" data-item-id="${item.id}">
                                 <i class="fas fa-cart-plus"></i> Đặt ngay
-                            </a>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -314,3 +315,132 @@ function setupAdminShortcut() {
     document.head.appendChild(style);
     document.body.appendChild(floatBtn);
 }
+
+// ---------------- QUICK ORDER MODAL LOGIC ----------------
+let currentSelectedOrderItem = null;
+
+function setupQuickOrderModal(siteData) {
+    const modal = document.getElementById('quickOrderModal');
+    if (!modal) return;
+
+    const closeBtn = document.getElementById('btnCloseOrderModal');
+    const form = document.getElementById('quickOrderForm');
+    const statusMsg = document.getElementById('orderStatusMessage');
+    const submitBtn = document.getElementById('btnSubmitOrder');
+
+    function openModalWithItem(item) {
+        currentSelectedOrderItem = item;
+        const thumb = document.getElementById('orderItemThumb');
+        const nameEl = document.getElementById('orderItemName');
+        const tagEl = document.getElementById('orderItemTag');
+        const priceEl = document.getElementById('orderItemPrice');
+
+        if (thumb) thumb.src = item.image || 'tai-nguyen/donut-signature.jpg';
+        if (nameEl) nameEl.textContent = item.name || 'Donut Kitten Cake';
+        if (tagEl) tagEl.textContent = item.tag || '🍩 Món Bánh';
+        if (priceEl) priceEl.textContent = formatCurrency(item.price || 10000);
+
+        const fbLink = item.orderLink || siteData?.general?.orderButtonLink || 'https://www.facebook.com/profile.php?id=61594490844705';
+        const fbBtn = document.getElementById('btnOrderFbLink');
+        if (fbBtn) fbBtn.href = fbLink;
+
+        if (statusMsg) {
+            statusMsg.style.display = 'none';
+            statusMsg.className = 'order-status-msg';
+            statusMsg.textContent = '';
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        modal.style.display = 'none';
+        if (form) form.reset();
+        const qtyInput = document.getElementById('orderQty');
+        if (qtyInput) qtyInput.value = '1';
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    // Delegate click on buttons
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn-open-order');
+        if (btn) {
+            e.preventDefault();
+            const itemId = btn.getAttribute('data-item-id');
+            const items = siteData?.menu?.items || [];
+            const item = items.find(i => i.id === itemId) || {
+                name: 'Donut Signature 10K',
+                price: 10000,
+                tag: '🍩 Món Signature',
+                image: 'tai-nguyen/donut-signature.jpg'
+            };
+            openModalWithItem(item);
+        }
+    });
+
+    // Submit form
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const customerName = document.getElementById('orderCustomerName').value.trim();
+            const phone = document.getElementById('orderPhone').value.trim();
+            const qty = parseInt(document.getElementById('orderQty').value, 10) || 1;
+            const note = document.getElementById('orderNote').value.trim();
+
+            if (!customerName || !phone) {
+                if (statusMsg) {
+                    statusMsg.className = 'order-status-msg error';
+                    statusMsg.textContent = 'Vui lòng nhập họ tên và số điện thoại!';
+                    statusMsg.style.display = 'block';
+                }
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi đơn...';
+
+            try {
+                const res = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        customerName,
+                        phone,
+                        note: `${note ? note + ' | ' : ''}SL: ${qty} cái`,
+                        items: [{
+                            name: currentSelectedOrderItem?.name || 'Bánh Kitten Cake',
+                            price: currentSelectedOrderItem?.price || 10000,
+                            quantity: qty
+                        }]
+                    })
+                });
+
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    statusMsg.className = 'order-status-msg success';
+                    statusMsg.innerHTML = '<i class="fas fa-check-circle"></i> Đặt bánh thành công! Kitten Cake sẽ gọi lại cho bạn sớm nhất.';
+                    statusMsg.style.display = 'block';
+                    form.reset();
+                    setTimeout(() => {
+                        closeModal();
+                    }, 2500);
+                } else {
+                    throw new Error(data.error || 'Có lỗi xảy ra khi gửi đơn');
+                }
+            } catch (err) {
+                statusMsg.className = 'order-status-msg error';
+                statusMsg.textContent = err.message || 'Không thể kết nối đến máy chủ!';
+                statusMsg.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Gửi đơn đặt bánh';
+            }
+        });
+    }
+}
+

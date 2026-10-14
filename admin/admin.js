@@ -388,6 +388,21 @@ window.deleteMenuItem = function(id) {
     }
 };
 
+function updateModalPricePreview() {
+    const val = parseInt(document.getElementById('modalMenuPrice').value, 10);
+    const previewEl = document.getElementById('modalMenuPriceFormatted');
+    if (previewEl) {
+        if (!isNaN(val) && val >= 0) {
+            previewEl.innerHTML = `<i class="fas fa-tag"></i> <span>Xem trước: ${formatCurrency(val)}</span>`;
+            previewEl.style.color = '#2ed573';
+        } else {
+            previewEl.innerHTML = `<i class="fas fa-exclamation-circle"></i> <span>Vui lòng nhập số tiền hợp lệ</span>`;
+            previewEl.style.color = '#ff4757';
+        }
+    }
+}
+document.getElementById('modalMenuPrice').addEventListener('input', updateModalPricePreview);
+
 // Add & Edit Menu Modal Logic
 document.getElementById('btnOpenAddMenuModal').addEventListener('click', () => {
     currentEditingMenuItemId = null;
@@ -396,6 +411,7 @@ document.getElementById('btnOpenAddMenuModal').addEventListener('click', () => {
     document.getElementById('modalMenuName').value = '';
     document.getElementById('modalMenuTag').value = '🍩 Món Signature';
     document.getElementById('modalMenuPrice').value = '10000';
+    updateModalPricePreview();
     document.getElementById('modalMenuBadge').value = '';
     document.getElementById('modalMenuFeatured').value = 'false';
     document.getElementById('modalMenuDesc').value = '';
@@ -414,6 +430,7 @@ window.openEditMenuModal = function(id) {
     document.getElementById('modalMenuName').value = item.name;
     document.getElementById('modalMenuTag').value = item.tag || '🍩 Món Signature';
     document.getElementById('modalMenuPrice').value = item.price;
+    updateModalPricePreview();
     document.getElementById('modalMenuBadge').value = item.badge || '';
     document.getElementById('modalMenuFeatured').value = item.isFeatured ? 'true' : 'false';
     document.getElementById('modalMenuDesc').value = item.description || '';

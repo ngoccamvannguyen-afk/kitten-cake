@@ -145,6 +145,21 @@
   },
   "orders": [
     {
+      "id": "ord_1791960429119",
+      "customerName": "Khách Hàng Thử Nghiệm",
+      "phone": "0901234567",
+      "note": "Test đặt 2 Donut",
+      "items": [
+        {
+          "name": "Donut Xốp Mềm",
+          "price": 10000,
+          "quantity": 2
+        }
+      ],
+      "status": "pending",
+      "createdAt": "2026-10-14T06:47:09.119Z"
+    },
+    {
       "id": "ord_1791957020498",
       "customerName": "Học Viên Kstudy",
       "phone": "0987654321",
