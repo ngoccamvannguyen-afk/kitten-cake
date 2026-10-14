@@ -18,8 +18,12 @@ const BACKUP_FILE = path.join(DATA_DIR, 'content.backup.json');
 const UPLOAD_DIR = path.join(__dirname, 'tai-nguyen');
 
 // Ensure directories exist
-if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+try {
+  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+  if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+} catch (e) {
+  // Read-only filesystem in serverless environments like Vercel
+}
 
 // Multer storage configuration
 const storage = multer.diskStorage({
@@ -264,6 +268,23 @@ app.delete('/api/orders/:id', (req, res) => {
 // Static serving
 app.use('/tai-nguyen', express.static(UPLOAD_DIR));
 app.use('/admin', express.static(path.join(__dirname, 'admin')));
+
+// Explicitly serve root files so Vercel's NFT (Node File Trace) includes them in the bundle
+app.get('/style.css', (req, res) => {
+  res.setHeader('Content-Type', 'text/css; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'style.css'));
+});
+
+app.get('/app.js', (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'app.js'));
+});
+
+app.get('/index.html', (req, res) => {
+  res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 app.use(express.static(__dirname));
 
 // Fallback for root /
@@ -271,12 +292,16 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`=======================================================`);
-  console.log(`🍰 KITTEN CAKE CMS SERVER RUNNING!`);
-  console.log(`👉 Trang chủ khách xem : http://localhost:${PORT}`);
-  console.log(`👉 Trang quản trị (CMS): http://localhost:${PORT}/admin`);
-  console.log(`🔐 Tài khoản mặc định : admin / 123`);
-  console.log(`=======================================================`);
-});
+// Start server locally
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`=======================================================`);
+    console.log(`🍰 KITTEN CAKE CMS SERVER RUNNING!`);
+    console.log(`👉 Trang chủ khách xem : http://localhost:${PORT}`);
+    console.log(`👉 Trang quản trị (CMS): http://localhost:${PORT}/admin`);
+    console.log(`🔐 Tài khoản mặc định : admin / 123`);
+    console.log(`=======================================================`);
+  });
+}
+
+module.exports = app;
