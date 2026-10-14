@@ -1,4 +1,6 @@
 // Kitten Cake - Frontend Dynamic Engine
+let currentSiteContent = null;
+
 document.addEventListener('DOMContentLoaded', () => {
     initSite();
 });
@@ -34,12 +36,14 @@ async function initSite() {
     }
 
     if (content) {
+        currentSiteContent = content;
         applyContentToDOM(content);
         setupQuickOrderModal(content);
     }
 
     // Show quick admin button if logged in
     setupAdminShortcut();
+    setupQuickCartListener();
 }
 
 function applyContentToDOM(data) {
@@ -390,6 +394,16 @@ function setupQuickOrderModal(siteData) {
         }
     });
 
+    // Flavor selection pill listener
+    document.querySelectorAll('.flavor-radio-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+            document.querySelectorAll('.flavor-radio-pill').forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            const r = pill.querySelector('input[type="radio"]');
+            if (r) r.checked = true;
+        });
+    });
+
     // Submit form
     if (form) {
         form.addEventListener('submit', async (e) => {
@@ -408,6 +422,8 @@ function setupQuickOrderModal(siteData) {
                 return;
             }
 
+            const chosenFlavor = document.querySelector('input[name="quickFlavor"]:checked')?.value || 'Chocolate';
+
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi đơn...';
 
@@ -418,10 +434,11 @@ function setupQuickOrderModal(siteData) {
                     body: JSON.stringify({
                         customerName,
                         phone,
-                        note: `${note ? note + ' | ' : ''}SL: ${qty} cái`,
+                        note: `${note ? note + ' | ' : ''}Hương vị: ${chosenFlavor} | SL: ${qty} cái`,
                         items: [{
                             name: currentSelectedOrderItem?.name || 'Bánh Kitten Cake',
                             price: currentSelectedOrderItem?.price || 10000,
+                            flavor: chosenFlavor,
                             quantity: qty
                         }]
                     })
@@ -450,4 +467,35 @@ function setupQuickOrderModal(siteData) {
         });
     }
 }
+
+// Lắng nghe sự kiện Thêm Giỏ Hàng Nhanh từ thẻ sản phẩm
+function setupQuickCartListener() {
+    document.addEventListener('click', (e) => {
+        const quickAddBtn = e.target.closest('.btn-quick-add-cart');
+        if (quickAddBtn) {
+            e.preventDefault();
+            const itemId = quickAddBtn.getAttribute('data-item-id');
+            const items = currentSiteContent?.menu?.items || [];
+            const item = items.find(i => i.id === itemId);
+
+            if (item) {
+                const firstFlavor = (item.flavors && item.flavors.length > 0)
+                    ? item.flavors[0]
+                    : 'Vị Chuẩn Signature';
+
+                if (window.KittenCart) {
+                    window.KittenCart.addItem({
+                        id: item.id,
+                        name: item.name,
+                        price: item.price,
+                        flavor: firstFlavor,
+                        image: item.image,
+                        quantity: 1
+                    }, true);
+                }
+            }
+        }
+    });
+}
+
 

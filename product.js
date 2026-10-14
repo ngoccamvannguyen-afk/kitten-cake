@@ -129,9 +129,10 @@ function renderProductDetails(product) {
     // 5. Flavors Selector
     const flavorContainer = document.getElementById('flavorSelector');
     const flavorDisplay = document.getElementById('selectedFlavorName');
+    const defaultFlavors = ['Chocolate Trắng', 'Matcha', 'Dâu', 'Chocolate'];
     const flavors = (product.flavors && product.flavors.length > 0)
         ? product.flavors
-        : ['Vị Chuẩn Signature'];
+        : defaultFlavors;
 
     selectedFlavor = flavors[0];
     if (flavorDisplay) flavorDisplay.textContent = selectedFlavor;
@@ -142,7 +143,15 @@ function renderProductDetails(product) {
             const pill = document.createElement('button');
             pill.type = 'button';
             pill.className = `flavor-pill ${index === 0 ? 'active' : ''}`;
-            pill.innerHTML = `<i class="fas fa-check checkmark"></i> <span>${flavor}</span>`;
+
+            let iconClass = 'fa-cookie-bite';
+            const fLower = flavor.toLowerCase();
+            if (fLower.includes('trắng') || fLower.includes('white')) iconClass = 'fa-ice-cream';
+            else if (fLower.includes('matcha') || fLower.includes('trà xanh')) iconClass = 'fa-leaf';
+            else if (fLower.includes('dâu') || fLower.includes('strawberry')) iconClass = 'fa-heart';
+            else if (fLower.includes('chocolate') || fLower.includes('socola')) iconClass = 'fa-cookie';
+
+            pill.innerHTML = `<i class="fas ${iconClass}"></i> <span>${flavor}</span> <i class="fas fa-check checkmark"></i>`;
             pill.addEventListener('click', () => {
                 document.querySelectorAll('.flavor-pill').forEach(p => p.classList.remove('active'));
                 pill.classList.add('active');
@@ -156,10 +165,14 @@ function renderProductDetails(product) {
     // 6. Details Tab Content
     const details = product.details || {};
     const ingEl = document.getElementById('pdpDetailIngredients');
-    if (ingEl && details.ingredients) ingEl.textContent = details.ingredients;
+    if (ingEl) {
+        ingEl.textContent = details.ingredients || 'Bột mì Nhật cao cấp, Bơ lạt New Zealand, Men tự nhiên, Trứng gà tươi, Socola Bỉ nguyên chất và sốt trái cây tươi.';
+    }
 
     const shelfEl = document.getElementById('pdpDetailShelfLife');
-    if (shelfEl && details.shelfLife) shelfEl.textContent = details.shelfLife;
+    if (shelfEl) {
+        shelfEl.textContent = details.shelfLife || 'Ngon nhất trong ngày, bảo quản mát 2-3 ngày trong ngăn mát tủ lạnh.';
+    }
 
     updateSubtotalPreview();
 }

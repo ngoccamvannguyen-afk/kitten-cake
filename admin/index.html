@@ -535,10 +535,12 @@
                                     <tr>
                                         <th>Thời gian</th>
                                         <th>Khách hàng</th>
-                                        <th>Số điện thoại</th>
-                                        <th>Nội dung / Ghi chú</th>
+                                        <th>Địa chỉ / Quận</th>
+                                        <th>Danh sách bánh</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Thanh toán</th>
                                         <th>Trạng thái</th>
-                                        <th style="width:140px; text-align:right;">Thao tác</th>
+                                        <th style="width:160px; text-align:right;">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody id="ordersTableBody">
@@ -653,6 +655,44 @@
                             <div class="form-group">
                                 <label>Đường dẫn khi bấm "Đặt bánh ngay" trên Header</label>
                                 <input type="text" id="setHeaderOrderLink" class="form-control" placeholder="https://www.facebook.com/...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-qrcode" style="color:#2ed573;"></i> Cài Đặt Chuyển Khoản VietQR & Phí Giao Hàng</h3>
+                            <p>Tự động tạo mã QR quét thanh toán Napas 24/7 và tính phí vận chuyển theo quận</p>
+                        </div>
+                    </div>
+                    <div class="cms-card-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Mã Ngân Hàng (Bank ID)</label>
+                                <input type="text" id="setBankId" class="form-control" placeholder="Ví dụ: MB, VCB, TCB, ACB, TPB...">
+                            </div>
+                            <div class="form-group">
+                                <label>Số tài khoản ngân hàng</label>
+                                <input type="text" id="setBankAccountNo" class="form-control" placeholder="Ví dụ: 0901234567">
+                            </div>
+                            <div class="form-group form-full">
+                                <label>Tên chủ tài khoản (In hoa không dấu)</label>
+                                <input type="text" id="setBankAccountName" class="form-control" placeholder="TIEM BANH KITTEN CAKE">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Phí giao hàng nội thành Quận 7 (VNĐ)</label>
+                                <input type="number" id="setShipDistrict7" class="form-control" placeholder="15000" step="1000">
+                            </div>
+                            <div class="form-group">
+                                <label>Phí giao hàng quận lân cận (VNĐ)</label>
+                                <input type="number" id="setShipOther" class="form-control" placeholder="25000" step="1000">
+                            </div>
+                            <div class="form-group form-full">
+                                <label>Đơn hàng tối thiểu để MIỄN PHÍ giao hàng (VNĐ)</label>
+                                <input type="number" id="setShipFreeMin" class="form-control" placeholder="120000" step="10000">
                             </div>
                         </div>
                     </div>
@@ -774,6 +814,25 @@
                         </select>
                     </div>
                     <div class="form-group form-full">
+                        <label>Danh sách hương vị (Phân tách bằng dấu phẩy ",")</label>
+                        <input type="text" id="modalMenuFlavors" class="form-control" placeholder="Ví dụ: Chocolate Trắng, Matcha, Dâu, Chocolate">
+                    </div>
+                    <div class="form-group">
+                        <label>Tình trạng bánh hôm nay</label>
+                        <select id="modalMenuInStock" class="form-control">
+                            <option value="true">Còn bánh (Bán bình thường)</option>
+                            <option value="false">Hết bánh hôm nay (Sold Out)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Hạn sử dụng & bảo quản</label>
+                        <input type="text" id="modalMenuShelfLife" class="form-control" placeholder="Ví dụ: Dùng trong ngày, ngăn mát 2-3 ngày">
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Nguyên liệu nổi bật</label>
+                        <input type="text" id="modalMenuIngredients" class="form-control" placeholder="Ví dụ: Bột mì Nhật, Bơ Anchor, Trứng tươi, Socola Bỉ">
+                    </div>
+                    <div class="form-group form-full">
                         <label>Mô tả hương vị món bánh</label>
                         <textarea id="modalMenuDesc" class="form-control" rows="2" placeholder="Ruột mềm xốp phủ socola Bỉ, dâu tây hoặc matcha ngọt dịu..."></textarea>
                     </div>
@@ -835,6 +894,76 @@
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeModal('galleryModal')">Hủy</button>
                 <button class="btn btn-primary" id="btnSaveGalleryItem">Thêm vào thư viện</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ORDER DETAILS & PACKING SLIP -->
+    <div class="modal-overlay" id="orderDetailModal">
+        <div class="modal-container" style="max-width:650px;">
+            <div class="modal-header">
+                <h3 id="orderModalTitle"><i class="fas fa-file-invoice"></i> Chi Tiết Đơn Hàng</h3>
+                <button class="modal-close" onclick="closeModal('orderDetailModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="orderModalPrintArea">
+                <!-- Printable packing slip -->
+                <div class="packing-slip-header" style="text-align:center; padding-bottom:14px; border-bottom:2px dashed #e9ecef; margin-bottom:16px;">
+                    <h2 style="font-size:20px; color:#ff4757; margin-bottom:4px;">🍰 TIỆM BÁNH KITTEN CAKE</h2>
+                    <p style="font-size:12px; color:#747d8c; margin:0;">Quận 7, TP. Hồ Chí Minh • Hotline: 09xx xxx xxx</p>
+                    <div style="font-weight:700; font-size:14px; margin-top:6px; color:#2f3542;" id="slipOrderCode">PHIẾU ĐÓNG HỘP BÁNH - #ord_123</div>
+                </div>
+
+                <div class="order-detail-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:13px; margin-bottom:16px;">
+                    <div><strong>Khách hàng:</strong> <span id="slipCustName">Nguyễn Văn A</span></div>
+                    <div><strong>Điện thoại:</strong> <span id="slipCustPhone">0901234567</span></div>
+                    <div style="grid-column:1 / -1;"><strong>Địa chỉ giao:</strong> <span id="slipCustAddress">123 Nguyễn Thị Thập, P. Tân Phong, Q.7</span></div>
+                    <div><strong>Thời gian đặt:</strong> <span id="slipOrderTime">14:00 14/10/2026</span></div>
+                    <div><strong>Thanh toán:</strong> <span id="slipPaymentMethod" class="badge">COD</span></div>
+                    <div style="grid-column:1 / -1; background:#fff0f3; padding:8px 12px; border-radius:8px; border-left:3px solid #ff4757;">
+                        <strong>Ghi chú / Lời chúc thiệp:</strong> <span id="slipOrderNote">Không</span>
+                    </div>
+                </div>
+
+                <h4 style="font-size:14px; margin-bottom:8px; color:#2f3542;"><i class="fas fa-box-open"></i> Danh sách bánh cần đóng hộp:</h4>
+                <div class="table-responsive" style="margin-bottom:16px;">
+                    <table class="cms-table" style="font-size:13px;">
+                        <thead>
+                            <tr>
+                                <th>Món bánh</th>
+                                <th>Hương vị</th>
+                                <th style="text-align:center;">SL</th>
+                                <th style="text-align:right;">Đơn giá</th>
+                                <th style="text-align:right;">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody id="slipItemsTableBody">
+                            <!-- Dynamic items -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="slip-summary" style="text-align:right; font-size:13px; display:flex; flex-direction:column; gap:4px;">
+                    <div>Tiền bánh: <strong id="slipSubtotal">0 đ</strong></div>
+                    <div>Phí ship: <strong id="slipShipping">0 đ</strong></div>
+                    <div>Giảm giá: <strong id="slipDiscount" style="color:#2ed573;">0 đ</strong></div>
+                    <div style="font-size:16px; margin-top:6px; color:#ff4757;">Tổng thu khách: <strong id="slipTotal" style="font-size:18px;">0 đ</strong></div>
+                </div>
+            </div>
+            <div class="modal-footer" style="justify-content:space-between;">
+                <div>
+                    <label style="font-size:13px; font-weight:700; margin-right:8px;">Trạng thái:</label>
+                    <select id="modalOrderStatusSelect" class="form-control" style="display:inline-block; width:160px; padding:6px 10px; font-size:13px;">
+                        <option value="pending">Chờ xác nhận</option>
+                        <option value="preparing">Đang làm bánh</option>
+                        <option value="delivering">Đang giao hàng</option>
+                        <option value="completed">Đã hoàn thành</option>
+                        <option value="cancelled">Đã hủy đơn</option>
+                    </select>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn btn-outline" id="btnPrintPackingSlip"><i class="fas fa-print"></i> In phiếu giao</button>
+                    <button class="btn btn-primary" id="btnUpdateOrderStatus"><i class="fas fa-save"></i> Cập nhật</button>
+                </div>
             </div>
         </div>
     </div>

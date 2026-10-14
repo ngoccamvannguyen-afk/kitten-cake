@@ -217,6 +217,20 @@ function populateAllForms() {
         }
     }
 
+    // Payment & Shipping Config
+    if (siteData.paymentConfig) {
+        const p = siteData.paymentConfig;
+        if (document.getElementById('setBankId')) document.getElementById('setBankId').value = p.bankId || 'MB';
+        if (document.getElementById('setBankAccountNo')) document.getElementById('setBankAccountNo').value = p.accountNumber || '';
+        if (document.getElementById('setBankAccountName')) document.getElementById('setBankAccountName').value = p.accountName || '';
+    }
+    if (siteData.shippingConfig) {
+        const s = siteData.shippingConfig;
+        if (document.getElementById('setShipDistrict7')) document.getElementById('setShipDistrict7').value = s.district7Fee || 15000;
+        if (document.getElementById('setShipOther')) document.getElementById('setShipOther').value = s.otherDistrictFee || 25000;
+        if (document.getElementById('setShipFreeMin')) document.getElementById('setShipFreeMin').value = s.freeShippingMin || 120000;
+    }
+
     // Hero Section
     if (siteData.hero) {
         const h = siteData.hero;
@@ -320,6 +334,7 @@ function renderMenuItemsTable() {
                     <div class="item-title-text">
                         <h4>${item.name}</h4>
                         <span>${item.description ? item.description.slice(0, 45) + '...' : ''}</span>
+                        ${item.inStock === false ? '<span style="display:inline-block; margin-top:3px; background:#ffebee; color:#ff4757; font-size:11px; padding:2px 6px; border-radius:4px; font-weight:700;"><i class="fas fa-ban"></i> Hết hàng hôm nay</span>' : ''}
                     </div>
                 </div>
             </td>
@@ -414,6 +429,10 @@ document.getElementById('btnOpenAddMenuModal').addEventListener('click', () => {
     updateModalPricePreview();
     document.getElementById('modalMenuBadge').value = '';
     document.getElementById('modalMenuFeatured').value = 'false';
+    document.getElementById('modalMenuFlavors').value = 'Chocolate Trắng, Matcha, Dâu, Chocolate';
+    document.getElementById('modalMenuInStock').value = 'true';
+    document.getElementById('modalMenuShelfLife').value = 'Dùng ngon nhất trong ngày, ngăn mát 2-3 ngày';
+    document.getElementById('modalMenuIngredients').value = 'Bột mì Nhật cao cấp, Bơ Anchor, Trứng tươi, Socola Bỉ';
     document.getElementById('modalMenuDesc').value = '';
     document.getElementById('modalMenuImgPreview').src = '../tai-nguyen/donut-signature.jpg';
     document.getElementById('modalMenuOrderLink').value = siteData.general?.socialLinks?.facebook || '';
@@ -433,6 +452,16 @@ window.openEditMenuModal = function(id) {
     updateModalPricePreview();
     document.getElementById('modalMenuBadge').value = item.badge || '';
     document.getElementById('modalMenuFeatured').value = item.isFeatured ? 'true' : 'false';
+
+    const defaultFlavorsStr = 'Chocolate Trắng, Matcha, Dâu, Chocolate';
+    const flavorsStr = (Array.isArray(item.flavors) && item.flavors.length > 0)
+        ? item.flavors.join(', ')
+        : defaultFlavorsStr;
+    document.getElementById('modalMenuFlavors').value = flavorsStr;
+    document.getElementById('modalMenuInStock').value = item.inStock !== false ? 'true' : 'false';
+    document.getElementById('modalMenuShelfLife').value = item.details?.shelfLife || '';
+    document.getElementById('modalMenuIngredients').value = item.details?.ingredients || '';
+
     document.getElementById('modalMenuDesc').value = item.description || '';
     document.getElementById('modalMenuOrderLink').value = item.orderLink || '';
 
@@ -450,6 +479,15 @@ document.getElementById('btnSaveMenuItem').addEventListener('click', async () =>
     const isFeatured = document.getElementById('modalMenuFeatured').value === 'true';
     const description = document.getElementById('modalMenuDesc').value.trim();
     const orderLink = document.getElementById('modalMenuOrderLink').value.trim();
+    const inStock = document.getElementById('modalMenuInStock').value === 'true';
+    const flavorsRaw = document.getElementById('modalMenuFlavors').value.trim();
+    const shelfLife = document.getElementById('modalMenuShelfLife').value.trim();
+    const ingredients = document.getElementById('modalMenuIngredients').value.trim();
+
+    const flavors = flavorsRaw
+        ? flavorsRaw.split(',').map(f => f.trim()).filter(Boolean)
+        : ['Vị Chuẩn Signature'];
+
     let imageSrc = document.getElementById('modalMenuImgPreview').getAttribute('src');
 
     // Clean relative path prefix if needed
@@ -477,6 +515,11 @@ document.getElementById('btnSaveMenuItem').addEventListener('click', async () =>
             item.description = description;
             item.orderLink = orderLink;
             item.image = imageSrc;
+            item.inStock = inStock;
+            item.flavors = flavors;
+            if (!item.details) item.details = {};
+            item.details.shelfLife = shelfLife;
+            item.details.ingredients = ingredients;
             actionMsg = `🎉 Đã cập nhật món "${name}" và đồng bộ ra trang chủ!`;
         }
     } else {
@@ -491,7 +534,13 @@ document.getElementById('btnSaveMenuItem').addEventListener('click', async () =>
             description,
             image: imageSrc || 'tai-nguyen/donut-signature.jpg',
             orderLink: orderLink || (siteData.general?.socialLinks?.facebook || '#'),
-            status: 'active'
+            status: 'active',
+            inStock,
+            flavors,
+            details: {
+                shelfLife,
+                ingredients
+            }
         };
         siteData.menu.items.push(newItem);
         actionMsg = `🎉 Đã thêm món mới "${name}" và đồng bộ ra trang chủ!`;
@@ -649,12 +698,16 @@ setupImageUpload('setLogoInput', 'setLogoPreview', (url) => {
     document.getElementById('sidebarLogo').src = `../${url}`;
 });
 
-// ---------------- ORDERS (ĐẶT BÁNH) ----------------
+// ---------------- ORDERS (ĐẶT BÁNH & GIỎ HÀNG ĐA MÓN) ----------------
+let currentOrdersList = [];
+let currentViewingOrderId = null;
+
 async function loadOrders() {
     try {
-        const res = await fetch('/api/orders');
+        const res = await fetch('/api/orders?_t=' + Date.now());
         const json = await res.json();
         const orders = json.orders || [];
+        currentOrdersList = orders;
 
         const badge = document.getElementById('orderBadge');
         const statOrdersCount = document.getElementById('statOrdersCount');
@@ -672,7 +725,7 @@ async function loadOrders() {
         tbody.innerHTML = '';
 
         if (orders.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:#a4b0be;">Chưa có đơn đặt bánh nào phát sinh.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:30px; color:#a4b0be;">Chưa có đơn đặt bánh nào phát sinh.</td></tr>`;
             return;
         }
 
@@ -680,20 +733,55 @@ async function loadOrders() {
             const tr = document.createElement('tr');
             const dateStr = new Date(order.createdAt).toLocaleString('vi-VN');
             const statusMap = {
-                'pending': '<span class="status-badge badge-hot"><i class="fas fa-clock"></i> Chờ xử lý</span>',
-                'completed': '<span class="status-badge badge-active"><i class="fas fa-check"></i> Đã xong</span>',
+                'pending': '<span class="status-badge badge-hot"><i class="fas fa-clock"></i> Chờ xác nhận</span>',
+                'preparing': '<span class="status-badge" style="background:#e8f4fd; color:#0984e3;"><i class="fas fa-cookie-bite"></i> Đang nướng bánh</span>',
+                'delivering': '<span class="status-badge" style="background:#f3e8fd; color:#6c5ce7;"><i class="fas fa-motorcycle"></i> Đang giao</span>',
+                'completed': '<span class="status-badge badge-active"><i class="fas fa-check-circle"></i> Đã hoàn thành</span>',
                 'cancelled': '<span class="status-badge badge-inactive"><i class="fas fa-times"></i> Đã hủy</span>'
             };
 
+            // Tóm tắt danh sách bánh
+            let itemsSummaryHtml = '';
+            if (Array.isArray(order.items) && order.items.length > 0) {
+                itemsSummaryHtml = order.items.map(i => `
+                    <div style="font-size:12px; margin-bottom:2px;">
+                        <strong>${i.quantity}x</strong> ${i.name}
+                        ${i.flavor ? `<span style="color:#ff6b81;">(${i.flavor})</span>` : ''}
+                    </div>
+                `).join('');
+            } else {
+                itemsSummaryHtml = `<span style="font-size:12px; color:#747d8c;">${order.note || 'Đặt bánh qua web'}</span>`;
+            }
+
+            const paymentBadge = order.paymentMethod === 'banking'
+                ? '<span class="status-badge" style="background:#e8f8f0; color:#2ed573; font-size:11px;"><i class="fas fa-qrcode"></i> VietQR</span>'
+                : '<span class="status-badge" style="background:#f1f2f6; color:#57606f; font-size:11px;"><i class="fas fa-money-bill-wave"></i> COD</span>';
+
+            const addressDisplay = order.address
+                ? `<div style="font-size:12px;">${order.address}</div><small style="color:#ff6b81; font-weight:600;">${order.district || 'Q.7'}</small>`
+                : `<span style="color:#a4b0be;">${order.district || 'Quận 7'}</span>`;
+
             tr.innerHTML = `
-                <td style="font-size:12px; color:#747d8c;">${dateStr}</td>
-                <td><strong>${order.customerName}</strong></td>
-                <td><a href="tel:${order.phone}" style="color:#ff6b81; font-weight:700; text-decoration:none;"><i class="fas fa-phone-alt"></i> ${order.phone}</a></td>
-                <td>${order.note || '<em style="color:#a4b0be;">Không ghi chú</em>'}</td>
+                <td style="font-size:12px; color:#747d8c; white-space:nowrap;">
+                    <strong>#${order.id.slice(-6)}</strong><br>
+                    <span>${dateStr}</span>
+                </td>
+                <td>
+                    <strong>${order.customerName}</strong><br>
+                    <a href="tel:${order.phone}" style="color:#ff6b81; font-size:12px; font-weight:700; text-decoration:none;">
+                        <i class="fas fa-phone-alt"></i> ${order.phone}
+                    </a>
+                </td>
+                <td>${addressDisplay}</td>
+                <td>${itemsSummaryHtml}</td>
+                <td style="font-weight:700; color:#ff4757; white-space:nowrap;">
+                    ${formatCurrency(order.total || order.subtotal || 10000)}
+                </td>
+                <td>${paymentBadge}</td>
                 <td>${statusMap[order.status] || order.status}</td>
-                <td style="text-align:right;">
-                    <button class="btn-action" title="Đánh dấu đã hoàn thành" onclick="updateOrderStatus('${order.id}', 'completed')">
-                        <i class="fas fa-check" style="color:#2ed573;"></i>
+                <td style="text-align:right; white-space:nowrap;">
+                    <button class="btn-action" title="Xem chi tiết & In phiếu đóng hộp" onclick="openOrderDetailModal('${order.id}')" style="background:#e8f4fd; color:#0984e3;">
+                        <i class="fas fa-file-invoice"></i>
                     </button>
                     <button class="btn-action delete" title="Xóa đơn" onclick="deleteOrder('${order.id}')">
                         <i class="fas fa-trash-alt"></i>
@@ -705,6 +793,99 @@ async function loadOrders() {
     } catch (err) {
         console.warn('Cannot fetch orders:', err);
     }
+}
+
+window.openOrderDetailModal = function(orderId) {
+    const order = currentOrdersList.find(o => o.id === orderId);
+    if (!order) return;
+
+    currentViewingOrderId = orderId;
+
+    document.getElementById('slipOrderCode').textContent = `PHIẾU ĐÓNG HỘP BÁNH - #${order.id}`;
+    document.getElementById('slipCustName').textContent = order.customerName;
+    document.getElementById('slipCustPhone').textContent = order.phone;
+    document.getElementById('slipCustAddress').textContent = `${order.address || ''} (${order.district || 'Quận 7'})`;
+    document.getElementById('slipOrderTime').textContent = new Date(order.createdAt).toLocaleString('vi-VN');
+    document.getElementById('slipPaymentMethod').textContent = order.paymentMethod === 'banking' ? 'Chuyển khoản VietQR' : 'Tiền mặt COD';
+    document.getElementById('slipOrderNote').textContent = order.note || 'Không có ghi chú thêm.';
+
+    // Render danh sách bánh
+    const itemsTbody = document.getElementById('slipItemsTableBody');
+    itemsTbody.innerHTML = '';
+    const items = order.items || [];
+
+    if (items.length === 0) {
+        itemsTbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">1 phần bánh theo ghi chú</td></tr>`;
+    } else {
+        items.forEach(item => {
+            const lineTotal = Number(item.price) * Number(item.quantity);
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${item.name}</strong></td>
+                <td><span style="color:#ff6b81;">${item.flavor || 'Vị chuẩn'}</span></td>
+                <td style="text-align:center;"><strong>${item.quantity}</strong></td>
+                <td style="text-align:right;">${formatCurrency(item.price)}</td>
+                <td style="text-align:right; font-weight:700;">${formatCurrency(lineTotal)}</td>
+            `;
+            itemsTbody.appendChild(tr);
+        });
+    }
+
+    document.getElementById('slipSubtotal').textContent = formatCurrency(order.subtotal || order.total || 0);
+    document.getElementById('slipShipping').textContent = formatCurrency(order.shippingFee || 0);
+    document.getElementById('slipDiscount').textContent = `-${formatCurrency(order.discount || 0)}`;
+    document.getElementById('slipTotal').textContent = formatCurrency(order.total || 0);
+
+    // Trạng thái đơn
+    document.getElementById('modalOrderStatusSelect').value = order.status || 'pending';
+
+    openModal('orderDetailModal');
+};
+
+const btnUpdateOrder = document.getElementById('btnUpdateOrderStatus');
+if (btnUpdateOrder) {
+    btnUpdateOrder.addEventListener('click', async () => {
+        if (!currentViewingOrderId) return;
+        const newStatus = document.getElementById('modalOrderStatusSelect').value;
+        await updateOrderStatus(currentViewingOrderId, newStatus);
+        closeModal('orderDetailModal');
+    });
+}
+
+const btnPrintSlip = document.getElementById('btnPrintPackingSlip');
+if (btnPrintSlip) {
+    btnPrintSlip.addEventListener('click', () => {
+        const printContents = document.getElementById('orderModalPrintArea').innerHTML;
+        const printWindow = window.open('', '_blank', 'width=650,height=750');
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>In Phiếu Đóng Hộp - Kitten Cake</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+                    <style>
+                        body { font-family: 'Quicksand', sans-serif; padding: 24px; color: #333; line-height: 1.5; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+                        th, td { border: 1px solid #ddd; padding: 8px 10px; font-size: 13px; }
+                        th { background: #f8f9fa; }
+                        .badge { font-weight: 700; color: #ff4757; }
+                        @media print {
+                            body { padding: 0; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${printContents}
+                    <div style="margin-top:24px; text-align:center; font-size:12px; color:#888;">
+                        Cảm ơn quý khách đã tin chọn Kitten Cake Quận 7! ❤️
+                    </div>
+                    <script>
+                        window.onload = function() { window.print(); window.close(); }
+                    </script>
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+    });
 }
 
 window.updateOrderStatus = async function(id, status) {
@@ -768,6 +949,17 @@ async function saveAllChanges(customMessage = '') {
         const ig = getVal('setInstaUrl'); if (ig !== null) siteData.general.socialLinks.instagram = ig;
         const tt = getVal('setTiktokUrl'); if (tt !== null) siteData.general.socialLinks.tiktok = tt;
     }
+
+    // Collect Payment & Shipping Config
+    if (!siteData.paymentConfig) siteData.paymentConfig = {};
+    const bId = getVal('setBankId'); if (bId !== null) siteData.paymentConfig.bankId = bId;
+    const bAcc = getVal('setBankAccountNo'); if (bAcc !== null) siteData.paymentConfig.accountNumber = bAcc;
+    const bName = getVal('setBankAccountName'); if (bName !== null) siteData.paymentConfig.accountName = bName;
+
+    if (!siteData.shippingConfig) siteData.shippingConfig = {};
+    const sD7 = getVal('setShipDistrict7'); if (sD7 !== null) siteData.shippingConfig.district7Fee = parseInt(sD7, 10) || 15000;
+    const sOth = getVal('setShipOther'); if (sOth !== null) siteData.shippingConfig.otherDistrictFee = parseInt(sOth, 10) || 25000;
+    const sMin = getVal('setShipFreeMin'); if (sMin !== null) siteData.shippingConfig.freeShippingMin = parseInt(sMin, 10) || 120000;
 
     // Collect Hero
     if (siteData.hero) {

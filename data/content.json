@@ -66,7 +66,7 @@
     "items": [
       {
         "id": "menu_1",
-        "name": "Donut Xốp Mềm",
+        "name": "Donut Xốp Mềm Signature",
         "tag": "🍩 Món Signature",
         "price": 10000,
         "isFeatured": true,
@@ -74,7 +74,26 @@
         "description": "Món bánh chủ đạo nướng tươi mỗi ngày, ruột mềm xốp phủ socola Bỉ, cốm cầu vồng, dâu tây hoặc matcha ngọt dịu.",
         "image": "tai-nguyen/donut-signature.jpg",
         "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
-        "status": "active"
+        "status": "active",
+        "inStock": true,
+        "flavors": [
+          "Chocolate Trắng",
+          "Matcha",
+          "Dâu",
+          "Chocolate"
+        ],
+        "gallery": [
+          "tai-nguyen/donut-signature.jpg",
+          "tai-nguyen/donut-collection.jpg",
+          "tai-nguyen/donut-varieties.jpg",
+          "tai-nguyen/donut-box.jpg"
+        ],
+        "details": {
+          "ingredients": "Bột mì Nhật cao cấp, Bơ lạt New Zealand, Men tự nhiên, Trứng gà tươi, Socola Bỉ nguyên chất",
+          "shelfLife": "Ngon nhất trong ngày, bảo quản mát 2-3 ngày",
+          "sweetLevel": "Ngọt thanh dịu (3/5)",
+          "serving": "1 chiếc (65g)"
+        }
       },
       {
         "id": "menu_2",
@@ -82,11 +101,26 @@
         "tag": "🥧 Bánh Nướng Nóng",
         "price": 18000,
         "isFeatured": false,
-        "badge": "",
+        "badge": "Bánh Nóng Giòn",
         "description": "Lớp vỏ ngàn lớp giòn rụm kết hợp cùng nhân trứng sữa nướng thơm lừng, béo ngậy chuẩn vị Hồng Kông.",
         "image": "tai-nguyen/tart-trung.jpg",
         "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
-        "status": "active"
+        "status": "active",
+        "inStock": true,
+        "flavors": [
+          "Truyền Thống Béo Ngậy",
+          "Nhân Phô Mai Chảy"
+        ],
+        "gallery": [
+          "tai-nguyen/tart-trung.jpg",
+          "tai-nguyen/donut-varieties.jpg"
+        ],
+        "details": {
+          "ingredients": "Vỏ bánh ngàn lớp bơ Pháp, Trứng gà ta, Sữa tươi tiệt trùng, Kem whipping cream",
+          "shelfLife": "Nên ăn ngay khi còn ấm nóng, hoặc hâm nóng bằng nồi chiên không dầu 3 phút",
+          "sweetLevel": "Béo ngậy thơm lừng (3.5/5)",
+          "serving": "1 chiếc (60g)"
+        }
       },
       {
         "id": "menu_3",
@@ -94,11 +128,26 @@
         "tag": "🍰 Bánh Lạnh Hũ",
         "price": 35000,
         "isFeatured": false,
-        "badge": "",
+        "badge": "Tiện Lợi Mang Đi",
         "description": "Sự kết hợp hoàn hảo giữa phô mai kem béo ngậy và vụn bánh Oreo giòn rụm đóng hũ mang đi cực tiện lợi.",
         "image": "tai-nguyen/oreo-cheesecake.jpg",
         "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
-        "status": "active"
+        "status": "active",
+        "inStock": true,
+        "flavors": [
+          "Oreo Truyền Thống",
+          "Oreo Dâu Tây Mát Lạnh"
+        ],
+        "gallery": [
+          "tai-nguyen/oreo-cheesecake.jpg",
+          "tai-nguyen/donut-box.jpg"
+        ],
+        "details": {
+          "ingredients": "Creamcheese Anchor, Vụn bánh quy Oreo Mỹ, Kem tươi whipping, Đường mía tinh luyện",
+          "shelfLife": "Bảo quản ngăn mát tủ lạnh 3-5 ngày",
+          "sweetLevel": "Béo ngậy giòn tan (3/5)",
+          "serving": "1 hũ (150ml)"
+        }
       },
       {
         "id": "menu_4",
@@ -106,11 +155,27 @@
         "tag": "🍮 Tráng Miệng Ý",
         "price": 25000,
         "isFeatured": false,
-        "badge": "",
+        "badge": "Thanh Mát Giải Nhiệt",
         "description": "Món tráng miệng thanh mát từ Ý, mềm mịn tan ngay trong miệng hòa quyện cùng sốt quả mọng chua ngọt.",
         "image": "tai-nguyen/panna-cotta.jpg",
         "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
-        "status": "active"
+        "status": "active",
+        "inStock": true,
+        "flavors": [
+          "Sốt Dâu Tây Tươi",
+          "Sốt Việt Quất Rừng",
+          "Sốt Xoài Chanh Dây"
+        ],
+        "gallery": [
+          "tai-nguyen/panna-cotta.jpg",
+          "tai-nguyen/about-poster.jpg"
+        ],
+        "details": {
+          "ingredients": "Kem sữa tươi cao cấp, Gelatin Pháp, Sốt trái cây tươi nấu chậm",
+          "shelfLife": "Bảo quản ngăn mát 2-3 ngày, dùng lạnh",
+          "sweetLevel": "Chua ngọt thanh tao (2.5/5)",
+          "serving": "1 hũ (120ml)"
+        }
       }
     ]
   },
@@ -168,29 +233,61 @@
   },
   "orders": [
     {
-      "id": "ord_1791960429119",
-      "customerName": "Khách Hàng Thử Nghiệm",
-      "phone": "0901234567",
-      "address": "Phường Tân Phong, Quận 7",
+      "id": "ord_1791962406557",
+      "customerName": "Hoàng Minh",
+      "phone": "0912345678",
+      "address": "15 Huỳnh Tấn Phát, Tân Thuận",
       "district": "Quận 7",
-      "note": "Giao giờ hành chính, gọi trước khi đến",
+      "note": "Giao nhanh trước 16h",
       "paymentMethod": "cod",
+      "items": [
+        {
+          "id": "menu_1",
+          "name": "Donut Xốp Mềm Signature",
+          "flavor": "Matcha Trà Xanh Uji",
+          "price": 10000,
+          "quantity": 3
+        }
+      ],
+      "subtotal": 30000,
       "shippingFee": 15000,
-      "subtotal": 20000,
       "discount": 0,
-      "total": 35000,
+      "total": 45000,
+      "voucherCode": "",
+      "status": "completed",
+      "createdAt": "2026-10-14T07:20:06.557Z"
+    },
+    {
+      "id": "ord_1791962316567",
+      "customerName": "Lan Hương",
+      "phone": "0988112233",
+      "address": "Chung cư Sunrise City, Nguyễn Hữu Thọ",
+      "district": "Quận 7",
+      "note": "Viết thiệp mừng sinh nhật Minh",
+      "paymentMethod": "banking",
       "items": [
         {
           "id": "menu_1",
           "name": "Donut Xốp Mềm Signature",
           "flavor": "Socola Bỉ Thượng Hạng",
           "price": 10000,
-          "quantity": 2,
-          "image": "tai-nguyen/donut-signature.jpg"
+          "quantity": 5
+        },
+        {
+          "id": "menu_2",
+          "name": "Tart Trứng Béo Ngậy",
+          "flavor": "Truyền Thống",
+          "price": 18000,
+          "quantity": 2
         }
       ],
+      "subtotal": 86000,
+      "shippingFee": 15000,
+      "discount": 8600,
+      "total": 92400,
+      "voucherCode": "KITTEN10",
       "status": "completed",
-      "createdAt": "2026-10-14T06:47:09.119Z"
+      "createdAt": "2026-10-14T07:18:36.567Z"
     }
   ]
 }
