@@ -10,16 +10,19 @@ app.use('/admin', express.static(path.join(__dirname, 'admin')));
 
 // Serve root static files
 app.get('/style.css', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.setHeader('Content-Type', 'text/css; charset=UTF-8');
   res.sendFile(path.join(__dirname, 'style.css'));
 });
 
 app.get('/app.js', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.setHeader('Content-Type', 'application/javascript; charset=UTF-8');
   res.sendFile(path.join(__dirname, 'app.js'));
 });
 
 app.get('/index.html', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.setHeader('Content-Type', 'text/html; charset=UTF-8');
   res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -28,6 +31,7 @@ app.use(express.static(__dirname));
 
 // Fallback for root /
 app.get('/', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 

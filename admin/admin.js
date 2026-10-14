@@ -355,15 +355,15 @@ function renderMenuItemsTable() {
     });
 }
 
-window.toggleMenuItemStatus = function(id, isChecked) {
+window.toggleMenuItemStatus = async function(id, isChecked) {
     const item = siteData.menu.items.find(i => i.id === id);
     if (item) {
         item.status = isChecked ? 'active' : 'inactive';
-        showToast(`Đã ${isChecked ? 'bật bán' : 'tạm dừng bán'} món "${item.name}"`);
+        await saveAllChanges(`Đã ${isChecked ? 'bật bán' : 'tạm dừng bán'} món "${item.name}" và đồng bộ ra trang chủ!`);
     }
 };
 
-window.moveMenuItem = function(index, direction) {
+window.moveMenuItem = async function(index, direction) {
     const items = siteData.menu.items;
     const targetIndex = index + direction;
     if (targetIndex < 0 || targetIndex >= items.length) return;
@@ -373,10 +373,10 @@ window.moveMenuItem = function(index, direction) {
     items[targetIndex] = temp;
 
     renderMenuItemsTable();
-    showToast('Đã thay đổi thứ tự món bánh!');
+    await saveAllChanges('Đã thay đổi thứ tự món bánh và đồng bộ ra trang chủ!');
 };
 
-window.deleteMenuItem = function(id) {
+window.deleteMenuItem = async function(id) {
     const item = siteData.menu.items.find(i => i.id === id);
     if (!item) return;
 
@@ -384,7 +384,7 @@ window.deleteMenuItem = function(id) {
         siteData.menu.items = siteData.menu.items.filter(i => i.id !== id);
         renderMenuItemsTable();
         updateDashboardStats();
-        showToast(`Đã xóa món "${item.name}"!`);
+        await saveAllChanges(`Đã xóa món "${item.name}" và đồng bộ ra trang chủ!`);
     }
 };
 
@@ -442,7 +442,7 @@ window.openEditMenuModal = function(id) {
     openModal('menuModal');
 };
 
-document.getElementById('btnSaveMenuItem').addEventListener('click', () => {
+document.getElementById('btnSaveMenuItem').addEventListener('click', async () => {
     const name = document.getElementById('modalMenuName').value.trim();
     const price = parseInt(document.getElementById('modalMenuPrice').value, 10);
     const tag = document.getElementById('modalMenuTag').value;
@@ -464,6 +464,7 @@ document.getElementById('btnSaveMenuItem').addEventListener('click', () => {
         return;
     }
 
+    let actionMsg = '';
     if (currentEditingMenuItemId) {
         // Edit existing
         const item = siteData.menu.items.find(i => i.id === currentEditingMenuItemId);
@@ -476,7 +477,7 @@ document.getElementById('btnSaveMenuItem').addEventListener('click', () => {
             item.description = description;
             item.orderLink = orderLink;
             item.image = imageSrc;
-            showToast(`Đã cập nhật món "${name}"!`);
+            actionMsg = `🎉 Đã cập nhật món "${name}" và đồng bộ ra trang chủ!`;
         }
     } else {
         // Add new
@@ -493,12 +494,15 @@ document.getElementById('btnSaveMenuItem').addEventListener('click', () => {
             status: 'active'
         };
         siteData.menu.items.push(newItem);
-        showToast(`Đã thêm món mới "${name}"!`);
+        actionMsg = `🎉 Đã thêm món mới "${name}" và đồng bộ ra trang chủ!`;
     }
 
     closeModal('menuModal');
     renderMenuItemsTable();
     updateDashboardStats();
+
+    // Tự động lưu ngay lập tức lên server và cập nhật file dữ liệu
+    await saveAllChanges(actionMsg);
 });
 
 // Setup image upload for Menu Modal
@@ -543,12 +547,12 @@ window.updateGalleryOverlay = function(id, newOverlay) {
     }
 };
 
-window.deleteGalleryItem = function(id) {
+window.deleteGalleryItem = async function(id) {
     if (confirm('Bạn có chắc muốn xóa ảnh này khỏi thư viện?')) {
         siteData.gallery.items = siteData.gallery.items.filter(i => i.id !== id);
         renderGalleryGrid();
         updateDashboardStats();
-        showToast('Đã xóa ảnh thành công!');
+        await saveAllChanges('Đã xóa ảnh thư viện và đồng bộ ra trang chủ!');
     }
 };
 
@@ -558,7 +562,7 @@ document.getElementById('btnOpenAddGalleryModal').addEventListener('click', () =
     openModal('galleryModal');
 });
 
-document.getElementById('btnSaveGalleryItem').addEventListener('click', () => {
+document.getElementById('btnSaveGalleryItem').addEventListener('click', async () => {
     const caption = document.getElementById('modalGalleryCaption').value.trim();
     let imageSrc = document.getElementById('modalGalleryImgPreview').getAttribute('src');
     if (imageSrc.startsWith('../')) imageSrc = imageSrc.substring(3);
@@ -575,7 +579,7 @@ document.getElementById('btnSaveGalleryItem').addEventListener('click', () => {
     closeModal('galleryModal');
     renderGalleryGrid();
     updateDashboardStats();
-    showToast('Đã thêm ảnh mới vào thư viện!');
+    await saveAllChanges('Đã thêm ảnh mới vào thư viện và đồng bộ ra trang chủ!');
 });
 
 setupImageUpload('modalGalleryImgInput', 'modalGalleryImgPreview');
@@ -605,24 +609,26 @@ function renderAboutFeatures() {
     });
 }
 
-window.updateAboutFeature = function(index, value) {
+window.updateAboutFeature = async function(index, value) {
     if (siteData.about.features && siteData.about.features[index] !== undefined) {
         siteData.about.features[index] = value;
+        await saveAllChanges('Đã lưu cam kết và đồng bộ ra trang chủ!');
     }
 };
 
-window.deleteAboutFeature = function(index) {
+window.deleteAboutFeature = async function(index) {
     if (siteData.about.features) {
         siteData.about.features.splice(index, 1);
         renderAboutFeatures();
-        showToast('Đã xóa cam kết!');
+        await saveAllChanges('Đã xóa cam kết và đồng bộ ra trang chủ!');
     }
 };
 
-document.getElementById('btnAddFeatureBtn').addEventListener('click', () => {
+document.getElementById('btnAddFeatureBtn').addEventListener('click', async () => {
     if (!siteData.about.features) siteData.about.features = [];
     siteData.about.features.push('Cam kết chất lượng mới');
     renderAboutFeatures();
+    await saveAllChanges('Đã thêm cam kết mới và đồng bộ ra trang chủ!');
 });
 
 // Setup other image uploaders
@@ -733,62 +739,83 @@ document.getElementById('btnRefreshOrders').addEventListener('click', () => {
 });
 
 // ---------------- SAVE ALL CHANGES ----------------
-async function saveAllChanges() {
+async function saveAllChanges(customMessage = '') {
     if (!siteData) return;
     const btn = document.getElementById('btnSaveAll');
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+    }
+
+    const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value.trim() : null;
+    const getChecked = (id) => document.getElementById(id) ? document.getElementById(id).checked : null;
 
     // Collect General Settings
-    siteData.general.brandName = document.getElementById('setBrandName').value.trim();
-    siteData.general.siteTitle = document.getElementById('setSiteTitle').value.trim();
-    siteData.general.brandTagline = document.getElementById('setBrandTagline').value.trim();
-    siteData.general.address = document.getElementById('setAddress').value.trim();
-    siteData.general.hotline = document.getElementById('setHotline').value.trim();
-    siteData.general.email = document.getElementById('setEmail').value.trim();
-    siteData.general.orderButtonLink = document.getElementById('setHeaderOrderLink').value.trim();
-    siteData.general.copyright = document.getElementById('setCopyright').value.trim();
-    siteData.general.openingHours.weekdays = document.getElementById('setWeekdaysHours').value.trim();
-    siteData.general.openingHours.weekends = document.getElementById('setWeekendsHours').value.trim();
-    siteData.general.socialLinks.facebook = document.getElementById('setFbUrl').value.trim();
-    siteData.general.socialLinks.instagram = document.getElementById('setInstaUrl').value.trim();
-    siteData.general.socialLinks.tiktok = document.getElementById('setTiktokUrl').value.trim();
+    if (siteData.general) {
+        const bn = getVal('setBrandName'); if (bn !== null) siteData.general.brandName = bn;
+        const st = getVal('setSiteTitle'); if (st !== null) siteData.general.siteTitle = st;
+        const bt = getVal('setBrandTagline'); if (bt !== null) siteData.general.brandTagline = bt;
+        const ad = getVal('setAddress'); if (ad !== null) siteData.general.address = ad;
+        const hl = getVal('setHotline'); if (hl !== null) siteData.general.hotline = hl;
+        const em = getVal('setEmail'); if (em !== null) siteData.general.email = em;
+        const ol = getVal('setHeaderOrderLink'); if (ol !== null) siteData.general.orderButtonLink = ol;
+        const cr = getVal('setCopyright'); if (cr !== null) siteData.general.copyright = cr;
+        if (!siteData.general.openingHours) siteData.general.openingHours = {};
+        const wd = getVal('setWeekdaysHours'); if (wd !== null) siteData.general.openingHours.weekdays = wd;
+        const we = getVal('setWeekendsHours'); if (we !== null) siteData.general.openingHours.weekends = we;
+        if (!siteData.general.socialLinks) siteData.general.socialLinks = {};
+        const fb = getVal('setFbUrl'); if (fb !== null) siteData.general.socialLinks.facebook = fb;
+        const ig = getVal('setInstaUrl'); if (ig !== null) siteData.general.socialLinks.instagram = ig;
+        const tt = getVal('setTiktokUrl'); if (tt !== null) siteData.general.socialLinks.tiktok = tt;
+    }
 
     // Collect Hero
-    siteData.hero.titlePart1 = document.getElementById('heroTitlePart1').value.trim();
-    siteData.hero.titleHighlight = document.getElementById('heroTitleHighlight').value.trim();
-    siteData.hero.description = document.getElementById('heroDesc').value.trim();
-    siteData.hero.badgeText = document.getElementById('heroBadgeText').value.trim();
-    siteData.hero.btnPrimaryText = document.getElementById('heroBtn1Text').value.trim();
-    siteData.hero.btnPrimaryLink = document.getElementById('heroBtn1Link').value.trim();
-    siteData.hero.btnOutlineText = document.getElementById('heroBtn2Text').value.trim();
-    siteData.hero.btnOutlineLink = document.getElementById('heroBtn2Link').value.trim();
+    if (siteData.hero) {
+        const tp1 = getVal('heroTitlePart1'); if (tp1 !== null) siteData.hero.titlePart1 = tp1;
+        const thl = getVal('heroTitleHighlight'); if (thl !== null) siteData.hero.titleHighlight = thl;
+        const hd = getVal('heroDesc'); if (hd !== null) siteData.hero.description = hd;
+        const hbt = getVal('heroBadgeText'); if (hbt !== null) siteData.hero.badgeText = hbt;
+        const bp1t = getVal('heroBtn1Text'); if (bp1t !== null) siteData.hero.btnPrimaryText = bp1t;
+        const bp1l = getVal('heroBtn1Link'); if (bp1l !== null) siteData.hero.btnPrimaryLink = bp1l;
+        const bot = getVal('heroBtn2Text'); if (bot !== null) siteData.hero.btnOutlineText = bot;
+        const bol = getVal('heroBtn2Link'); if (bol !== null) siteData.hero.btnOutlineLink = bol;
+    }
 
     // Brand Strip
-    siteData.brandStrip.enabled = document.getElementById('brandStripEnabled').checked;
+    if (siteData.brandStrip) {
+        const bse = getChecked('brandStripEnabled'); if (bse !== null) siteData.brandStrip.enabled = bse;
+    }
 
     // Menu Titles
-    siteData.menu.sectionTitlePart1 = document.getElementById('menuTitlePart1').value.trim();
-    siteData.menu.sectionTitleHighlight = document.getElementById('menuTitleHighlight').value.trim();
-    siteData.menu.sectionDescription = document.getElementById('menuSectionDesc').value.trim();
+    if (siteData.menu) {
+        const mt1 = getVal('menuTitlePart1'); if (mt1 !== null) siteData.menu.sectionTitlePart1 = mt1;
+        const mth = getVal('menuTitleHighlight'); if (mth !== null) siteData.menu.sectionTitleHighlight = mth;
+        const msd = getVal('menuSectionDesc'); if (msd !== null) siteData.menu.sectionDescription = msd;
+    }
 
     // Promo Banner
-    siteData.promoBanner.enabled = document.getElementById('promoEnabled').checked;
-    siteData.promoBanner.title = document.getElementById('promoTitle').value.trim();
-    siteData.promoBanner.description = document.getElementById('promoDesc').value.trim();
-    siteData.promoBanner.btnText = document.getElementById('promoBtnText').value.trim();
-    siteData.promoBanner.btnLink = document.getElementById('promoBtnLink').value.trim();
+    if (siteData.promoBanner) {
+        const pe = getChecked('promoEnabled'); if (pe !== null) siteData.promoBanner.enabled = pe;
+        const pt = getVal('promoTitle'); if (pt !== null) siteData.promoBanner.title = pt;
+        const pd = getVal('promoDesc'); if (pd !== null) siteData.promoBanner.description = pd;
+        const pbt = getVal('promoBtnText'); if (pbt !== null) siteData.promoBanner.btnText = pbt;
+        const pbl = getVal('promoBtnLink'); if (pbl !== null) siteData.promoBanner.btnLink = pbl;
+    }
 
     // Gallery Titles
-    siteData.gallery.sectionTitlePart1 = document.getElementById('galleryTitlePart1').value.trim();
-    siteData.gallery.sectionTitleHighlight = document.getElementById('galleryTitleHighlight').value.trim();
-    siteData.gallery.sectionDescription = document.getElementById('gallerySectionDesc').value.trim();
+    if (siteData.gallery) {
+        const gt1 = getVal('galleryTitlePart1'); if (gt1 !== null) siteData.gallery.sectionTitlePart1 = gt1;
+        const gth = getVal('galleryTitleHighlight'); if (gth !== null) siteData.gallery.sectionTitleHighlight = gth;
+        const gsd = getVal('gallerySectionDesc'); if (gsd !== null) siteData.gallery.sectionDescription = gsd;
+    }
 
     // About Us
-    siteData.about.sectionTitlePart1 = document.getElementById('aboutTitlePart1').value.trim();
-    siteData.about.sectionTitleHighlight = document.getElementById('aboutTitleHighlight').value.trim();
-    siteData.about.paragraph1 = document.getElementById('aboutP1').value.trim();
-    siteData.about.paragraph2 = document.getElementById('aboutP2').value.trim();
+    if (siteData.about) {
+        const at1 = getVal('aboutTitlePart1'); if (at1 !== null) siteData.about.sectionTitlePart1 = at1;
+        const ath = getVal('aboutTitleHighlight'); if (ath !== null) siteData.about.sectionTitleHighlight = ath;
+        const ap1 = getVal('aboutP1'); if (ap1 !== null) siteData.about.paragraph1 = ap1;
+        const ap2 = getVal('aboutP2'); if (ap2 !== null) siteData.about.paragraph2 = ap2;
+    }
 
     // Send to Server
     try {
@@ -799,17 +826,19 @@ async function saveAllChanges() {
         });
         const data = await res.json();
         if (res.ok && data.success) {
-            showToast('🎉 Đã lưu toàn bộ thay đổi thành công! Trang chủ đã được cập nhật.');
+            showToast(customMessage || '🎉 Đã lưu toàn bộ thay đổi thành công! Trang chủ đã được cập nhật.');
         } else {
             throw new Error(data.error || 'Lỗi ghi tệp dữ liệu');
         }
     } catch (err) {
         console.warn('Save API failed, saving to localStorage as fallback:', err);
         localStorage.setItem('kitten_site_data', JSON.stringify(siteData));
-        showToast('Đã lưu dữ liệu vào bộ nhớ máy tính!');
+        showToast('Đã lưu dữ liệu tạm vào bộ nhớ máy!');
     } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-save"></i> <span>Lưu tất cả thay đổi</span>';
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-save"></i> <span>Lưu tất cả thay đổi</span>';
+        }
         updateDashboardStats();
     }
 }

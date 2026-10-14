@@ -13,7 +13,7 @@ async function initSite() {
     let content = null;
 
     try {
-        const res = await fetch('/api/content');
+        const res = await fetch('/api/content?_t=' + Date.now(), { cache: 'no-store' });
         if (res.ok) {
             const json = await res.json();
             content = json.data;
@@ -24,7 +24,7 @@ async function initSite() {
 
     if (!content) {
         try {
-            const resLocal = await fetch('data/content.json');
+            const resLocal = await fetch('data/content.json?_t=' + Date.now(), { cache: 'no-store' });
             if (resLocal.ok) {
                 content = await resLocal.json();
             }

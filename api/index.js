@@ -89,6 +89,9 @@ function saveContent(data) {
 
 // GET /api/content
 app.get('/api/content', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   const data = readContent();
   if (!data) {
     return res.status(500).json({ error: 'Không thể đọc dữ liệu nội dung.' });
