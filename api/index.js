@@ -277,6 +277,8 @@ app.post('/api/orders', (req, res) => {
     subtotal,
     shippingFee,
     discount,
+    comboDiscount,
+    comboFreeDescription,
     total,
     voucherCode
   } = req.body;
@@ -305,6 +307,8 @@ app.post('/api/orders', (req, res) => {
     subtotal: calculatedSubtotal,
     shippingFee: calculatedShipping,
     discount: calculatedDiscount,
+    comboDiscount: Number(comboDiscount) || 0,
+    comboFreeDescription: comboFreeDescription || '',
     total: calculatedTotal,
     voucherCode: voucherCode || '',
     status: 'pending',
@@ -350,6 +354,15 @@ app.delete('/api/orders/:id', (req, res) => {
   data.orders = data.orders.filter(o => o.id !== id);
   saveContent(data);
   res.json({ success: true, message: 'Đã xóa đơn hàng.' });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && (err.status === 400 || err.statusCode === 400) && 'body' in err) {
+    return res.status(400).json({ success: false, error: 'Dữ liệu JSON không hợp lệ.' });
+  }
+  console.error('API Error:', err);
+  res.status(500).json({ success: false, error: 'Đã xảy ra lỗi máy chủ nội bộ.' });
 });
 
 module.exports = app;

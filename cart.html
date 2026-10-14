@@ -198,13 +198,16 @@
                                 <span>Phí giao hàng:</span>
                                 <strong id="summaryShipping">15.000đ</strong>
                             </div>
-                            <div class="summary-line discount-line" id="summaryDiscountRow" style="display:none;">
-                                <span>Giảm giá voucher:</span>
-                                <strong id="summaryDiscount">-0đ</strong>
+                            <div class="summary-line combo-discount-line" id="summaryComboRow" style="display:none; color:#2ed573;">
+                                <span><i class="fas fa-gift"></i> Mua 5 Tặng 1 (Free bánh rẻ nhất):</span>
+                                <strong id="summaryComboDiscount">-0đ</strong>
                             </div>
-                            <div class="summary-line bonus-line" id="summaryBonusRow" style="display:none;">
-                                <span>Quà tặng combo:</span>
-                                <strong id="summaryBonus">Tặng 1 Donut (0đ)</strong>
+                            <div id="summaryComboDetail" style="display:none; font-size:0.8rem; color:#2ed573; margin-top:-6px; margin-bottom:8px; padding-left:18px;">
+                                <!-- Chi tiết chiếc bánh được miễn phí -->
+                            </div>
+                            <div class="summary-line discount-line" id="summaryDiscountRow" style="display:none;">
+                                <span><i class="fas fa-tag"></i> Giảm giá voucher:</span>
+                                <strong id="summaryDiscount">-0đ</strong>
                             </div>
 
                             <hr class="summary-divider">
@@ -402,27 +405,41 @@
 
             totalBadge.textContent = window.KittenCart.getTotalCount();
 
-            // Check combo 5 tặng 1
-            const donutCount = window.KittenCart.getDonutCount();
-            if (donutCount >= 5) {
-                const bonusDonut = Math.floor(donutCount / 5);
-                comboAlert.innerHTML = `🎉 <b>CHÚC MỪNG:</b> Bạn đặt ${donutCount} chiếc Donut, được <b>TẶNG ${bonusDonut} CHIẾC DONUT</b> miễn phí đóng hộp quà xinh xắn!`;
+            // Check combo Mua 5 tặng 1 (Bỏ 6 bánh tặng miễn phí bánh rẻ nhất)
+            const promo = window.KittenCart.getPromoBuy5Get1();
+            if (promo.eligible) {
+                const freeNames = promo.freeItems.map(f => `${f.name}${f.flavor ? ` (${f.flavor})` : ''}`).join(', ');
+                comboAlert.innerHTML = `🎉 <b>CHÚC MỪNG:</b> Bạn có <b>${promo.totalCakes} chiếc bánh</b> trong giỏ hàng! Đã áp dụng ưu đãi <b>MUA 5 TẶNG 1</b>: <b>TẶNG MIỄN PHÍ ${promo.freeCount} BÁNH</b> có giá thấp nhất (<span style="text-decoration:underline;">${freeNames}</span> - Giảm ngay <b>${window.formatVNCurrency(promo.discountAmount)}</b>)!`;
                 comboAlert.className = 'cart-promo-banner success';
                 comboAlert.style.display = 'block';
-            } else if (donutCount > 0) {
-                const needed = 5 - donutCount;
-                comboAlert.innerHTML = `🍩 Mua thêm <b>${needed}</b> chiếc Donut để nhận ngay <b>1 Donut tặng kèm</b> miễn phí!`;
+            } else if (promo.totalCakes > 0) {
+                comboAlert.innerHTML = `🍩 Chọn thêm <b>${promo.neededForNext} chiếc bánh nữa</b> (đủ 6 bánh) để nhận ngay <b>1 BÁNH MIỄN PHÍ</b> (tặng chiếc có giá thấp nhất)!`;
                 comboAlert.className = 'cart-promo-banner info';
                 comboAlert.style.display = 'block';
             } else {
                 comboAlert.style.display = 'none';
             }
 
+            // Đếm số lượng bánh được tặng free cho từng dòng sản phẩm
+            const freeCountsPerIndex = {};
+            promo.freeItems.forEach(f => {
+                freeCountsPerIndex[f.itemIndex] = (freeCountsPerIndex[f.itemIndex] || 0) + 1;
+            });
+
             // Render bảng
             tbody.innerHTML = '';
             items.forEach((item, index) => {
                 const tr = document.createElement('tr');
                 const lineTotal = Number(item.price) * Number(item.quantity);
+
+                const toppingsHtml = (item.toppings && item.toppings.length > 0)
+                    ? `<div class="prod-toppings" style="font-size:0.8rem; color:#747d8c; margin-top:3px;"><i class="fas fa-sparkles" style="color:#ffa502;"></i> Topping: <strong style="color:#2f3542;">${item.toppings.join(', ')}</strong> <span style="color:#ff6b81; font-weight:700;">(+${window.formatVNCurrency(item.toppings.length * 3000)})</span></div>`
+                    : '';
+
+                const freeInRow = freeCountsPerIndex[index] || 0;
+                const freeBadgeHtml = freeInRow > 0
+                    ? `<div class="prod-free-tag" style="display:inline-flex; align-items:center; gap:5px; font-size:0.75rem; font-weight:700; color:#2ed573; background:#e8f8f0; padding:2px 8px; border-radius:8px; margin-top:4px;"><i class="fas fa-gift"></i> Tặng Free ${freeInRow} chiếc (0đ)</div>`
+                    : '';
 
                 tr.innerHTML = `
                     <td>
@@ -431,6 +448,8 @@
                             <div>
                                 <h4 class="prod-name">${item.name}</h4>
                                 <span class="prod-flavor"><i class="fas fa-cookie"></i> ${item.flavor}</span>
+                                ${toppingsHtml}
+                                ${freeBadgeHtml}
                             </div>
                         </div>
                     </td>
@@ -457,10 +476,11 @@
             const subtotal = window.KittenCart.getSubtotal();
             const subtotalEl = document.getElementById('summarySubtotal');
             const shippingEl = document.getElementById('summaryShipping');
+            const comboRow = document.getElementById('summaryComboRow');
+            const comboEl = document.getElementById('summaryComboDiscount');
+            const comboDetail = document.getElementById('summaryComboDetail');
             const discountRow = document.getElementById('summaryDiscountRow');
             const discountEl = document.getElementById('summaryDiscount');
-            const bonusRow = document.getElementById('summaryBonusRow');
-            const bonusEl = document.getElementById('summaryBonus');
             const totalEl = document.getElementById('summaryTotal');
 
             if (subtotalEl) subtotalEl.textContent = window.formatVNCurrency(subtotal);
@@ -479,32 +499,37 @@
                 if (shippingEl) shippingEl.textContent = window.formatVNCurrency(shippingFee);
             }
 
+            // Combo Mua 5 Tặng 1 (khi giỏ hàng >= 6 chiếc bánh, tặng miễn phí chiếc có giá thấp nhất)
+            const promo = window.KittenCart.getPromoBuy5Get1();
+            const comboDiscount = promo.discountAmount;
+
+            if (comboDiscount > 0) {
+                if (comboRow) comboRow.style.display = 'flex';
+                if (comboEl) comboEl.textContent = `-${window.formatVNCurrency(comboDiscount)}`;
+                if (comboDetail) {
+                    comboDetail.style.display = 'block';
+                    const freeNames = promo.freeItems.map(f => `${f.name}${f.flavor ? ` (${f.flavor})` : ''}`).join(', ');
+                    comboDetail.innerHTML = `(Miễn phí ${promo.freeCount} bánh: <b>${freeNames}</b>)`;
+                }
+            } else {
+                if (comboRow) comboRow.style.display = 'none';
+                if (comboDetail) comboDetail.style.display = 'none';
+            }
+
             // Voucher giảm giá
-            let discount = 0;
+            let voucherDiscount = 0;
             if (appliedVoucher) {
-                discount = appliedVoucher.discountAmount || 0;
+                voucherDiscount = appliedVoucher.discountAmount || 0;
                 if (discountRow) {
                     discountRow.style.display = 'flex';
-                    discountEl.textContent = `-${window.formatVNCurrency(discount)}`;
+                    discountEl.textContent = `-${window.formatVNCurrency(voucherDiscount)}`;
                 }
             } else {
                 if (discountRow) discountRow.style.display = 'none';
             }
 
-            // Combo bonus
-            const donutCount = window.KittenCart.getDonutCount();
-            if (donutCount >= 5) {
-                const bonusCount = Math.floor(donutCount / 5);
-                if (bonusRow) {
-                    bonusRow.style.display = 'flex';
-                    bonusEl.textContent = `Tặng ${bonusCount} Donut (0đ)`;
-                }
-            } else {
-                if (bonusRow) bonusRow.style.display = 'none';
-            }
-
-            // Tổng cuối
-            const total = Math.max(0, subtotal + shippingFee - discount);
+            // Tổng cuối: Tiền hàng - Giảm giá combo + Phí ship - Giảm giá voucher
+            const total = Math.max(0, subtotal - comboDiscount + shippingFee - voucherDiscount);
             if (totalEl) totalEl.textContent = window.formatVNCurrency(total);
 
             // Cập nhật mã VietQR nếu đang chọn Banking
@@ -668,8 +693,18 @@
                     const subtotal = window.KittenCart.getSubtotal();
                     let shippingFee = areaSelect ? parseInt(areaSelect.options[areaSelect.selectedIndex].getAttribute('data-fee'), 10) : 15000;
                     if (subtotal >= 120000 && shippingFee > 0) shippingFee = 0;
-                    const discount = appliedVoucher ? (appliedVoucher.discountAmount || 0) : 0;
-                    const total = Math.max(0, subtotal + shippingFee - discount);
+
+                    const promo = window.KittenCart.getPromoBuy5Get1();
+                    const comboDiscount = promo.discountAmount || 0;
+                    const voucherDiscount = appliedVoucher ? (appliedVoucher.discountAmount || 0) : 0;
+                    const totalDiscount = comboDiscount + voucherDiscount;
+                    const total = Math.max(0, subtotal - comboDiscount + shippingFee - voucherDiscount);
+
+                    let comboFreeDesc = '';
+                    if (promo.eligible) {
+                        const freeNames = promo.freeItems.map(f => `${f.name}${f.flavor ? ` (${f.flavor})` : ''}`).join(', ');
+                        comboFreeDesc = `Free ${promo.freeCount} bánh thấp nhất: ${freeNames}`;
+                    }
 
                     btnPlaceOrder.disabled = true;
                     btnPlaceOrder.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi đơn đặt bánh...';
@@ -689,7 +724,9 @@
                                 items,
                                 subtotal,
                                 shippingFee,
-                                discount,
+                                discount: totalDiscount,
+                                comboDiscount,
+                                comboFreeDescription: comboFreeDesc,
                                 total,
                                 voucherCode: appliedVoucher?.code || ''
                             })

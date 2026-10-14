@@ -4,7 +4,7 @@
     "brandName": "Kitten Cake",
     "logo": "tai-nguyen/logo.jpg",
     "brandTagline": "Tiệm bánh ngọt nhỏ xinh tại Quận 7 - Nơi gửi gắm yêu thương qua từng vị ngọt.",
-    "hotline": "09xx xxx xxx",
+    "hotline": "0898575717",
     "address": "Quận 7, TP. Hồ Chí Minh",
     "email": "hello@kittencake.vn",
     "orderButtonText": "Đặt bánh ngay",
@@ -66,34 +66,44 @@
     "items": [
       {
         "id": "menu_1",
-        "name": "Donut Xốp Mềm Signature",
+        "name": "Donut Xốp Mềm",
         "tag": "🍩 Món Signature",
         "price": 10000,
         "isFeatured": true,
         "badge": "Best Seller • Món Chính",
-        "description": "Món bánh chủ đạo nướng tươi mỗi ngày, ruột mềm xốp phủ socola Bỉ, cốm cầu vồng, dâu tây hoặc matcha ngọt dịu.",
-        "image": "tai-nguyen/donut-signature.jpg",
+        "description": "Món bánh chủ đạo nướng tươi mỗi ngày, ruột mềm xốp với 4 phân loại vị trứ danh: Chocolate Trắng, Matcha, Dâu, Chocolate cùng các loại topping thơm giòn tự chọn (+3k/loại).",
+        "image": "tai-nguyen/donut-choco.jpg",
         "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
         "status": "active",
         "inStock": true,
         "flavors": [
-          "Chocolate Trắng",
-          "Matcha",
-          "Dâu",
-          "Chocolate"
+          {
+            "name": "Chocolate Trắng",
+            "image": "tai-nguyen/donut-vani.jpg",
+            "desc": "Lớp kem chocolate trắng mịn màng, ngọt thanh dịu"
+          },
+          {
+            "name": "Matcha",
+            "image": "tai-nguyen/donut-matcha.jpg",
+            "desc": "Sốt trà xanh matcha Uji thơm mát kết hợp lát hạnh nhân giòn"
+          },
+          {
+            "name": "Dâu",
+            "image": "tai-nguyen/donut-dau.jpg",
+            "desc": "Men dâu tây hồng pastel chua ngọt dịu dàng, kèm dâu tây sấy rắc mặt"
+          },
+          {
+            "name": "Chocolate",
+            "image": "tai-nguyen/donut-choco.jpg",
+            "desc": "Phủ sốt chocolate Bỉ đậm đà, đường vân choco và vụn socola giòn"
+          }
         ],
         "gallery": [
-          "tai-nguyen/donut-signature.jpg",
-          "tai-nguyen/donut-collection.jpg",
-          "tai-nguyen/donut-varieties.jpg",
-          "tai-nguyen/donut-box.jpg"
-        ],
-        "details": {
-          "ingredients": "Bột mì Nhật cao cấp, Bơ lạt New Zealand, Men tự nhiên, Trứng gà tươi, Socola Bỉ nguyên chất",
-          "shelfLife": "Ngon nhất trong ngày, bảo quản mát 2-3 ngày",
-          "sweetLevel": "Ngọt thanh dịu (3/5)",
-          "serving": "1 chiếc (65g)"
-        }
+          "tai-nguyen/donut-choco.jpg",
+          "tai-nguyen/donut-vani.jpg",
+          "tai-nguyen/donut-matcha.jpg",
+          "tai-nguyen/donut-dau.jpg"
+        ]
       },
       {
         "id": "menu_2",
@@ -101,26 +111,11 @@
         "tag": "🥧 Bánh Nướng Nóng",
         "price": 18000,
         "isFeatured": false,
-        "badge": "Bánh Nóng Giòn",
+        "badge": "",
         "description": "Lớp vỏ ngàn lớp giòn rụm kết hợp cùng nhân trứng sữa nướng thơm lừng, béo ngậy chuẩn vị Hồng Kông.",
         "image": "tai-nguyen/tart-trung.jpg",
         "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
-        "status": "active",
-        "inStock": true,
-        "flavors": [
-          "Truyền Thống Béo Ngậy",
-          "Nhân Phô Mai Chảy"
-        ],
-        "gallery": [
-          "tai-nguyen/tart-trung.jpg",
-          "tai-nguyen/donut-varieties.jpg"
-        ],
-        "details": {
-          "ingredients": "Vỏ bánh ngàn lớp bơ Pháp, Trứng gà ta, Sữa tươi tiệt trùng, Kem whipping cream",
-          "shelfLife": "Nên ăn ngay khi còn ấm nóng, hoặc hâm nóng bằng nồi chiên không dầu 3 phút",
-          "sweetLevel": "Béo ngậy thơm lừng (3.5/5)",
-          "serving": "1 chiếc (60g)"
-        }
+        "status": "active"
       },
       {
         "id": "menu_3",
@@ -128,26 +123,11 @@
         "tag": "🍰 Bánh Lạnh Hũ",
         "price": 35000,
         "isFeatured": false,
-        "badge": "Tiện Lợi Mang Đi",
+        "badge": "",
         "description": "Sự kết hợp hoàn hảo giữa phô mai kem béo ngậy và vụn bánh Oreo giòn rụm đóng hũ mang đi cực tiện lợi.",
         "image": "tai-nguyen/oreo-cheesecake.jpg",
         "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
-        "status": "active",
-        "inStock": true,
-        "flavors": [
-          "Oreo Truyền Thống",
-          "Oreo Dâu Tây Mát Lạnh"
-        ],
-        "gallery": [
-          "tai-nguyen/oreo-cheesecake.jpg",
-          "tai-nguyen/donut-box.jpg"
-        ],
-        "details": {
-          "ingredients": "Creamcheese Anchor, Vụn bánh quy Oreo Mỹ, Kem tươi whipping, Đường mía tinh luyện",
-          "shelfLife": "Bảo quản ngăn mát tủ lạnh 3-5 ngày",
-          "sweetLevel": "Béo ngậy giòn tan (3/5)",
-          "serving": "1 hũ (150ml)"
-        }
+        "status": "active"
       },
       {
         "id": "menu_4",
@@ -155,27 +135,11 @@
         "tag": "🍮 Tráng Miệng Ý",
         "price": 25000,
         "isFeatured": false,
-        "badge": "Thanh Mát Giải Nhiệt",
+        "badge": "",
         "description": "Món tráng miệng thanh mát từ Ý, mềm mịn tan ngay trong miệng hòa quyện cùng sốt quả mọng chua ngọt.",
         "image": "tai-nguyen/panna-cotta.jpg",
         "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
-        "status": "active",
-        "inStock": true,
-        "flavors": [
-          "Sốt Dâu Tây Tươi",
-          "Sốt Việt Quất Rừng",
-          "Sốt Xoài Chanh Dây"
-        ],
-        "gallery": [
-          "tai-nguyen/panna-cotta.jpg",
-          "tai-nguyen/about-poster.jpg"
-        ],
-        "details": {
-          "ingredients": "Kem sữa tươi cao cấp, Gelatin Pháp, Sốt trái cây tươi nấu chậm",
-          "shelfLife": "Bảo quản ngăn mát 2-3 ngày, dùng lạnh",
-          "sweetLevel": "Chua ngọt thanh tao (2.5/5)",
-          "serving": "1 hũ (120ml)"
-        }
+        "status": "active"
       }
     ]
   },
@@ -192,11 +156,6 @@
     "sectionTitleHighlight": "Ngọt Ngào",
     "sectionDescription": "Những mẻ bánh mới ra lò mỗi ngày tại gian bếp Kitten Cake Quận 7.",
     "items": [
-      {
-        "id": "gal_1",
-        "image": "tai-nguyen/donut-varieties.jpg",
-        "overlay": "Khay Donut tình yêu đủ vị"
-      },
       {
         "id": "gal_2",
         "image": "tai-nguyen/donut-box.jpg",
@@ -232,6 +191,42 @@
     "password": "123"
   },
   "orders": [
+    {
+      "id": "ord_1791967047743",
+      "customerName": "Khách Test Mua 5 Tặng 1",
+      "phone": "0912345678",
+      "address": "456 Huỳnh Tấn Phát",
+      "district": "Quận 7",
+      "note": "Kiểm tra giảm giá bánh rẻ nhất",
+      "paymentMethod": "cod",
+      "items": [
+        {
+          "id": "menu_1",
+          "name": "Donut Xốp Mềm",
+          "price": 13000,
+          "flavor": "Vị Choco",
+          "toppings": [
+            "Hạt cốm"
+          ],
+          "quantity": 5
+        },
+        {
+          "id": "menu_1",
+          "name": "Donut Xốp Mềm",
+          "price": 10000,
+          "flavor": "Vị Vani",
+          "toppings": [],
+          "quantity": 1
+        }
+      ],
+      "subtotal": 75000,
+      "shippingFee": 15000,
+      "discount": 10000,
+      "total": 80000,
+      "voucherCode": "",
+      "status": "pending",
+      "createdAt": "2026-10-14T08:37:27.743Z"
+    },
     {
       "id": "ord_1791962406557",
       "customerName": "Hoàng Minh",

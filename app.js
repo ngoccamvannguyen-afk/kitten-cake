@@ -479,17 +479,26 @@ function setupQuickCartListener() {
             const item = items.find(i => i.id === itemId);
 
             if (item) {
-                const firstFlavor = (item.flavors && item.flavors.length > 0)
-                    ? item.flavors[0]
-                    : 'Vị Chuẩn Signature';
+                let flavorName = 'Vị Chuẩn Signature';
+                let itemImage = item.image || 'tai-nguyen/donut-choco.jpg';
+                if (item.flavors && item.flavors.length > 0) {
+                    const f0 = item.flavors[0];
+                    if (typeof f0 === 'string') {
+                        flavorName = f0;
+                    } else if (f0 && f0.name) {
+                        flavorName = f0.name;
+                        if (f0.image) itemImage = f0.image;
+                    }
+                }
 
                 if (window.KittenCart) {
                     window.KittenCart.addItem({
                         id: item.id,
                         name: item.name,
                         price: item.price,
-                        flavor: firstFlavor,
-                        image: item.image,
+                        flavor: flavorName,
+                        toppings: [],
+                        image: itemImage,
                         quantity: 1
                     }, true);
                 }

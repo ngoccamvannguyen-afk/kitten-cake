@@ -61,6 +61,14 @@ app.get('/', (req, res) => {
 
 // Start server locally
 if (require.main === module) {
+  process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+  });
+
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  });
+
   app.listen(PORT, () => {
     console.log(`=======================================================`);
     console.log(`🍰 KITTEN CAKE CMS SERVER RUNNING!`);

@@ -1543,6 +1543,123 @@ body.cart-page {
     color: #fff;
 }
 
+/* Visual Flavor Selector with Thumbnails */
+.flavor-pill.visual-pill {
+    padding: 6px 16px 6px 6px;
+    border-radius: 28px;
+    gap: 10px;
+}
+.flavor-mini-thumb {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+}
+.flavor-pill:hover .flavor-mini-thumb {
+    transform: scale(1.08);
+}
+.flavor-pill.active .flavor-mini-thumb {
+    border-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Topping Selector & Badges */
+.topping-badge-tag {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: #fff0f3;
+    color: #ff4757;
+    border: 1px solid #ffd1d8;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+.topping-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.topping-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 22px;
+    border: 1.5px dashed #ffd1d8;
+    background: #fffafb;
+    font-family: var(--font-main);
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #57606f;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    user-select: none;
+}
+
+.topping-pill .topping-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #f1f2f6;
+    color: #a4b0be;
+    font-size: 0.7rem;
+    transition: all 0.2s ease;
+}
+
+.topping-pill .topping-name {
+    font-weight: 700;
+}
+
+.topping-pill .topping-price {
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 10px;
+    background: #ffe3e8;
+    color: #ff4757;
+    transition: all 0.2s ease;
+}
+
+.topping-pill:hover {
+    border-color: var(--accent-color);
+    border-style: solid;
+    background: #fff0f3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(255, 107, 129, 0.15);
+}
+
+.topping-pill.active {
+    background: linear-gradient(135deg, #ff758c, #ff4757);
+    color: #fff;
+    border-color: transparent;
+    border-style: solid;
+    box-shadow: 0 4px 14px rgba(255, 71, 87, 0.35);
+    transform: translateY(-2px);
+}
+
+.topping-pill.active .topping-check {
+    background: #fff;
+    color: #ff4757;
+}
+
+.topping-pill.active .topping-price {
+    background: rgba(255, 255, 255, 0.28);
+    color: #fff;
+}
+
 /* Quick Order Modal Flavors */
 .quick-order-flavors {
     display: grid;
@@ -2081,6 +2198,13 @@ body.cart-page {
     color: #2f3542;
 }
 .discount-line strong {
+    color: #2ed573 !important;
+}
+.combo-discount-line {
+    color: #2ed573;
+    font-weight: 700;
+}
+.combo-discount-line strong {
     color: #2ed573 !important;
 }
 .bonus-line strong {

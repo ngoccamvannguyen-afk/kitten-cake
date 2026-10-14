@@ -4,7 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 let currentProduct = null;
-let selectedFlavor = '';
+let selectedFlavor = 'Vị Choco';
+let selectedFlavorImage = 'tai-nguyen/donut-choco.jpg';
+let selectedToppings = [];
 let currentQuantity = 1;
 
 async function initProductPage() {
@@ -73,9 +75,6 @@ function renderProductDetails(product) {
         }
     }
 
-    const priceEl = document.getElementById('pdpPrice');
-    if (priceEl) priceEl.textContent = formatCurrency(product.price);
-
     const descEl = document.getElementById('pdpDesc');
     if (descEl) descEl.textContent = product.description;
 
@@ -107,7 +106,7 @@ function renderProductDetails(product) {
 
     const gallery = (product.gallery && product.gallery.length > 0)
         ? product.gallery
-        : [product.image || 'tai-nguyen/donut-signature.jpg'];
+        : [product.image || 'tai-nguyen/donut-choco.jpg'];
 
     if (mainImg) mainImg.src = gallery[0];
 
@@ -116,53 +115,143 @@ function renderProductDetails(product) {
         gallery.forEach((imgUrl, index) => {
             const thumb = document.createElement('div');
             thumb.className = `pdp-thumb-item ${index === 0 ? 'active' : ''}`;
+            thumb.setAttribute('data-img', imgUrl);
             thumb.innerHTML = `<img src="${imgUrl}" alt="${product.name} ${index + 1}">`;
             thumb.addEventListener('click', () => {
-                document.querySelectorAll('.pdp-thumb-item').forEach(t => t.classList.remove('active'));
-                thumb.classList.add('active');
-                if (mainImg) mainImg.src = imgUrl;
+                selectMainImage(imgUrl);
             });
             thumbsContainer.appendChild(thumb);
         });
     }
 
-    // 5. Flavors Selector
+    function selectMainImage(imgUrl) {
+        if (mainImg) mainImg.src = imgUrl;
+        document.querySelectorAll('.pdp-thumb-item').forEach(t => {
+            t.classList.toggle('active', t.getAttribute('data-img') === imgUrl);
+        });
+    }
+
+    // 5. Flavors Selector (Vị Choco, Vani, Matcha, Dâu)
     const flavorContainer = document.getElementById('flavorSelector');
     const flavorDisplay = document.getElementById('selectedFlavorName');
-    const defaultFlavors = ['Chocolate Trắng', 'Matcha', 'Dâu', 'Chocolate'];
-    const flavors = (product.flavors && product.flavors.length > 0)
+
+    const defaultFlavors = [
+        { name: 'Chocolate Trắng', image: 'tai-nguyen/donut-vani.jpg' },
+        { name: 'Matcha', image: 'tai-nguyen/donut-matcha.jpg' },
+        { name: 'Dâu', image: 'tai-nguyen/donut-dau.jpg' },
+        { name: 'Chocolate', image: 'tai-nguyen/donut-choco.jpg' }
+    ];
+
+    const rawFlavors = (product.flavors && product.flavors.length > 0)
         ? product.flavors
         : defaultFlavors;
 
-    selectedFlavor = flavors[0];
+    // Chuẩn hóa định dạng mảng object { name, image }
+    const flavors = rawFlavors.map(f => {
+        if (typeof f === 'string') {
+            const fLower = f.toLowerCase();
+            let img = 'tai-nguyen/donut-choco.jpg';
+            if (fLower.includes('trắng') || fLower.includes('white') || fLower.includes('vani')) img = 'tai-nguyen/donut-vani.jpg';
+            else if (fLower.includes('matcha')) img = 'tai-nguyen/donut-matcha.jpg';
+            else if (fLower.includes('dâu')) img = 'tai-nguyen/donut-dau.jpg';
+            else if (fLower.includes('choco')) img = 'tai-nguyen/donut-choco.jpg';
+            return { name: f, image: img };
+        }
+        return f;
+    });
+
+    selectedFlavor = flavors[0].name;
+    selectedFlavorImage = flavors[0].image || gallery[0];
     if (flavorDisplay) flavorDisplay.textContent = selectedFlavor;
+    selectMainImage(selectedFlavorImage);
 
     if (flavorContainer) {
         flavorContainer.innerHTML = '';
-        flavors.forEach((flavor, index) => {
+        flavors.forEach((flavorObj, index) => {
             const pill = document.createElement('button');
             pill.type = 'button';
-            pill.className = `flavor-pill ${index === 0 ? 'active' : ''}`;
+            pill.className = `flavor-pill visual-pill ${index === 0 ? 'active' : ''}`;
 
-            let iconClass = 'fa-cookie-bite';
-            const fLower = flavor.toLowerCase();
-            if (fLower.includes('trắng') || fLower.includes('white')) iconClass = 'fa-ice-cream';
-            else if (fLower.includes('matcha') || fLower.includes('trà xanh')) iconClass = 'fa-leaf';
-            else if (fLower.includes('dâu') || fLower.includes('strawberry')) iconClass = 'fa-heart';
-            else if (fLower.includes('chocolate') || fLower.includes('socola')) iconClass = 'fa-cookie';
+            pill.innerHTML = `
+                <img src="${flavorObj.image}" alt="${flavorObj.name}" class="flavor-mini-thumb">
+                <span>${flavorObj.name}</span>
+                <i class="fas fa-check checkmark"></i>
+            `;
 
-            pill.innerHTML = `<i class="fas ${iconClass}"></i> <span>${flavor}</span> <i class="fas fa-check checkmark"></i>`;
             pill.addEventListener('click', () => {
                 document.querySelectorAll('.flavor-pill').forEach(p => p.classList.remove('active'));
                 pill.classList.add('active');
-                selectedFlavor = flavor;
-                if (flavorDisplay) flavorDisplay.textContent = flavor;
+                selectedFlavor = flavorObj.name;
+                selectedFlavorImage = flavorObj.image;
+                if (flavorDisplay) flavorDisplay.textContent = flavorObj.name;
+
+                // Tự động chuyển đổi hình ảnh minh họa tương ứng với vị đã chọn
+                selectMainImage(flavorObj.image);
             });
+
             flavorContainer.appendChild(pill);
         });
     }
 
-    // 6. Details Tab Content
+    // 6. Toppings Selector (+3.000đ / loại)
+    const toppingsGroup = document.getElementById('pdpToppingsGroup');
+    const toppingContainer = document.getElementById('toppingSelector');
+    const toppingCountEl = document.getElementById('selectedToppingsCount');
+
+    const defaultToppings = [
+        { id: 'top_oreo', name: 'Vụn Oreo', price: 3000 },
+        { id: 'top_cashew', name: 'Hạt điều', price: 3000 },
+        { id: 'top_marshmallow', name: 'Marshmallow', price: 3000 },
+        { id: 'top_choco_chips', name: 'Vụn chocolate', price: 3000 },
+        { id: 'top_dried_strawberry', name: 'Dâu tây sấy vụn', price: 3000 },
+        { id: 'top_sprinkles', name: 'Hạt cốm', price: 3000 }
+    ];
+
+    const toppingsList = (product.toppings && product.toppings.length > 0)
+        ? product.toppings
+        : (product.id === 'menu_1' ? defaultToppings : []);
+
+    selectedToppings = [];
+
+    if (toppingsList.length === 0) {
+        if (toppingsGroup) toppingsGroup.style.display = 'none';
+    } else {
+        if (toppingsGroup) toppingsGroup.style.display = 'block';
+        if (toppingContainer) {
+            toppingContainer.innerHTML = '';
+            toppingsList.forEach(top => {
+                const pill = document.createElement('button');
+                pill.type = 'button';
+                pill.className = 'topping-pill';
+                pill.innerHTML = `
+                    <span class="topping-check"><i class="fas fa-check"></i></span>
+                    <span class="topping-name">${top.name}</span>
+                    <span class="topping-price">+3k</span>
+                `;
+
+                pill.addEventListener('click', () => {
+                    const idx = selectedToppings.indexOf(top.name);
+                    if (idx > -1) {
+                        selectedToppings.splice(idx, 1);
+                        pill.classList.remove('active');
+                    } else {
+                        selectedToppings.push(top.name);
+                        pill.classList.add('active');
+                    }
+
+                    if (toppingCountEl) {
+                        toppingCountEl.textContent = `Đã chọn: ${selectedToppings.length}`;
+                    }
+
+                    updateSubtotalPreview();
+                });
+
+                toppingContainer.appendChild(pill);
+            });
+        }
+    }
+
+    // 7. Details Tab Content
     const details = product.details || {};
     const ingEl = document.getElementById('pdpDetailIngredients');
     if (ingEl) {
@@ -184,7 +273,20 @@ function updateSubtotalPreview() {
     if (currentQuantity > 99) currentQuantity = 99;
     qtyInput.value = currentQuantity;
 
-    const subtotal = (currentProduct?.price || 10000) * currentQuantity;
+    const basePrice = Number(currentProduct?.price) || 10000;
+    const toppingsExtra = selectedToppings.length * 3000;
+    const unitPrice = basePrice + toppingsExtra;
+
+    const priceEl = document.getElementById('pdpPrice');
+    if (priceEl) {
+        if (toppingsExtra > 0) {
+            priceEl.innerHTML = `${formatCurrency(unitPrice)} <small style="font-size:0.9rem; color:#747d8c; font-weight:600;">(${formatCurrency(basePrice)} + ${formatCurrency(toppingsExtra)} topping)</small>`;
+        } else {
+            priceEl.textContent = formatCurrency(unitPrice);
+        }
+    }
+
+    const subtotal = unitPrice * currentQuantity;
     const subtotalDisplay = document.getElementById('pdpSubtotalDisplay');
     if (subtotalDisplay) {
         subtotalDisplay.textContent = formatCurrency(subtotal);
@@ -227,12 +329,18 @@ function setupEvents() {
         btnAdd.addEventListener('click', () => {
             if (!currentProduct || currentProduct.inStock === false) return;
 
+            const basePrice = Number(currentProduct.price) || 10000;
+            const toppingsExtra = selectedToppings.length * 3000;
+            const finalUnitPrice = basePrice + toppingsExtra;
+
             window.KittenCart.addItem({
                 id: currentProduct.id,
                 name: currentProduct.name,
-                price: currentProduct.price,
+                basePrice: basePrice,
+                price: finalUnitPrice,
                 flavor: selectedFlavor,
-                image: currentProduct.image || 'tai-nguyen/donut-signature.jpg',
+                toppings: [...selectedToppings],
+                image: selectedFlavorImage || currentProduct.image || 'tai-nguyen/donut-choco.jpg',
                 quantity: currentQuantity
             }, true);
         });
@@ -244,12 +352,18 @@ function setupEvents() {
         btnBuy.addEventListener('click', () => {
             if (!currentProduct || currentProduct.inStock === false) return;
 
+            const basePrice = Number(currentProduct.price) || 10000;
+            const toppingsExtra = selectedToppings.length * 3000;
+            const finalUnitPrice = basePrice + toppingsExtra;
+
             window.KittenCart.addItem({
                 id: currentProduct.id,
                 name: currentProduct.name,
-                price: currentProduct.price,
+                basePrice: basePrice,
+                price: finalUnitPrice,
                 flavor: selectedFlavor,
-                image: currentProduct.image || 'tai-nguyen/donut-signature.jpg',
+                toppings: [...selectedToppings],
+                image: selectedFlavorImage || currentProduct.image || 'tai-nguyen/donut-choco.jpg',
                 quantity: currentQuantity
             }, false);
 

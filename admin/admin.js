@@ -744,9 +744,10 @@ async function loadOrders() {
             let itemsSummaryHtml = '';
             if (Array.isArray(order.items) && order.items.length > 0) {
                 itemsSummaryHtml = order.items.map(i => `
-                    <div style="font-size:12px; margin-bottom:2px;">
+                    <div style="font-size:12px; margin-bottom:3px;">
                         <strong>${i.quantity}x</strong> ${i.name}
-                        ${i.flavor ? `<span style="color:#ff6b81;">(${i.flavor})</span>` : ''}
+                        ${i.flavor ? `<span style="color:#ff6b81; font-weight:600;">(${i.flavor})</span>` : ''}
+                        ${Array.isArray(i.toppings) && i.toppings.length > 0 ? `<div style="font-size:11px; color:#e17055; margin-left:14px;"><i class="fas fa-sparkles"></i> Topping: ${i.toppings.join(', ')}</div>` : ''}
                     </div>
                 `).join('');
             } else {
@@ -776,6 +777,7 @@ async function loadOrders() {
                 <td>${itemsSummaryHtml}</td>
                 <td style="font-weight:700; color:#ff4757; white-space:nowrap;">
                     ${formatCurrency(order.total || order.subtotal || 10000)}
+                    ${(order.discount && order.discount > 0) ? `<div style="font-size:11px; color:#2ed573; font-weight:600;"><i class="fas fa-gift"></i> -${formatCurrency(order.discount)}</div>` : ''}
                 </td>
                 <td>${paymentBadge}</td>
                 <td>${statusMap[order.status] || order.status}</td>
@@ -819,10 +821,16 @@ window.openOrderDetailModal = function(orderId) {
     } else {
         items.forEach(item => {
             const lineTotal = Number(item.price) * Number(item.quantity);
+            const toppingsHtml = (Array.isArray(item.toppings) && item.toppings.length > 0)
+                ? `<div style="font-size:11px; color:#e17055; margin-top:3px;"><i class="fas fa-sparkles"></i> Topping: <strong>${item.toppings.join(', ')}</strong></div>`
+                : '';
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td><strong>${item.name}</strong></td>
-                <td><span style="color:#ff6b81;">${item.flavor || 'Vị chuẩn'}</span></td>
+                <td>
+                    <strong>${item.name}</strong>
+                    ${toppingsHtml}
+                </td>
+                <td><span style="color:#ff6b81; font-weight:600;">${item.flavor || 'Vị chuẩn'}</span></td>
                 <td style="text-align:center;"><strong>${item.quantity}</strong></td>
                 <td style="text-align:right;">${formatCurrency(item.price)}</td>
                 <td style="text-align:right; font-weight:700;">${formatCurrency(lineTotal)}</td>
@@ -833,7 +841,18 @@ window.openOrderDetailModal = function(orderId) {
 
     document.getElementById('slipSubtotal').textContent = formatCurrency(order.subtotal || order.total || 0);
     document.getElementById('slipShipping').textContent = formatCurrency(order.shippingFee || 0);
-    document.getElementById('slipDiscount').textContent = `-${formatCurrency(order.discount || 0)}`;
+    
+    const discountEl = document.getElementById('slipDiscount');
+    if (order.discount && order.discount > 0) {
+        let desc = '';
+        if (order.comboFreeDescription) {
+            desc = `<br><small style="color:#2ed573; font-weight:600;"><i class="fas fa-gift"></i> ${order.comboFreeDescription}</small>`;
+        }
+        discountEl.innerHTML = `-${formatCurrency(order.discount)}${desc}`;
+    } else {
+        discountEl.textContent = '0đ';
+    }
+
     document.getElementById('slipTotal').textContent = formatCurrency(order.total || 0);
 
     // Trạng thái đơn

@@ -125,17 +125,31 @@
                     <!-- Combo Promo Highlight -->
                     <div class="pdp-promo-card">
                         <div class="promo-badge"><i class="fas fa-gift"></i> ƯU ĐÃI COMBO</div>
-                        <p>Mua <strong>5 chiếc Donut tặng ngay 1 chiếc</strong> (Chỉ 50K nhận đủ hộp 6 chiếc xinh xắn mang về)!</p>
+                        <p>Mua <strong>5 chiếc tặng 1 chiếc</strong>: Bỏ đủ <strong>6 chiếc bánh vào giỏ hàng</strong>, hệ thống sẽ tự động <strong>MIỄN PHÍ 1 chiếc có giá thấp nhất</strong>!</p>
                     </div>
 
                     <!-- Flavor Selection -->
                     <div class="pdp-option-group">
                         <label class="option-label">
-                            <i class="fas fa-cookie-bite"></i> Chọn hương vị topping:
-                            <span class="selected-flavor-name" id="selectedFlavorName">Socola Bỉ Thượng Hạng</span>
+                            <i class="fas fa-cookie-bite"></i> Chọn vị bánh:
+                            <span class="selected-flavor-name" id="selectedFlavorName">Vị Choco</span>
                         </label>
                         <div class="flavor-selector" id="flavorSelector">
-                            <!-- Dynamic Flavors Pills -->
+                            <!-- Dynamic Flavors Pills with mini thumbnails -->
+                        </div>
+                    </div>
+
+                    <!-- Topping Selection -->
+                    <div class="pdp-option-group" id="pdpToppingsGroup">
+                        <div class="option-label-wrap" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <label class="option-label" style="margin-bottom:0;">
+                                <i class="fas fa-sparkles"></i> Thêm Topping thơm giòn:
+                                <span class="topping-badge-tag">+3.000đ / loại</span>
+                            </label>
+                            <span class="selected-toppings-count" id="selectedToppingsCount" style="font-size:0.85rem; color:#ff6b81; font-weight:700;">Đã chọn: 0</span>
+                        </div>
+                        <div class="topping-selector" id="toppingSelector">
+                            <!-- Dynamic Toppings Checkbox Pills -->
                         </div>
                     </div>
 
