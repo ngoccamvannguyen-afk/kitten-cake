@@ -1,0 +1,888 @@
+// Kitten Cake CMS - Client-Side Controller
+let siteData = null;
+let currentEditingMenuItemId = null;
+let pendingUploadedImages = {};
+
+// Helper: Format Vietnamese Currency
+function formatCurrency(amount) {
+    if (isNaN(amount)) return '0 đ';
+    return Number(amount).toLocaleString('vi-VN') + ' đ';
+}
+
+// Helper: Toast Notifications
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
+    toast.innerHTML = `<i class="fas ${icon}"></i> <span>${message}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+    }, 4000);
+}
+
+// Modal helper
+function openModal(id) {
+    document.getElementById(id).classList.add('active');
+}
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+}
+
+// Check Authentication
+function checkAuth() {
+    const token = localStorage.getItem('kitten_admin_token');
+    if (!token && !window.location.href.includes('login.html')) {
+        window.location.href = 'login.html';
+    }
+}
+
+// Logout
+document.getElementById('btnLogout').addEventListener('click', () => {
+    if (confirm('Bạn có chắc chắn muốn đăng xuất khỏi trang quản trị?')) {
+        localStorage.removeItem('kitten_admin_token');
+        localStorage.removeItem('kitten_admin_user');
+        window.location.href = 'login.html';
+    }
+});
+
+// Mobile menu toggle
+const mobileToggle = document.getElementById('mobileToggle');
+const sidebar = document.getElementById('sidebar');
+if (mobileToggle) {
+    mobileToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+    });
+}
+
+// Tab Navigation
+const menuLinks = document.querySelectorAll('.menu-link');
+const tabPanes = document.querySelectorAll('.tab-pane');
+const pageTitle = document.getElementById('pageTitle');
+const pageSubtitle = document.getElementById('pageSubtitle');
+
+const tabTitles = {
+    'tab-dashboard': { title: 'Tổng Quan Hệ Thống', subtitle: 'Xin chào! Cập nhật nội dung website Kitten Cake thật nhanh và dễ dàng.' },
+    'tab-menu': { title: 'Quản Lý Thực Đơn & Món Bánh', subtitle: 'Thêm món mới, điều chỉnh giá, đổi tag loại bánh và bật/tắt hiển thị món.' },
+    'tab-promo': { title: 'Quản Lý Ưu Đãi Donut Box', subtitle: 'Chương trình khuyến mãi combo dành riêng cho học sinh - sinh viên.' },
+    'tab-hero': { title: 'Quản Lý Hero & Banner Cover', subtitle: 'Thay đổi tiêu đề lớn, slogan, huy hiệu vương miện và ảnh dải banner.' },
+    'tab-gallery': { title: 'Thư Viện Ảnh Bánh Thực Tế', subtitle: 'Cập nhật những mẻ bánh nướng mới ra lò mỗi ngày tại gian bếp Kitten Cake.' },
+    'tab-about': { title: 'Về Kitten Cake & Cam Kết', subtitle: 'Câu chuyện thương hiệu tiệm bánh và các điểm cam kết chất lượng.' },
+    'tab-orders': { title: 'Yêu Cầu & Đơn Đặt Bánh Nhanh', subtitle: 'Xem danh sách khách hàng đặt bánh trực tuyến qua website.' },
+    'tab-settings': { title: 'Cài Đặt Chung & Liên Hệ', subtitle: 'Hotline, địa chỉ Quận 7, email, giờ mở cửa và các kênh mạng xã hội.' },
+    'tab-backup': { title: 'Sao Lưu & An Toàn Dữ Liệu', subtitle: 'Tải file backup về máy tính hoặc nạp lại dữ liệu ban đầu.' }
+};
+
+function switchTab(tabId) {
+    menuLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('data-tab') === tabId);
+    });
+    tabPanes.forEach(pane => {
+        pane.classList.toggle('active', pane.id === tabId);
+    });
+
+    if (tabTitles[tabId]) {
+        pageTitle.textContent = tabTitles[tabId].title;
+        pageSubtitle.textContent = tabTitles[tabId].subtitle;
+    }
+
+    if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+menuLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tabId = link.getAttribute('data-tab');
+        switchTab(tabId);
+    });
+});
+
+document.querySelectorAll('.quick-nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-target');
+        switchTab(target);
+    });
+});
+
+// Helper: Upload file to server
+async function uploadFile(file) {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+        const res = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+            return data.url;
+        } else {
+            throw new Error(data.error || 'Lỗi khi tải ảnh lên');
+        }
+    } catch (err) {
+        console.warn('API upload failed, creating local object URL:', err);
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.readAsDataURL(file);
+        });
+    }
+}
+
+// Bind Image Upload Handler to Input
+function setupImageUpload(inputId, previewId, onUploaded) {
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+    if (!input || !preview) return;
+
+    input.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Instant local preview
+        const localUrl = URL.createObjectURL(file);
+        preview.src = localUrl;
+
+        showToast('Đang tải ảnh lên...', 'success');
+        try {
+            const uploadedUrl = await uploadFile(file);
+            preview.src = uploadedUrl;
+            if (onUploaded) onUploaded(uploadedUrl);
+            showToast('Tải ảnh thành công!', 'success');
+        } catch (err) {
+            showToast('Lỗi tải ảnh: ' + err.message, 'error');
+        }
+    });
+}
+
+// ---------------- LOAD DATA FROM SERVER ----------------
+async function loadSiteData() {
+    try {
+        const res = await fetch('/api/content');
+        if (res.ok) {
+            const json = await res.json();
+            siteData = json.data;
+        } else {
+            throw new Error('Không thể tải từ API');
+        }
+    } catch (err) {
+        console.warn('Fetch /api/content failed, attempting local data/content.json:', err);
+        try {
+            const localRes = await fetch('../data/content.json');
+            siteData = await localRes.json();
+        } catch (localErr) {
+            console.error('Fatal: Cannot load content data', localErr);
+        }
+    }
+
+    if (siteData) {
+        populateAllForms();
+        updateDashboardStats();
+    }
+}
+
+// ---------------- POPULATE FORMS ----------------
+function populateAllForms() {
+    if (!siteData) return;
+
+    // Brand info & Logo
+    if (siteData.general) {
+        const g = siteData.general;
+        document.getElementById('sidebarBrandName').textContent = g.brandName || 'Kitten Cake';
+        document.getElementById('sidebarLogo').src = g.logo ? `../${g.logo}` : '../tai-nguyen/logo.jpg';
+        document.getElementById('setBrandName').value = g.brandName || '';
+        document.getElementById('setSiteTitle').value = g.siteTitle || '';
+        document.getElementById('setBrandTagline').value = g.brandTagline || '';
+        document.getElementById('setLogoPreview').src = g.logo ? `../${g.logo}` : '../tai-nguyen/logo.jpg';
+        document.getElementById('setAddress').value = g.address || '';
+        document.getElementById('setHotline').value = g.hotline || '';
+        document.getElementById('setEmail').value = g.email || '';
+        document.getElementById('setHeaderOrderLink').value = g.orderButtonLink || '';
+        document.getElementById('setCopyright').value = g.copyright || '';
+
+        if (g.openingHours) {
+            document.getElementById('setWeekdaysHours').value = g.openingHours.weekdays || '';
+            document.getElementById('setWeekendsHours').value = g.openingHours.weekends || '';
+        }
+        if (g.socialLinks) {
+            document.getElementById('setFbUrl').value = g.socialLinks.facebook || '';
+            document.getElementById('setInstaUrl').value = g.socialLinks.instagram || '';
+            document.getElementById('setTiktokUrl').value = g.socialLinks.tiktok || '';
+        }
+    }
+
+    // Hero Section
+    if (siteData.hero) {
+        const h = siteData.hero;
+        document.getElementById('heroTitlePart1').value = h.titlePart1 || '';
+        document.getElementById('heroTitleHighlight').value = h.titleHighlight || '';
+        document.getElementById('heroDesc').value = h.description || '';
+        document.getElementById('heroBadgeText').value = h.badgeText || '';
+        document.getElementById('heroBtn1Text').value = h.btnPrimaryText || '';
+        document.getElementById('heroBtn1Link').value = h.btnPrimaryLink || '';
+        document.getElementById('heroBtn2Text').value = h.btnOutlineText || '';
+        document.getElementById('heroBtn2Link').value = h.btnOutlineLink || '';
+        if (h.image) document.getElementById('heroImgPreview').src = `../${h.image}`;
+    }
+
+    // Brand Strip
+    if (siteData.brandStrip) {
+        document.getElementById('brandStripEnabled').checked = siteData.brandStrip.enabled !== false;
+        if (siteData.brandStrip.image) {
+            document.getElementById('coverBannerPreview').src = `../${siteData.brandStrip.image}`;
+        }
+    }
+
+    // Menu Section Titles & Items
+    if (siteData.menu) {
+        document.getElementById('menuTitlePart1').value = siteData.menu.sectionTitlePart1 || '';
+        document.getElementById('menuTitleHighlight').value = siteData.menu.sectionTitleHighlight || '';
+        document.getElementById('menuSectionDesc').value = siteData.menu.sectionDescription || '';
+        renderMenuItemsTable();
+    }
+
+    // Promo Banner
+    if (siteData.promoBanner) {
+        const p = siteData.promoBanner;
+        document.getElementById('promoEnabled').checked = p.enabled !== false;
+        document.getElementById('promoTitle').value = p.title || '';
+        document.getElementById('promoDesc').value = p.description || '';
+        document.getElementById('promoBtnText').value = p.btnText || '';
+        document.getElementById('promoBtnLink').value = p.btnLink || '';
+        if (p.image) document.getElementById('promoImgPreview').src = `../${p.image}`;
+    }
+
+    // Gallery
+    if (siteData.gallery) {
+        document.getElementById('galleryTitlePart1').value = siteData.gallery.sectionTitlePart1 || '';
+        document.getElementById('galleryTitleHighlight').value = siteData.gallery.sectionTitleHighlight || '';
+        document.getElementById('gallerySectionDesc').value = siteData.gallery.sectionDescription || '';
+        renderGalleryGrid();
+    }
+
+    // About Us
+    if (siteData.about) {
+        const a = siteData.about;
+        document.getElementById('aboutTitlePart1').value = a.sectionTitlePart1 || '';
+        document.getElementById('aboutTitleHighlight').value = a.sectionTitleHighlight || '';
+        document.getElementById('aboutP1').value = a.paragraph1 || '';
+        document.getElementById('aboutP2').value = a.paragraph2 || '';
+        if (a.image) document.getElementById('aboutImgPreview').src = `../${a.image}`;
+        renderAboutFeatures();
+    }
+
+    // Orders
+    loadOrders();
+}
+
+// ---------------- DASHBOARD STATS ----------------
+function updateDashboardStats() {
+    if (!siteData) return;
+    const menuCount = (siteData.menu && siteData.menu.items) ? siteData.menu.items.length : 0;
+    const galCount = (siteData.gallery && siteData.gallery.items) ? siteData.gallery.items.length : 0;
+    const isPromoOn = siteData.promoBanner && siteData.promoBanner.enabled !== false;
+
+    document.getElementById('statMenuCount').textContent = menuCount;
+    document.getElementById('statGalleryCount').textContent = galCount;
+    document.getElementById('statPromoStatus').textContent = isPromoOn ? 'Đang bật' : 'Đang tắt';
+    document.getElementById('statPromoStatus').style.color = isPromoOn ? '#2ed573' : '#a4b0be';
+}
+
+// ---------------- MENU MANAGEMENT ----------------
+function renderMenuItemsTable() {
+    const tbody = document.getElementById('menuItemsTableBody');
+    if (!tbody || !siteData || !siteData.menu) return;
+
+    tbody.innerHTML = '';
+    const items = siteData.menu.items || [];
+
+    if (items.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:#a4b0be;">Chưa có món bánh nào. Hãy bấm "+ Thêm món mới"!</td></tr>`;
+        return;
+    }
+
+    items.forEach((item, index) => {
+        const tr = document.createElement('tr');
+        const isActive = item.status !== 'inactive';
+        const imgPath = item.image.startsWith('http') || item.image.startsWith('data:') ? item.image : `../${item.image}`;
+
+        tr.innerHTML = `
+            <td style="font-weight:700; color:#a4b0be;">#${index + 1}</td>
+            <td>
+                <div class="item-thumb-title">
+                    <img src="${imgPath}" alt="${item.name}" class="item-thumb" onerror="this.src='../tai-nguyen/donut-signature.jpg'">
+                    <div class="item-title-text">
+                        <h4>${item.name}</h4>
+                        <span>${item.description ? item.description.slice(0, 45) + '...' : ''}</span>
+                    </div>
+                </div>
+            </td>
+            <td><span style="background:#f1f2f6; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:600;">${item.tag || 'Bánh ngọt'}</span></td>
+            <td><span class="price-tag">${formatCurrency(item.price)}</span></td>
+            <td>
+                ${item.badge ? `<span class="status-badge badge-hot"><i class="fas fa-fire"></i> ${item.badge}</span>` : '<span style="color:#ced6e0;">—</span>'}
+            </td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleMenuItemStatus('${item.id}', this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </td>
+            <td>
+                <div class="action-btns" style="justify-content:flex-end;">
+                    <button class="btn-action" title="Di chuyển lên" onclick="moveMenuItem(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.4;"' : ''}>
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                    <button class="btn-action" title="Di chuyển xuống" onclick="moveMenuItem(${index}, 1)" ${index === items.length - 1 ? 'disabled style="opacity:0.4;"' : ''}>
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
+                    <button class="btn-action" title="Chỉnh sửa món này" onclick="openEditMenuModal('${item.id}')">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                    <button class="btn-action delete" title="Xóa món" onclick="deleteMenuItem('${item.id}')">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+window.toggleMenuItemStatus = function(id, isChecked) {
+    const item = siteData.menu.items.find(i => i.id === id);
+    if (item) {
+        item.status = isChecked ? 'active' : 'inactive';
+        showToast(`Đã ${isChecked ? 'bật bán' : 'tạm dừng bán'} món "${item.name}"`);
+    }
+};
+
+window.moveMenuItem = function(index, direction) {
+    const items = siteData.menu.items;
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= items.length) return;
+
+    const temp = items[index];
+    items[index] = items[targetIndex];
+    items[targetIndex] = temp;
+
+    renderMenuItemsTable();
+    showToast('Đã thay đổi thứ tự món bánh!');
+};
+
+window.deleteMenuItem = function(id) {
+    const item = siteData.menu.items.find(i => i.id === id);
+    if (!item) return;
+
+    if (confirm(`Bạn có chắc muốn xóa món bánh "${item.name}" khỏi thực đơn?`)) {
+        siteData.menu.items = siteData.menu.items.filter(i => i.id !== id);
+        renderMenuItemsTable();
+        updateDashboardStats();
+        showToast(`Đã xóa món "${item.name}"!`);
+    }
+};
+
+// Add & Edit Menu Modal Logic
+document.getElementById('btnOpenAddMenuModal').addEventListener('click', () => {
+    currentEditingMenuItemId = null;
+    document.getElementById('menuModalTitle').textContent = 'Thêm Món Bánh Mới';
+    document.getElementById('modalMenuId').value = '';
+    document.getElementById('modalMenuName').value = '';
+    document.getElementById('modalMenuTag').value = '🍩 Món Signature';
+    document.getElementById('modalMenuPrice').value = '10000';
+    document.getElementById('modalMenuBadge').value = '';
+    document.getElementById('modalMenuFeatured').value = 'false';
+    document.getElementById('modalMenuDesc').value = '';
+    document.getElementById('modalMenuImgPreview').src = '../tai-nguyen/donut-signature.jpg';
+    document.getElementById('modalMenuOrderLink').value = siteData.general?.socialLinks?.facebook || '';
+    openModal('menuModal');
+});
+
+window.openEditMenuModal = function(id) {
+    const item = siteData.menu.items.find(i => i.id === id);
+    if (!item) return;
+
+    currentEditingMenuItemId = id;
+    document.getElementById('menuModalTitle').textContent = 'Chỉnh Sửa Món Bánh';
+    document.getElementById('modalMenuId').value = item.id;
+    document.getElementById('modalMenuName').value = item.name;
+    document.getElementById('modalMenuTag').value = item.tag || '🍩 Món Signature';
+    document.getElementById('modalMenuPrice').value = item.price;
+    document.getElementById('modalMenuBadge').value = item.badge || '';
+    document.getElementById('modalMenuFeatured').value = item.isFeatured ? 'true' : 'false';
+    document.getElementById('modalMenuDesc').value = item.description || '';
+    document.getElementById('modalMenuOrderLink').value = item.orderLink || '';
+
+    const imgPath = item.image.startsWith('http') || item.image.startsWith('data:') ? item.image : `../${item.image}`;
+    document.getElementById('modalMenuImgPreview').src = imgPath;
+
+    openModal('menuModal');
+};
+
+document.getElementById('btnSaveMenuItem').addEventListener('click', () => {
+    const name = document.getElementById('modalMenuName').value.trim();
+    const price = parseInt(document.getElementById('modalMenuPrice').value, 10);
+    const tag = document.getElementById('modalMenuTag').value;
+    const badge = document.getElementById('modalMenuBadge').value.trim();
+    const isFeatured = document.getElementById('modalMenuFeatured').value === 'true';
+    const description = document.getElementById('modalMenuDesc').value.trim();
+    const orderLink = document.getElementById('modalMenuOrderLink').value.trim();
+    let imageSrc = document.getElementById('modalMenuImgPreview').getAttribute('src');
+
+    // Clean relative path prefix if needed
+    if (imageSrc.startsWith('../')) imageSrc = imageSrc.substring(3);
+
+    if (!name) {
+        alert('Vui lòng nhập tên món bánh!');
+        return;
+    }
+    if (isNaN(price) || price < 0) {
+        alert('Vui lòng nhập giá bán hợp lệ!');
+        return;
+    }
+
+    if (currentEditingMenuItemId) {
+        // Edit existing
+        const item = siteData.menu.items.find(i => i.id === currentEditingMenuItemId);
+        if (item) {
+            item.name = name;
+            item.price = price;
+            item.tag = tag;
+            item.badge = badge;
+            item.isFeatured = isFeatured;
+            item.description = description;
+            item.orderLink = orderLink;
+            item.image = imageSrc;
+            showToast(`Đã cập nhật món "${name}"!`);
+        }
+    } else {
+        // Add new
+        const newItem = {
+            id: 'menu_' + Date.now(),
+            name,
+            tag,
+            price,
+            isFeatured,
+            badge,
+            description,
+            image: imageSrc || 'tai-nguyen/donut-signature.jpg',
+            orderLink: orderLink || (siteData.general?.socialLinks?.facebook || '#'),
+            status: 'active'
+        };
+        siteData.menu.items.push(newItem);
+        showToast(`Đã thêm món mới "${name}"!`);
+    }
+
+    closeModal('menuModal');
+    renderMenuItemsTable();
+    updateDashboardStats();
+});
+
+// Setup image upload for Menu Modal
+setupImageUpload('modalMenuImgInput', 'modalMenuImgPreview');
+
+// ---------------- GALLERY MANAGEMENT ----------------
+function renderGalleryGrid() {
+    const container = document.getElementById('galleryGridContainer');
+    if (!container || !siteData || !siteData.gallery) return;
+
+    container.innerHTML = '';
+    const items = siteData.gallery.items || [];
+
+    if (items.length === 0) {
+        container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:30px; color:#a4b0be;">Chưa có ảnh nào trong thư viện. Bấm "+ Thêm ảnh mới" để đăng ảnh!</div>`;
+        return;
+    }
+
+    items.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'gallery-card';
+        const imgPath = item.image.startsWith('http') || item.image.startsWith('data:') ? item.image : `../${item.image}`;
+
+        card.innerHTML = `
+            <img src="${imgPath}" alt="${item.overlay || 'Bánh Kitten Cake'}" onerror="this.src='../tai-nguyen/donut-varieties.jpg'">
+            <button class="gallery-delete-btn" title="Xóa ảnh" onclick="deleteGalleryItem('${item.id}')">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+            <div class="gallery-card-info">
+                <input type="text" value="${item.overlay || ''}" placeholder="Dòng chữ chú thích..." onchange="updateGalleryOverlay('${item.id}', this.value)">
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+window.updateGalleryOverlay = function(id, newOverlay) {
+    const item = siteData.gallery.items.find(i => i.id === id);
+    if (item) {
+        item.overlay = newOverlay;
+        showToast('Đã lưu chú thích ảnh!');
+    }
+};
+
+window.deleteGalleryItem = function(id) {
+    if (confirm('Bạn có chắc muốn xóa ảnh này khỏi thư viện?')) {
+        siteData.gallery.items = siteData.gallery.items.filter(i => i.id !== id);
+        renderGalleryGrid();
+        updateDashboardStats();
+        showToast('Đã xóa ảnh thành công!');
+    }
+};
+
+document.getElementById('btnOpenAddGalleryModal').addEventListener('click', () => {
+    document.getElementById('modalGalleryCaption').value = '';
+    document.getElementById('modalGalleryImgPreview').src = '../tai-nguyen/donut-varieties.jpg';
+    openModal('galleryModal');
+});
+
+document.getElementById('btnSaveGalleryItem').addEventListener('click', () => {
+    const caption = document.getElementById('modalGalleryCaption').value.trim();
+    let imageSrc = document.getElementById('modalGalleryImgPreview').getAttribute('src');
+    if (imageSrc.startsWith('../')) imageSrc = imageSrc.substring(3);
+
+    const newItem = {
+        id: 'gal_' + Date.now(),
+        image: imageSrc || 'tai-nguyen/donut-varieties.jpg',
+        overlay: caption || 'Bánh mới ra lò mỗi ngày'
+    };
+
+    if (!siteData.gallery.items) siteData.gallery.items = [];
+    siteData.gallery.items.push(newItem);
+
+    closeModal('galleryModal');
+    renderGalleryGrid();
+    updateDashboardStats();
+    showToast('Đã thêm ảnh mới vào thư viện!');
+});
+
+setupImageUpload('modalGalleryImgInput', 'modalGalleryImgPreview');
+
+// ---------------- ABOUT US FEATURES CHECKLIST ----------------
+function renderAboutFeatures() {
+    const container = document.getElementById('aboutFeaturesList');
+    if (!container || !siteData || !siteData.about) return;
+
+    container.innerHTML = '';
+    const features = siteData.about.features || [];
+
+    features.forEach((feat, index) => {
+        const row = document.createElement('div');
+        row.style.display = 'flex';
+        row.style.gap = '10px';
+        row.style.alignItems = 'center';
+
+        row.innerHTML = `
+            <i class="fas fa-check-circle" style="color:#2ed573; font-size:18px;"></i>
+            <input type="text" class="form-control" value="${feat}" onchange="updateAboutFeature(${index}, this.value)" style="flex:1;">
+            <button class="btn-action delete" title="Xóa dòng này" onclick="deleteAboutFeature(${index})">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        container.appendChild(row);
+    });
+}
+
+window.updateAboutFeature = function(index, value) {
+    if (siteData.about.features && siteData.about.features[index] !== undefined) {
+        siteData.about.features[index] = value;
+    }
+};
+
+window.deleteAboutFeature = function(index) {
+    if (siteData.about.features) {
+        siteData.about.features.splice(index, 1);
+        renderAboutFeatures();
+        showToast('Đã xóa cam kết!');
+    }
+};
+
+document.getElementById('btnAddFeatureBtn').addEventListener('click', () => {
+    if (!siteData.about.features) siteData.about.features = [];
+    siteData.about.features.push('Cam kết chất lượng mới');
+    renderAboutFeatures();
+});
+
+// Setup other image uploaders
+setupImageUpload('promoImgInput', 'promoImgPreview', (url) => {
+    if (siteData.promoBanner) siteData.promoBanner.image = url;
+});
+setupImageUpload('heroImgInput', 'heroImgPreview', (url) => {
+    if (siteData.hero) siteData.hero.image = url;
+});
+setupImageUpload('coverBannerInput', 'coverBannerPreview', (url) => {
+    if (siteData.brandStrip) siteData.brandStrip.image = url;
+});
+setupImageUpload('aboutImgInput', 'aboutImgPreview', (url) => {
+    if (siteData.about) siteData.about.image = url;
+});
+setupImageUpload('setLogoInput', 'setLogoPreview', (url) => {
+    if (siteData.general) siteData.general.logo = url;
+    document.getElementById('sidebarLogo').src = `../${url}`;
+});
+
+// ---------------- ORDERS (ĐẶT BÁNH) ----------------
+async function loadOrders() {
+    try {
+        const res = await fetch('/api/orders');
+        const json = await res.json();
+        const orders = json.orders || [];
+
+        const badge = document.getElementById('orderBadge');
+        const statOrdersCount = document.getElementById('statOrdersCount');
+        const pendingCount = orders.filter(o => o.status === 'pending').length;
+
+        if (pendingCount > 0) {
+            badge.style.display = 'inline-block';
+            badge.textContent = pendingCount;
+        } else {
+            badge.style.display = 'none';
+        }
+        statOrdersCount.textContent = orders.length;
+
+        const tbody = document.getElementById('ordersTableBody');
+        tbody.innerHTML = '';
+
+        if (orders.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:#a4b0be;">Chưa có đơn đặt bánh nào phát sinh.</td></tr>`;
+            return;
+        }
+
+        orders.forEach(order => {
+            const tr = document.createElement('tr');
+            const dateStr = new Date(order.createdAt).toLocaleString('vi-VN');
+            const statusMap = {
+                'pending': '<span class="status-badge badge-hot"><i class="fas fa-clock"></i> Chờ xử lý</span>',
+                'completed': '<span class="status-badge badge-active"><i class="fas fa-check"></i> Đã xong</span>',
+                'cancelled': '<span class="status-badge badge-inactive"><i class="fas fa-times"></i> Đã hủy</span>'
+            };
+
+            tr.innerHTML = `
+                <td style="font-size:12px; color:#747d8c;">${dateStr}</td>
+                <td><strong>${order.customerName}</strong></td>
+                <td><a href="tel:${order.phone}" style="color:#ff6b81; font-weight:700; text-decoration:none;"><i class="fas fa-phone-alt"></i> ${order.phone}</a></td>
+                <td>${order.note || '<em style="color:#a4b0be;">Không ghi chú</em>'}</td>
+                <td>${statusMap[order.status] || order.status}</td>
+                <td style="text-align:right;">
+                    <button class="btn-action" title="Đánh dấu đã hoàn thành" onclick="updateOrderStatus('${order.id}', 'completed')">
+                        <i class="fas fa-check" style="color:#2ed573;"></i>
+                    </button>
+                    <button class="btn-action delete" title="Xóa đơn" onclick="deleteOrder('${order.id}')">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } catch (err) {
+        console.warn('Cannot fetch orders:', err);
+    }
+}
+
+window.updateOrderStatus = async function(id, status) {
+    try {
+        await fetch(`/api/orders/${id}/status`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status })
+        });
+        showToast('Cập nhật trạng thái đơn thành công!');
+        loadOrders();
+    } catch (err) {
+        showToast('Lỗi khi đổi trạng thái đơn', 'error');
+    }
+};
+
+window.deleteOrder = async function(id) {
+    if (confirm('Bạn có chắc muốn xóa đơn này?')) {
+        try {
+            await fetch(`/api/orders/${id}`, { method: 'DELETE' });
+            showToast('Đã xóa đơn hàng!');
+            loadOrders();
+        } catch (err) {
+            showToast('Lỗi khi xóa đơn', 'error');
+        }
+    }
+};
+
+document.getElementById('btnRefreshOrders').addEventListener('click', () => {
+    loadOrders();
+    showToast('Đã làm mới danh sách đơn hàng!');
+});
+
+// ---------------- SAVE ALL CHANGES ----------------
+async function saveAllChanges() {
+    if (!siteData) return;
+    const btn = document.getElementById('btnSaveAll');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+
+    // Collect General Settings
+    siteData.general.brandName = document.getElementById('setBrandName').value.trim();
+    siteData.general.siteTitle = document.getElementById('setSiteTitle').value.trim();
+    siteData.general.brandTagline = document.getElementById('setBrandTagline').value.trim();
+    siteData.general.address = document.getElementById('setAddress').value.trim();
+    siteData.general.hotline = document.getElementById('setHotline').value.trim();
+    siteData.general.email = document.getElementById('setEmail').value.trim();
+    siteData.general.orderButtonLink = document.getElementById('setHeaderOrderLink').value.trim();
+    siteData.general.copyright = document.getElementById('setCopyright').value.trim();
+    siteData.general.openingHours.weekdays = document.getElementById('setWeekdaysHours').value.trim();
+    siteData.general.openingHours.weekends = document.getElementById('setWeekendsHours').value.trim();
+    siteData.general.socialLinks.facebook = document.getElementById('setFbUrl').value.trim();
+    siteData.general.socialLinks.instagram = document.getElementById('setInstaUrl').value.trim();
+    siteData.general.socialLinks.tiktok = document.getElementById('setTiktokUrl').value.trim();
+
+    // Collect Hero
+    siteData.hero.titlePart1 = document.getElementById('heroTitlePart1').value.trim();
+    siteData.hero.titleHighlight = document.getElementById('heroTitleHighlight').value.trim();
+    siteData.hero.description = document.getElementById('heroDesc').value.trim();
+    siteData.hero.badgeText = document.getElementById('heroBadgeText').value.trim();
+    siteData.hero.btnPrimaryText = document.getElementById('heroBtn1Text').value.trim();
+    siteData.hero.btnPrimaryLink = document.getElementById('heroBtn1Link').value.trim();
+    siteData.hero.btnOutlineText = document.getElementById('heroBtn2Text').value.trim();
+    siteData.hero.btnOutlineLink = document.getElementById('heroBtn2Link').value.trim();
+
+    // Brand Strip
+    siteData.brandStrip.enabled = document.getElementById('brandStripEnabled').checked;
+
+    // Menu Titles
+    siteData.menu.sectionTitlePart1 = document.getElementById('menuTitlePart1').value.trim();
+    siteData.menu.sectionTitleHighlight = document.getElementById('menuTitleHighlight').value.trim();
+    siteData.menu.sectionDescription = document.getElementById('menuSectionDesc').value.trim();
+
+    // Promo Banner
+    siteData.promoBanner.enabled = document.getElementById('promoEnabled').checked;
+    siteData.promoBanner.title = document.getElementById('promoTitle').value.trim();
+    siteData.promoBanner.description = document.getElementById('promoDesc').value.trim();
+    siteData.promoBanner.btnText = document.getElementById('promoBtnText').value.trim();
+    siteData.promoBanner.btnLink = document.getElementById('promoBtnLink').value.trim();
+
+    // Gallery Titles
+    siteData.gallery.sectionTitlePart1 = document.getElementById('galleryTitlePart1').value.trim();
+    siteData.gallery.sectionTitleHighlight = document.getElementById('galleryTitleHighlight').value.trim();
+    siteData.gallery.sectionDescription = document.getElementById('gallerySectionDesc').value.trim();
+
+    // About Us
+    siteData.about.sectionTitlePart1 = document.getElementById('aboutTitlePart1').value.trim();
+    siteData.about.sectionTitleHighlight = document.getElementById('aboutTitleHighlight').value.trim();
+    siteData.about.paragraph1 = document.getElementById('aboutP1').value.trim();
+    siteData.about.paragraph2 = document.getElementById('aboutP2').value.trim();
+
+    // Send to Server
+    try {
+        const res = await fetch('/api/content', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(siteData)
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+            showToast('🎉 Đã lưu toàn bộ thay đổi thành công! Trang chủ đã được cập nhật.');
+        } else {
+            throw new Error(data.error || 'Lỗi ghi tệp dữ liệu');
+        }
+    } catch (err) {
+        console.warn('Save API failed, saving to localStorage as fallback:', err);
+        localStorage.setItem('kitten_site_data', JSON.stringify(siteData));
+        showToast('Đã lưu dữ liệu vào bộ nhớ máy tính!');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-save"></i> <span>Lưu tất cả thay đổi</span>';
+        updateDashboardStats();
+    }
+}
+
+document.getElementById('btnSaveAll').addEventListener('click', saveAllChanges);
+
+// ---------------- BACKUP & RESTORE ----------------
+document.getElementById('btnDownloadBackup').addEventListener('click', () => {
+    window.location.href = '/api/backup';
+    showToast('Bản sao lưu đang được tải về máy tính!');
+});
+
+document.getElementById('restoreFileInput').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+        try {
+            const parsed = JSON.parse(event.target.result);
+            if (!parsed.general || !parsed.menu) {
+                throw new Error('Tệp JSON không đúng cấu trúc của Kitten Cake CMS');
+            }
+
+            if (confirm('Bạn có chắc muốn khôi phục nội dung từ tệp sao lưu này? Mọi nội dung hiện tại sẽ được thay thế.')) {
+                const res = await fetch('/api/restore', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(parsed)
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    siteData = parsed;
+                    populateAllForms();
+                    showToast('Khôi phục dữ liệu từ tệp thành công!');
+                } else {
+                    throw new Error(data.error || 'Lỗi từ máy chủ');
+                }
+            }
+        } catch (err) {
+            alert('Lỗi nạp tệp sao lưu: ' + err.message);
+        }
+    };
+    reader.readAsText(file);
+});
+
+document.getElementById('btnResetToDefaults').addEventListener('click', async () => {
+    if (confirm('CẢNH BÁO: Hành động này sẽ đặt lại toàn bộ thực đơn và thông tin về dữ liệu mặc định ban đầu của tiệm bánh. Bạn có chắc không?')) {
+        try {
+            const res = await fetch('../data/content.json');
+            const defaultData = await res.json();
+            siteData = defaultData;
+            await saveAllChanges();
+            populateAllForms();
+            showToast('Đã khôi phục về trạng thái gốc của tiệm bánh!');
+        } catch (err) {
+            showToast('Không thể nạp dữ liệu gốc: ' + err.message, 'error');
+        }
+    }
+});
+
+// Change Password
+document.getElementById('btnChangePassword').addEventListener('click', async () => {
+    const currentPassword = document.getElementById('pwdCurrent').value;
+    const newPassword = document.getElementById('pwdNew').value;
+
+    if (!currentPassword || !newPassword) {
+        alert('Vui lòng nhập đầy đủ mật khẩu hiện tại và mật khẩu mới!');
+        return;
+    }
+
+    try {
+        const res = await fetch('/api/auth/change-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ currentPassword, newPassword })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+            showToast('Đổi mật khẩu thành công! Hãy ghi nhớ mật khẩu mới.');
+            document.getElementById('pwdCurrent').value = '';
+            document.getElementById('pwdNew').value = '';
+        } else {
+            alert(data.error || 'Không thể đổi mật khẩu');
+        }
+    } catch (err) {
+        showToast('Lỗi kết nối máy chủ: ' + err.message, 'error');
+    }
+});
+
+// Initialize on page load
+checkAuth();
+loadSiteData();

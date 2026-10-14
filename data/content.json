@@ -1,13 +1,13 @@
 {
   "general": {
-    "siteTitle": "Kitten Cake - Tiệm Bánh Ngọt Nhỏ Xinh Quận 7",
+    "siteTitle": "Kitten Cake - B�nh Ng?t Tuoi M?i Ng�y Qu?n 7",
     "brandName": "Kitten Cake",
     "logo": "tai-nguyen/logo.jpg",
-    "brandTagline": "Tiệm bánh ngọt nhỏ xinh tại Quận 7 - Nơi gửi gắm yêu thương qua từng vị ngọt.",
+    "brandTagline": "Ti?m b�nh ng?t nh? xinh t?i Qu?n 7 - Noi g?i g?m y�u thuong qua t?ng v? ng?t.",
     "hotline": "09xx xxx xxx",
-    "address": "Quận 7, TP. Hồ Chí Minh",
+    "address": "Qu?n 7, TP. H? Ch� Minh",
     "email": "hello@kittencake.vn",
-    "orderButtonText": "Đặt bánh ngay",
+    "orderButtonText": "D?t b�nh ngay",
     "orderButtonLink": "https://www.facebook.com/profile.php?id=61594490844705",
     "socialLinks": {
       "facebook": "https://www.facebook.com/profile.php?id=61594490844705",
@@ -15,76 +15,76 @@
       "tiktok": "#"
     },
     "openingHours": {
-      "weekdays": "Thứ 2 - Thứ 6: 08:00 - 22:00",
-      "weekends": "Thứ 7 - CN: 07:30 - 22:30"
+      "weekdays": "Th? 2 - Th? 6: 08:00 - 22:00",
+      "weekends": "Th? 7 - CN: 07:30 - 22:30"
     },
-    "copyright": "© 2026 Kitten Cake Bakery. Thiết kế bởi chuyên gia Web."
+    "copyright": "� 2026 Kitten Cake Bakery. Thi?t k? b?i chuy�n gia Web."
   },
   "hero": {
-    "titlePart1": "Thiên Đường Donut",
-    "titleHighlight": "Đồng Giá Chỉ 10K",
-    "description": "Khám phá món bánh Donut trứ danh tại Kitten Cake giữa lòng Quận 7. Bánh tươi mềm xốp nướng mỗi ngày, ngập tràn topping ngọt ngào với mức giá siêu hạt dẻ chỉ 10.000đ/chiếc dành riêng cho giới trẻ & học sinh sinh viên!",
+    "titlePart1": "Thi�n Du?ng Donut",
+    "titleHighlight": "D?ng Gi� Ch? 10K",
+    "description": "Kh�m ph� m�n b�nh Donut tr? danh t?i Kitten Cake gi?a l�ng Qu?n 7. B�nh tuoi m?m x?p nu?ng m?i ng�y, ng?p tr�n topping ng?t ng�o v?i m?c gi� si�u h?t d? ch? 10.000d/chi?c d�nh ri�ng cho gi?i tr? & h?c sinh sinh vi�n!",
     "badgeText": "Donut Signature 10K",
     "image": "tai-nguyen/donut-collection.jpg",
-    "btnPrimaryText": "Thử Ngay Donut 10K",
+    "btnPrimaryText": "Th? Ngay Donut 10K",
     "btnPrimaryLink": "#menu",
-    "btnOutlineText": "Chỉ đường tới tiệm",
+    "btnOutlineText": "Ch? du?ng t?i ti?m",
     "btnOutlineLink": "#contact"
   },
   "brandStrip": {
     "enabled": true,
     "image": "tai-nguyen/cover-banner.png",
-    "alt": "Kitten Cake - Bánh ngọt cho những khoảnh khắc thêm đáng yêu"
+    "alt": "Kitten Cake - B�nh ng?t cho nh?ng kho?nh kh?c th�m d�ng y�u"
   },
   "menu": {
-    "sectionTitlePart1": "Thực Đơn",
+    "sectionTitlePart1": "Th?c Don",
     "sectionTitleHighlight": "Signature",
-    "sectionDescription": "Món chính Donut 10K thơm ngon bất bại cùng các dòng bánh ngọt ngào được giới trẻ Quận 7 săn đón nhất.",
+    "sectionDescription": "M�n ch�nh Donut 10K thom ngon b?t b?i c�ng c�c d�ng b�nh ng?t ng�o du?c gi?i tr? Qu?n 7 san d�n nh?t.",
     "items": [
       {
         "id": "menu_1",
-        "name": "Donut Xốp Mềm",
-        "tag": "🍩 Món Signature",
+        "name": "Donut X?p M?m",
+        "tag": "?? M�n Signature",
         "price": 10000,
         "isFeatured": true,
-        "badge": "Best Seller • Món Chính",
-        "description": "Món bánh chủ đạo nướng tươi mỗi ngày, ruột mềm xốp phủ socola Bỉ, cốm cầu vồng, dâu tây hoặc matcha ngọt dịu.",
+        "badge": "Best Seller . M�n Ch�nh",
+        "description": "M�n b�nh ch? d?o nu?ng tuoi m?i ng�y, ru?t m?m x?p ph? socola B?, c?m c?u v?ng, d�u t�y ho?c matcha ng?t d?u.",
         "image": "tai-nguyen/donut-signature.jpg",
         "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
         "status": "active"
       },
       {
         "id": "menu_2",
-        "name": "Tart Trứng Béo Ngậy",
-        "tag": "🥧 Bánh Nướng Nóng",
+        "name": "Tart Tr?ng B�o Ng?y",
+        "tag": "?? B�nh Nu?ng N�ng",
         "price": 18000,
         "isFeatured": false,
         "badge": "",
-        "description": "Lớp vỏ ngàn lớp giòn rụm kết hợp cùng nhân trứng sữa nướng thơm lừng, béo ngậy chuẩn vị Hồng Kông.",
+        "description": "L?p v? ng�n l?p gi�n r?m k?t h?p c�ng nh�n tr?ng s?a nu?ng thom l?ng, b�o ng?y chu?n v? H?ng K�ng.",
         "image": "tai-nguyen/tart-trung.jpg",
         "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
         "status": "active"
       },
       {
         "id": "menu_3",
-        "name": "Oreo Cheesecake Hũ",
-        "tag": "🍰 Bánh Lạnh Hũ",
+        "name": "Oreo Cheesecake Hu",
+        "tag": "?? B�nh L?nh Hu",
         "price": 35000,
         "isFeatured": false,
         "badge": "",
-        "description": "Sự kết hợp hoàn hảo giữa phô mai kem béo ngậy và vụn bánh Oreo giòn rụm đóng hũ mang đi cực tiện lợi.",
+        "description": "S? k?t h?p ho�n h?o gi?a ph� mai kem b�o ng?y v� v?n b�nh Oreo gi�n r?m d�ng hu mang di c?c ti?n l?i.",
         "image": "tai-nguyen/oreo-cheesecake.jpg",
         "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
         "status": "active"
       },
       {
         "id": "menu_4",
-        "name": "Panna Cotta Trái Cây",
-        "tag": "🍮 Tráng Miệng Ý",
+        "name": "Panna Cotta Tr�i C�y",
+        "tag": "?? Tr�ng Mi?ng �",
         "price": 25000,
         "isFeatured": false,
         "badge": "",
-        "description": "Món tráng miệng thanh mát từ Ý, mềm mịn tan ngay trong miệng hòa quyện cùng sốt quả mọng chua ngọt.",
+        "description": "M�n tr�ng mi?ng thanh m�t t? �, m?m m?n tan ngay trong mi?ng h�a quy?n c�ng s?t qu? m?ng chua ng?t.",
         "image": "tai-nguyen/panna-cotta.jpg",
         "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
         "status": "active"
@@ -93,55 +93,65 @@
   },
   "promoBanner": {
     "enabled": true,
-    "title": "🍩 Ưu Đãi Độc Quyền Cho Học Sinh - Sinh Viên",
-    "description": "Mua Combo 5 Donut tặng ngay 1 Donut (chỉ 50.000đ được 6 bánh) đóng hộp mèo Kitten Cake xinh xắn mang về!",
+    "title": "?? Uu D�i D?c Quy?n Cho H?c Sinh - Sinh Vi�n",
+    "description": "Mua Combo 5 Donut t?ng ngay 1 Donut (ch? 50.000d du?c 6 b�nh) d�ng h?p m�o Kitten Cake xinh x?n mang v?!",
     "image": "tai-nguyen/donut-box.jpg",
-    "btnText": "Inbox Nhận Ưu Đãi",
+    "btnText": "Inbox Nh?n Uu D�i",
     "btnLink": "https://www.facebook.com/profile.php?id=61594490844705"
   },
   "gallery": {
-    "sectionTitlePart1": "Khoảnh Khắc",
-    "sectionTitleHighlight": "Ngọt Ngào",
-    "sectionDescription": "Những mẻ bánh mới ra lò mỗi ngày tại gian bếp Kitten Cake Quận 7.",
+    "sectionTitlePart1": "Kho?nh Kh?c",
+    "sectionTitleHighlight": "Ng?t Ng�o",
+    "sectionDescription": "Nh?ng m? b�nh m?i ra l� m?i ng�y t?i gian b?p Kitten Cake Qu?n 7.",
     "items": [
       {
         "id": "gal_1",
         "image": "tai-nguyen/donut-varieties.jpg",
-        "overlay": "Khay Donut tình yêu đủ vị"
+        "overlay": "Khay Donut t�nh y�u d? v?"
       },
       {
         "id": "gal_2",
         "image": "tai-nguyen/donut-box.jpg",
-        "overlay": "Hộp quà tặng Donut 12 vị"
+        "overlay": "H?p qu� t?ng Donut 12 v?"
       },
       {
         "id": "gal_3",
         "image": "tai-nguyen/tart-trung.jpg",
-        "overlay": "Tart trứng ngàn lớp nóng giòn"
+        "overlay": "Tart tr?ng ng�n l?p n�ng gi�n"
       },
       {
         "id": "gal_4",
         "image": "tai-nguyen/oreo-cheesecake.jpg",
-        "overlay": "Oreo Cheesecake hũ tiện lợi"
+        "overlay": "Oreo Cheesecake hu ti?n l?i"
       }
     ]
   },
   "about": {
-    "sectionTitlePart1": "Về",
+    "sectionTitlePart1": "V?",
     "sectionTitleHighlight": "Kitten Cake",
     "image": "tai-nguyen/about-poster.jpg",
-    "paragraph1": "Nằm ẩn mình trong một góc nhỏ yên bình của Quận 7, Kitten Cake mang đến một không gian \"chill\" đúng điệu cho giới trẻ Sài Thành.",
-    "paragraph2": "Chúng mình đặc biệt nổi tiếng với dòng bánh Donut 10K nướng mới mỗi ngày, mềm xốp và đa dạng hương vị. Với biểu tượng chú mèo lười đáng yêu, Kitten Cake hy vọng mỗi chiếc bánh trao tay đều mang lại niềm vui ngọt ngào, vừa túi tiền cho các bạn học sinh - sinh viên.",
+    "paragraph1": "N?m ?n m�nh trong m?t g�c nh? y�n b�nh c?a Qu?n 7, Kitten Cake mang d?n m?t kh�ng gian \"chill\" d�ng di?u cho gi?i tr? S�i Th�nh.",
+    "paragraph2": "Ch�ng m�nh d?c bi?t n?i ti?ng v?i d�ng b�nh Donut 10K nu?ng m?i m?i ng�y, m?m x?p v� da d?ng huong v?. V?i bi?u tu?ng ch� m�o lu?i d�ng y�u, Kitten Cake hy v?ng m?i chi?c b�nh trao tay d?u mang l?i ni?m vui ng?t ng�o, v?a t�i ti?n cho c�c b?n h?c sinh - sinh vi�n.",
     "features": [
-      "Donut nướng mới trong ngày, đồng giá 10K",
-      "Nguyên liệu cao cấp, vị ngọt thanh nhẹ",
-      "Đặt bánh giao ngay",
-      "Phục vụ chu đáo, thân thiện và nhiệt tình"
+      "Donut nu?ng m?i trong ng�y, d?ng gi� 10K",
+      "Nguy�n li?u cao c?p, v? ng?t thanh nh?",
+      "D?t b�nh giao ngay",
+      "Ph?c v? chu d�o, th�n thi?n v� nhi?t t�nh"
     ]
   },
   "adminAuth": {
     "username": "admin",
     "password": "123"
   },
-  "orders": []
+  "orders": [
+    {
+      "id": "ord_1791957020498",
+      "customerName": "H?c Vi�n Kstudy",
+      "phone": "0987654321",
+      "note": "Cho m�nh 1 h?p Combo 5 Donut t?ng 1 nh� ti?m!",
+      "items": [],
+      "status": "pending",
+      "createdAt": "2026-10-14T05:50:20.498Z"
+    }
+  ]
 }
