@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Quản Trị CMS - Kitten Cake</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="cms-sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="../tai-nguyen/logo.jpg" alt="Logo" class="sidebar-logo" id="sidebarLogo">
+            <div class="brand-text">
+                <h2 id="sidebarBrandName">Kitten Cake</h2>
+                <span>Bảng Quản Trị Web</span>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <div class="menu-category-label">Quản Lý Chính</div>
+            <li>
+                <a href="#dashboard" class="menu-link active" data-tab="tab-dashboard">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Tổng quan</span>
+                </a>
+            </li>
+            <li>
+                <a href="#menu" class="menu-link" data-tab="tab-menu">
+                    <i class="fas fa-birthday-cake"></i>
+                    <span>Thực đơn & Món bánh</span>
+                </a>
+            </li>
+            <li>
+                <a href="#promo" class="menu-link" data-tab="tab-promo">
+                    <i class="fas fa-tags"></i>
+                    <span>Ưu đãi Donut Box</span>
+                </a>
+            </li>
+            <li>
+                <a href="#hero" class="menu-link" data-tab="tab-hero">
+                    <i class="fas fa-image"></i>
+                    <span>Hero & Banner Cover</span>
+                </a>
+            </li>
+            <li>
+                <a href="#gallery" class="menu-link" data-tab="tab-gallery">
+                    <i class="fas fa-camera-retro"></i>
+                    <span>Thư viện ảnh bánh</span>
+                </a>
+            </li>
+            <li>
+                <a href="#about" class="menu-link" data-tab="tab-about">
+                    <i class="fas fa-store-alt"></i>
+                    <span>Về Kitten Cake</span>
+                </a>
+            </li>
+
+            <div class="menu-category-label">Khách Hàng & Hệ Thống</div>
+            <li>
+                <a href="#orders" class="menu-link" data-tab="tab-orders">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>Đơn đặt bánh</span>
+                    <span class="menu-badge" id="orderBadge" style="display:none;">0</span>
+                </a>
+            </li>
+            <li>
+                <a href="#settings" class="menu-link" data-tab="tab-settings">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Cài đặt chung & Liên hệ</span>
+                </a>
+            </li>
+            <li>
+                <a href="#backup" class="menu-link" data-tab="tab-backup">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Sao lưu & Khôi phục</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar"><i class="fas fa-user-shield"></i></div>
+                <div class="user-meta">
+                    <div class="name" id="adminUserDisplayName">Admin</div>
+                    <div class="role">Chủ tiệm bánh</div>
+                </div>
+            </div>
+            <button class="btn-icon-logout" id="btnLogout" title="Đăng xuất">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="cms-main">
+        <!-- Top Header -->
+        <header class="cms-header">
+            <div class="header-left">
+                <button class="mobile-toggle" id="mobileToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="page-title">
+                    <h1 id="pageTitle">Tổng Quan Hệ Thống</h1>
+                    <p id="pageSubtitle">Xin chào! Cập nhật nội dung website Kitten Cake thật nhanh và dễ dàng.</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a href="/" target="_blank" class="btn btn-outline" title="Mở trang chủ ở tab mới để xem">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>Xem website</span>
+                </a>
+                <button class="btn btn-primary" id="btnSaveAll">
+                    <i class="fas fa-save"></i>
+                    <span>Lưu tất cả thay đổi</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Body Content -->
+        <div class="cms-content">
+
+            <!-- 1. TAB DASHBOARD -->
+            <div class="tab-pane active" id="tab-dashboard">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3 id="statMenuCount">4</h3>
+                            <p>Món bánh đang bán</p>
+                        </div>
+                        <div class="stat-icon pink"><i class="fas fa-cookie-bite"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3 id="statGalleryCount">4</h3>
+                            <p>Ảnh góc bếp & tiệm</p>
+                        </div>
+                        <div class="stat-icon orange"><i class="fas fa-images"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3 id="statOrdersCount">0</h3>
+                            <p>Đơn đặt bánh mới</p>
+                        </div>
+                        <div class="stat-icon green"><i class="fas fa-bell"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3 id="statPromoStatus">Bật</h3>
+                            <p>Banner ưu đãi Donut</p>
+                        </div>
+                        <div class="stat-icon blue"><i class="fas fa-gift"></i></div>
+                    </div>
+                </div>
+
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-rocket" style="color:#ff6b81;"></i> Thao Tác Nhanh (Không Cần Hướng Dẫn)</h3>
+                            <p>Bấm chọn ngay khu vực bạn muốn chỉnh sửa trên website</p>
+                        </div>
+                    </div>
+                    <div class="cms-card-body">
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
+                            <button class="btn btn-outline quick-nav-btn" data-target="tab-menu" style="padding:16px; justify-content:center; flex-direction:column; gap:10px;">
+                                <i class="fas fa-plus-circle" style="font-size:24px; color:#ff6b81;"></i>
+                                <span>Thêm / Đổi giá bánh</span>
+                            </button>
+                            <button class="btn btn-outline quick-nav-btn" data-target="tab-promo" style="padding:16px; justify-content:center; flex-direction:column; gap:10px;">
+                                <i class="fas fa-bullhorn" style="font-size:24px; color:#ffa502;"></i>
+                                <span>Cài ưu đãi Donut Box</span>
+                            </button>
+                            <button class="btn btn-outline quick-nav-btn" data-target="tab-gallery" style="padding:16px; justify-content:center; flex-direction:column; gap:10px;">
+                                <i class="fas fa-upload" style="font-size:24px; color:#2ed573;"></i>
+                                <span>Đăng ảnh mẻ bánh mới</span>
+                            </button>
+                            <button class="btn btn-outline quick-nav-btn" data-target="tab-settings" style="padding:16px; justify-content:center; flex-direction:column; gap:10px;">
+                                <i class="fas fa-phone-alt" style="font-size:24px; color:#1e90ff;"></i>
+                                <span>Đổi hotline / giờ mở cửa</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-info-circle" style="color:#ffa502;"></i> Hướng Dẫn Nhanh & Mẹo Sử Dụng</h3>
+                            <p>Những điều bạn cần biết khi quản trị web Kitten Cake</p>
+                        </div>
+                    </div>
+                    <div class="cms-card-body" style="font-size:14px; line-height:1.7; color:#57606f;">
+                        <ul style="padding-left:20px;">
+                            <li><strong>Chỉnh sửa bất kỳ lúc nào:</strong> Sau khi thay đổi nội dung, chỉ cần bấm nút màu hồng <strong>"Lưu tất cả thay đổi"</strong> ở góc trên bên phải là trang web ngoài sẽ cập nhật ngay lập tức.</li>
+                            <li><strong>Tải ảnh lên tiện lợi:</strong> Hỗ trợ ảnh JPG, PNG, WEBP. Ảnh tự động tối ưu và lưu vào thư mục tài nguyên của tiệm bánh.</li>
+                            <li><strong>An tâm không sợ lỗi:</strong> Nếu lỡ chỉnh sửa sai, bạn có thể vào mục <strong>"Sao lưu & Khôi phục"</strong> để tải lại trạng thái ban đầu của website bất kỳ lúc nào.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. TAB MENU MANAGEMENT -->
+            <div class="tab-pane" id="tab-menu">
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-heading" style="color:#ff6b81;"></i> Tiêu Đề Khu Vực Thực Đơn</h3>
+                            <p>Hiển thị ở phần đầu của danh sách bánh trên trang chủ</p>
+                        </div>
+                    </div>
+                    <div class="cms-card-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Tiêu đề phần 1</label>
+                                <input type="text" id="menuTitlePart1" class="form-control" placeholder="Thực Đơn">
+                            </div>
+                            <div class="form-group">
+                                <label>Chữ nổi bật màu hồng</label>
+                                <input type="text" id="menuTitleHighlight" class="form-control" placeholder="Signature">
+                            </div>
+                            <div class="form-group form-full">
+                                <label>Đoạn mô tả ngắn dưới tiêu đề</label>
+                                <textarea id="menuSectionDesc" class="form-control" rows="2" placeholder="Mô tả thực đơn..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-birthday-cake" style="color:#ff6b81;"></i> Danh Sách Món Bánh Hiện Tại</h3>
+                            <p>Bật/tắt trạng thái món, đổi giá hoặc bấm nút Sửa để thay đổi thông tin chi tiết</p>
+                        </div>
+                        <button class="btn btn-primary btn-sm" id="btnOpenAddMenuModal">
+                            <i class="fas fa-plus"></i> Thêm món mới
+                        </button>
+                    </div>
+                    <div class="cms-card-body" style="padding:0;">
+                        <div class="table-responsive">
+                            <table class="cms-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:60px;">Thứ tự</th>
+                                        <th>Món bánh</th>
+                                        <th>Loại / Tag</th>
+                                        <th>Giá bán</th>
+                                        <th>Huy hiệu</th>
+                                        <th>Trạng thái</th>
+                                        <th style="width:130px; text-align:right;">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="menuItemsTableBody">
+                                    <!-- Dynamic items -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. TAB PROMO BANNER -->
+            <div class="tab-pane" id="tab-promo">
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-gift" style="color:#ff6b81;"></i> Banner Khuyến Mãi Hộp Donut</h3>
+                            <p>Khối ưu đãi nằm ngay dưới bảng thực đơn (Ưu đãi Combo học sinh - sinh viên)</p>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span style="font-size:13px; font-weight:700;">Hiển thị banner:</span>
+                            <label class="switch">
+                                <input type="checkbox" id="promoEnabled">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="cms-card-body">
+                        <div class="form-grid">
+                            <div class="form-group form-full">
+                                <label>Tiêu đề chương trình ưu đãi</label>
+                                <input type="text" id="promoTitle" class="form-control" placeholder="🍩 Ưu Đãi Độc Quyền...">
+                            </div>
+                            <div class="form-group form-full">
+                                <label>Nội dung chi tiết khuyến mãi (Hỗ trợ định dạng nhấn mạnh)</label>
+                                <textarea id="promoDesc" class="form-control" rows="3" placeholder="Mua Combo 5 Donut tặng ngay 1 Donut..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Chữ trên nút bấm</label>
+                                <input type="text" id="promoBtnText" class="form-control" placeholder="Inbox Nhận Ưu Đãi">
+                            </div>
+                            <div class="form-group">
+                                <label>Đường dẫn khi bấm nút (Fanpage / Zalo / Messenger)</label>
+                                <input type="text" id="promoBtnLink" class="form-control" placeholder="https://www.facebook.com/...">
+                            </div>
+                            <div class="form-group form-full">
+                                <label>Hình ảnh hộp quà Donut</label>
+                                <div class="image-uploader-box">
+                                    <div class="img-preview-wrap">
+                                        <img id="promoImgPreview" src="../tai-nguyen/donut-box.jpg" alt="Donut Box">
+                                    </div>
+                                    <div class="uploader-controls">
+                                        <label class="btn-upload">
+                                            <i class="fas fa-cloud-upload-alt"></i> Chọn ảnh hộp quà mới
+                                            <input type="file" id="promoImgInput" accept="image/*">
+                                        </label>
+                                        <div class="uploader-hint">Khuyên dùng ảnh vuông hoặc chữ nhật rõ nét, tỉ lệ đẹp nhất 4:3 hoặc 1:1.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. TAB HERO & COVER BANNER -->
+            <div class="tab-pane" id="tab-hero">
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-star" style="color:#ff6b81;"></i> Phần Đầu Trang (Hero Section)</h3>
+                            <p>Khu vực chào đón khách hàng đầu tiên khi vào website</p>
+                        </div>
+                    </div>
+                    <div class="cms-card-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Tiêu đề chính dòng 1</label>
+                                <input type="text" id="heroTitlePart1" class="form-control" placeholder="Thiên Đường Donut">
+                            </div>
+                            <div class="form-group">
+                                <label>Chữ nổi bật dòng 2 (Màu hồng cam)</label>
+                                <input type="text" id="heroTitleHighlight" class="form-control" placeholder="Đồng Giá Chỉ 10K">
+                            </div>
+                            <div class="form-group form-full">
+                                <label>Đoạn giới thiệu ngắn</label>
+                                <textarea id="heroDesc" class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Huy hiệu nổi bật trên ảnh</label>
+                                <input type="text" id="heroBadgeText" class="form-control" placeholder="Donut Signature 10K">
+                            </div>
+                            <div class="form-group">
+                                <label>Nút chính (Tên & Link)</label>
+                                <div style="display:flex; gap:10px;">
+                                    <input type="text" id="heroBtn1Text" class="form-control" placeholder="Thử Ngay Donut 10K">
+                                    <input type="text" id="heroBtn1Link" class="form-control" placeholder="#menu">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Nút phụ (Tên & Link)</label>
+                                <div style="display:flex; gap:10px;">
+                                    <input type="text" id="heroBtn2Text" class="form-control" placeholder="Chỉ đường tới tiệm">
+                                    <input type="text" id="heroBtn2Link" class="form-control" placeholder="#contact">
+                                </div>
+                            </div>
+                            <div class="form-group form-full">
+                                <label>Ảnh bộ sưu tập Donut chính</label>
+                                <div class="image-uploader-box">
+                                    <div class="img-preview-wrap">
+                                        <img id="heroImgPreview" src="../tai-nguyen/donut-collection.jpg" alt="Hero Donut">
+                                    </div>
+                                    <div class="uploader-controls">
+                                        <label class="btn-upload">
+                                            <i class="fas fa-cloud-upload-alt"></i> Tải ảnh Hero mới
+                                            <input type="file" id="heroImgInput" accept="image/*">
+                                        </label>
+                                        <div class="uploader-hint">Khuyên dùng ảnh chụp đẹp, có dĩa/khay donut bắt mắt.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-panorama" style="color:#ffa502;"></i> Dải Banner Cover Thương Hiệu (Brand Strip)</h3>
+                            <p>Dải banner ngang nằm ngay dưới phần Hero</p>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span style="font-size:13px; font-weight:700;">Hiển thị:</span>
+                            <label class="switch">
+                                <input type="checkbox" id="brandStripEnabled">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="cms-card-body">
+                        <div class="image-uploader-box">
+                            <div class="img-preview-wrap" style="width:180px; height:80px;">
+                                <img id="coverBannerPreview" src="../tai-nguyen/cover-banner.png" alt="Cover Banner" style="object-fit:cover;">
+                            </div>
+                            <div class="uploader-controls">
+                                <label class="btn-upload">
+                                    <i class="fas fa-cloud-upload-alt"></i> Thay ảnh Cover Banner
+                                    <input type="file" id="coverBannerInput" accept="image/*">
+                                </label>
+                                <div class="uploader-hint">Ảnh ngang dài (tỉ lệ khoảng 3:1 hoặc 4:1) thể hiện slogan hoặc logo tiệm.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. TAB GALLERY -->
+            <div class="tab-pane" id="tab-gallery">
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-camera-retro" style="color:#ff6b81;"></i> Tiêu Đề Thư Viện Hình Ảnh</h3>
+                            <p>Hiển thị ở section Khoảnh Khắc Ngọt Ngào</p>
+                        </div>
+                    </div>
+                    <div class="cms-card-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Tiêu đề phần 1</label>
+                                <input type="text" id="galleryTitlePart1" class="form-control" placeholder="Khoảnh Khắc">
+                            </div>
+                            <div class="form-group">
+                                <label>Chữ nổi bật màu hồng</label>
+                                <input type="text" id="galleryTitleHighlight" class="form-control" placeholder="Ngọt Ngào">
+                            </div>
+                            <div class="form-group form-full">
+                                <label>Mô tả ngắn</label>
+                                <input type="text" id="gallerySectionDesc" class="form-control" placeholder="Những mẻ bánh mới ra lò mỗi ngày...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-images" style="color:#ff6b81;"></i> Danh Sách Hình Ảnh Thực Tế</h3>
+                            <p>Nhấp vào ô chữ để sửa dòng chú thích hiển thị khi rê chuột</p>
+                        </div>
+                        <button class="btn btn-primary btn-sm" id="btnOpenAddGalleryModal">
+                            <i class="fas fa-plus"></i> Thêm ảnh mới
+                        </button>
+                    </div>
+                    <div class="cms-card-body">
+                        <div class="gallery-admin-grid" id="galleryGridContainer">
+                            <!-- Dynamic items -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. TAB ABOUT -->
+            <div class="tab-pane" id="tab-about">
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-store-alt" style="color:#ff6b81;"></i> Giới Thiệu Về Tiệm Bánh</h3>
+                            <p>Nội dung câu chuyện thương hiệu và hình ảnh poster Kitten Cake</p>
+                        </div>
+                    </div>
+                    <div class="cms-card-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Tiêu đề phần 1</label>
+                                <input type="text" id="aboutTitlePart1" class="form-control" placeholder="Về">
+                            </div>
+                            <div class="form-group">
+                                <label>Chữ nổi bật</label>
+                                <input type="text" id="aboutTitleHighlight" class="form-control" placeholder="Kitten Cake">
+                            </div>
+                            <div class="form-group form-full">
+                                <label>Đoạn giới thiệu 1</label>
+                                <textarea id="aboutP1" class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="form-group form-full">
+                                <label>Đoạn giới thiệu 2</label>
+                                <textarea id="aboutP2" class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="form-group form-full">
+                                <label>Ảnh Poster giới thiệu bên trái</label>
+                                <div class="image-uploader-box">
+                                    <div class="img-preview-wrap" style="width:100px; height:120px;">
+                                        <img id="aboutImgPreview" src="../tai-nguyen/about-poster.jpg" alt="About Poster">
+                                    </div>
+                                    <div class="uploader-controls">
+                                        <label class="btn-upload">
+                                            <i class="fas fa-cloud-upload-alt"></i> Tải poster mới
+                                            <input type="file" id="aboutImgInput" accept="image/*">
+                                        </label>
+                                        <div class="uploader-hint">Poster dọc hoặc ảnh chú mèo linh vật đáng yêu của tiệm.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-check-circle" style="color:#2ed573;"></i> Cam Kết Chất Lượng (Danh Sách Gạch Đầu Dòng)</h3>
+                            <p>Những điểm nổi bật có icon tích xanh bên dưới bài viết giới thiệu</p>
+                        </div>
+                        <button class="btn btn-primary btn-sm" id="btnAddFeatureBtn">
+                            <i class="fas fa-plus"></i> Thêm cam kết
+                        </button>
+                    </div>
+                    <div class="cms-card-body">
+                        <div id="aboutFeaturesList" style="display:flex; flex-direction:column; gap:12px;">
+                            <!-- Dynamic feature rows -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. TAB ORDERS (ĐẶT BÁNH NHANH) -->
+            <div class="tab-pane" id="tab-orders">
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-shopping-bag" style="color:#ff6b81;"></i> Danh Sách Yêu Cầu & Đơn Đặt Bánh</h3>
+                            <p>Khách hàng gửi yêu cầu trực tiếp từ website sẽ hiển thị ngay tại đây</p>
+                        </div>
+                        <button class="btn btn-outline btn-sm" id="btnRefreshOrders">
+                            <i class="fas fa-sync-alt"></i> Làm mới danh sách
+                        </button>
+                    </div>
+                    <div class="cms-card-body" style="padding:0;">
+                        <div class="table-responsive">
+                            <table class="cms-table">
+                                <thead>
+                                    <tr>
+                                        <th>Thời gian</th>
+                                        <th>Khách hàng</th>
+                                        <th>Số điện thoại</th>
+                                        <th>Nội dung / Ghi chú</th>
+                                        <th>Trạng thái</th>
+                                        <th style="width:140px; text-align:right;">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ordersTableBody">
+                                    <!-- Dynamic order rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. TAB SETTINGS -->
+            <div class="tab-pane" id="tab-settings">
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-info" style="color:#ff6b81;"></i> Thông Tin Tiệm Bánh & Nhận Diện</h3>
+                            <p>Tên tiệm, câu khẩu hiệu và logo</p>
+                        </div>
+                    </div>
+                    <div class="cms-card-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Tên tiệm bánh (Hiển thị góc trên & footer)</label>
+                                <input type="text" id="setBrandName" class="form-control" placeholder="Kitten Cake">
+                            </div>
+                            <div class="form-group">
+                                <label>Tiêu đề trang (Thẻ Title trên tab trình duyệt)</label>
+                                <input type="text" id="setSiteTitle" class="form-control">
+                            </div>
+                            <div class="form-group form-full">
+                                <label>Khẩu hiệu / Giới thiệu ngắn ở chân trang (Footer)</label>
+                                <input type="text" id="setBrandTagline" class="form-control">
+                            </div>
+                            <div class="form-group form-full">
+                                <label>Logo tiệm bánh</label>
+                                <div class="image-uploader-box">
+                                    <div class="img-preview-wrap" style="width:70px; height:70px; border-radius:50%;">
+                                        <img id="setLogoPreview" src="../tai-nguyen/logo.jpg" alt="Logo" style="border-radius:50%;">
+                                    </div>
+                                    <div class="uploader-controls">
+                                        <label class="btn-upload">
+                                            <i class="fas fa-cloud-upload-alt"></i> Tải logo mới
+                                            <input type="file" id="setLogoInput" accept="image/*">
+                                        </label>
+                                        <div class="uploader-hint">Khuyên dùng ảnh tròn hoặc vuông, kích thước khoảng 200x200 px.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-map-marked-alt" style="color:#ffa502;"></i> Địa Chỉ, Hotline & Giờ Mở Cửa</h3>
+                            <p>Hiển thị ở cột thông tin liên hệ dưới chân trang (Footer)</p>
+                        </div>
+                    </div>
+                    <div class="cms-card-body">
+                        <div class="form-grid-3">
+                            <div class="form-group">
+                                <label>Địa chỉ tiệm</label>
+                                <input type="text" id="setAddress" class="form-control" placeholder="Quận 7, TP. Hồ Chí Minh">
+                            </div>
+                            <div class="form-group">
+                                <label>Hotline đặt bánh</label>
+                                <input type="text" id="setHotline" class="form-control" placeholder="09xx xxx xxx">
+                            </div>
+                            <div class="form-group">
+                                <label>Email tiệm</label>
+                                <input type="text" id="setEmail" class="form-control" placeholder="hello@kittencake.vn">
+                            </div>
+                            <div class="form-group">
+                                <label>Giờ mở cửa ngày thường (Thứ 2 - Thứ 6)</label>
+                                <input type="text" id="setWeekdaysHours" class="form-control" placeholder="Thứ 2 - Thứ 6: 08:00 - 22:00">
+                            </div>
+                            <div class="form-group">
+                                <label>Giờ mở cửa cuối tuần (Thứ 7 - CN)</label>
+                                <input type="text" id="setWeekendsHours" class="form-control" placeholder="Thứ 7 - CN: 07:30 - 22:30">
+                            </div>
+                            <div class="form-group">
+                                <label>Bản quyền dưới cùng (Footer Copyright)</label>
+                                <input type="text" id="setCopyright" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-share-alt" style="color:#1e90ff;"></i> Kênh Mạng Xã Hội & Nút Đặt Bánh Header</h3>
+                            <p>Liên kết Fanpage Facebook, Instagram, TikTok của tiệm</p>
+                        </div>
+                    </div>
+                    <div class="cms-card-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Facebook Fanpage URL</label>
+                                <input type="text" id="setFbUrl" class="form-control" placeholder="https://www.facebook.com/...">
+                            </div>
+                            <div class="form-group">
+                                <label>Instagram URL</label>
+                                <input type="text" id="setInstaUrl" class="form-control" placeholder="https://instagram.com/...">
+                            </div>
+                            <div class="form-group">
+                                <label>TikTok URL</label>
+                                <input type="text" id="setTiktokUrl" class="form-control" placeholder="https://tiktok.com/@...">
+                            </div>
+                            <div class="form-group">
+                                <label>Đường dẫn khi bấm "Đặt bánh ngay" trên Header</label>
+                                <input type="text" id="setHeaderOrderLink" class="form-control" placeholder="https://www.facebook.com/...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. TAB BACKUP & RESTORE -->
+            <div class="tab-pane" id="tab-backup">
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-shield-alt" style="color:#2ed573;"></i> Sao Lưu & Khôi Phục Dữ Liệu</h3>
+                            <p>Đảm bảo an toàn 100% cho nội dung website của bạn</p>
+                        </div>
+                    </div>
+                    <div class="cms-card-body">
+                        <div class="form-grid">
+                            <div style="background:#fafbfc; border:1px solid #e9ecef; border-radius:12px; padding:20px;">
+                                <h4 style="font-size:16px; margin-bottom:8px; color:#2f3542;"><i class="fas fa-download" style="color:#2ed573;"></i> 1. Tải Về Bản Sao Lưu (.json)</h4>
+                                <p style="font-size:13px; color:#747d8c; margin-bottom:16px;">Tải toàn bộ thực đơn, giá, hình ảnh và cài đặt về máy tính của bạn để lưu trữ dự phòng.</p>
+                                <button class="btn btn-outline" id="btnDownloadBackup">
+                                    <i class="fas fa-file-download"></i> Tải bản sao lưu ngay
+                                </button>
+                            </div>
+
+                            <div style="background:#fafbfc; border:1px solid #e9ecef; border-radius:12px; padding:20px;">
+                                <h4 style="font-size:16px; margin-bottom:8px; color:#2f3542;"><i class="fas fa-upload" style="color:#1e90ff;"></i> 2. Khôi Phục Từ Tệp Sao Lưu</h4>
+                                <p style="font-size:13px; color:#747d8c; margin-bottom:16px;">Nạp lại tệp dữ liệu đã sao lưu trước đó để đưa website về trạng thái mong muốn.</p>
+                                <label class="btn btn-outline" style="cursor:pointer;">
+                                    <i class="fas fa-file-import"></i> Chọn tệp .json để nạp
+                                    <input type="file" id="restoreFileInput" accept=".json" style="display:none;">
+                                </label>
+                            </div>
+                        </div>
+
+                        <div style="margin-top:24px; padding-top:20px; border-top:1px solid #e9ecef; display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <h4 style="font-size:15px; color:#ff4757;"><i class="fas fa-undo"></i> Khôi phục dữ liệu tiệm bánh ban đầu</h4>
+                                <p style="font-size:13px; color:#747d8c;">Đưa toàn bộ thực đơn và thông tin về dữ liệu mẫu lúc mới bàn giao web.</p>
+                            </div>
+                            <button class="btn btn-danger btn-sm" id="btnResetToDefaults">
+                                <i class="fas fa-history"></i> Khôi phục mặc định
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-key" style="color:#ffa502;"></i> Đổi Mật Khẩu Quản Trị</h3>
+                            <p>Thay đổi mật khẩu đăng nhập vào CMS</p>
+                        </div>
+                    </div>
+                    <div class="cms-card-body">
+                        <div class="form-grid" style="max-width:500px;">
+                            <div class="form-group form-full">
+                                <label>Mật khẩu hiện tại</label>
+                                <input type="password" id="pwdCurrent" class="form-control" placeholder="Nhập mật khẩu hiện tại...">
+                            </div>
+                            <div class="form-group form-full">
+                                <label>Mật khẩu mới</label>
+                                <input type="password" id="pwdNew" class="form-control" placeholder="Nhập mật khẩu mới...">
+                            </div>
+                            <div class="form-group form-full">
+                                <button class="btn btn-primary" id="btnChangePassword">
+                                    <i class="fas fa-check"></i> Cập nhật mật khẩu
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODAL: ADD / EDIT MENU ITEM -->
+    <div class="modal-overlay" id="menuModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="menuModalTitle">Thêm Món Bánh Mới</h3>
+                <button class="modal-close" onclick="closeModal('menuModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="modalMenuId">
+                <div class="form-grid">
+                    <div class="form-group form-full">
+                        <label>Tên món bánh <span style="color:#ff4757;">*</span></label>
+                        <input type="text" id="modalMenuName" class="form-control" placeholder="Ví dụ: Donut Xốp Mềm, Bánh Chuối Nướng..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phân loại / Tag</label>
+                        <select id="modalMenuTag" class="form-control">
+                            <option value="🍩 Món Signature">🍩 Món Signature</option>
+                            <option value="🥧 Bánh Nướng Nóng">🥧 Bánh Nướng Nóng</option>
+                            <option value="🍰 Bánh Lạnh Hũ">🍰 Bánh Lạnh Hũ</option>
+                            <option value="🍮 Tráng Miệng Ý">🍮 Tráng Miệng Ý</option>
+                            <option value="🍪 Bánh Quy Giòn">🍪 Bánh Quy Giòn</option>
+                            <option value="🥖 Bánh Mì Tươi">🥖 Bánh Mì Tươi</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Giá bán (VNĐ) <span style="color:#ff4757;">*</span></label>
+                        <input type="number" id="modalMenuPrice" class="form-control" placeholder="10000" required step="1000">
+                    </div>
+                    <div class="form-group">
+                        <label>Huy hiệu nổi bật (Tùy chọn)</label>
+                        <input type="text" id="modalMenuBadge" class="form-control" placeholder="Ví dụ: Best Seller • Món Chính">
+                    </div>
+                    <div class="form-group">
+                        <label>Đóng khung viền nổi bật?</label>
+                        <select id="modalMenuFeatured" class="form-control">
+                            <option value="false">Bình thường</option>
+                            <option value="true">Nổi bật (Viền hồng Best Seller)</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Mô tả hương vị món bánh</label>
+                        <textarea id="modalMenuDesc" class="form-control" rows="2" placeholder="Ruột mềm xốp phủ socola Bỉ, dâu tây hoặc matcha ngọt dịu..."></textarea>
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Hình ảnh món bánh</label>
+                        <div class="image-uploader-box">
+                            <div class="img-preview-wrap">
+                                <img id="modalMenuImgPreview" src="../tai-nguyen/donut-signature.jpg" alt="Preview">
+                            </div>
+                            <div class="uploader-controls">
+                                <label class="btn-upload">
+                                    <i class="fas fa-cloud-upload-alt"></i> Tải ảnh bánh từ máy tính
+                                    <input type="file" id="modalMenuImgInput" accept="image/*">
+                                </label>
+                                <div class="uploader-hint">Chụp ảnh đĩa bánh rõ nét dưới ánh sáng tự nhiên.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Đường dẫn khi khách bấm "Đặt ngay"</label>
+                        <input type="text" id="modalMenuOrderLink" class="form-control" placeholder="Mặc định lấy link Fanpage của tiệm">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('menuModal')">Hủy bỏ</button>
+                <button class="btn btn-primary" id="btnSaveMenuItem">Lưu món bánh</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD GALLERY IMAGE -->
+    <div class="modal-overlay" id="galleryModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Thêm Ảnh Vào Thư Viện</h3>
+                <button class="modal-close" onclick="closeModal('galleryModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom:16px;">
+                    <label>Dòng chữ chú thích khi khách rê chuột vào ảnh</label>
+                    <input type="text" id="modalGalleryCaption" class="form-control" placeholder="Ví dụ: Khay Donut tình yêu vừa ra lò">
+                </div>
+                <div class="form-group">
+                    <label>Chọn hình ảnh</label>
+                    <div class="image-uploader-box">
+                        <div class="img-preview-wrap" style="width:120px; height:100px;">
+                            <img id="modalGalleryImgPreview" src="../tai-nguyen/donut-varieties.jpg" alt="Gallery Preview">
+                        </div>
+                        <div class="uploader-controls">
+                            <label class="btn-upload">
+                                <i class="fas fa-cloud-upload-alt"></i> Chọn ảnh từ máy tính
+                                <input type="file" id="modalGalleryImgInput" accept="image/*">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('galleryModal')">Hủy</button>
+                <button class="btn btn-primary" id="btnSaveGalleryItem">Thêm vào thư viện</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
