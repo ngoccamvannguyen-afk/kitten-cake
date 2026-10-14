@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập Quản trị - Kitten Cake CMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #fff0f3 0%, #ffe3e3 50%, #ffd8d8 100%);
+            padding: 20px;
+        }
+        .login-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 440px;
+            padding: 40px 35px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(255, 107, 129, 0.15);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #ff6b81, #ffa502, #ff4757);
+        }
+        .login-logo {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            object-fit: cover;
+            border: 4px solid #fff0f3;
+            box-shadow: 0 4px 15px rgba(255, 107, 129, 0.2);
+        }
+        .login-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2f3542;
+            margin-bottom: 6px;
+        }
+        .login-subtitle {
+            font-size: 14px;
+            color: #747d8c;
+            margin-bottom: 28px;
+        }
+        .login-form .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .login-form label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2f3542;
+            margin-bottom: 8px;
+        }
+        .input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-group i.input-icon {
+            position: absolute;
+            left: 16px;
+            color: #a4b0be;
+            font-size: 16px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 13px 16px 13px 46px;
+            border: 1.5px solid #e4e7eb;
+            border-radius: 12px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 15px;
+            transition: all 0.25s ease;
+            outline: none;
+            background: #fafafa;
+        }
+        .input-group input:focus {
+            border-color: #ff6b81;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(255, 107, 129, 0.15);
+        }
+        .toggle-password {
+            position: absolute;
+            right: 16px;
+            background: none;
+            border: none;
+            color: #a4b0be;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ff6b81 0%, #ff4757 100%);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Quicksand', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(255, 71, 87, 0.35);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 71, 87, 0.45);
+        }
+        .demo-credentials {
+            margin-top: 24px;
+            padding: 14px;
+            background: #fff5f5;
+            border-radius: 12px;
+            border: 1px dashed #ffb8b8;
+            font-size: 13px;
+            color: #57606f;
+        }
+        .demo-credentials strong {
+            color: #ff4757;
+        }
+        .quick-fill-btn {
+            background: #fff;
+            border: 1px solid #ff6b81;
+            color: #ff6b81;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 6px;
+            display: inline-block;
+            transition: 0.2s;
+        }
+        .quick-fill-btn:hover {
+            background: #ff6b81;
+            color: #fff;
+        }
+        .alert-box {
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            font-size: 14px;
+            display: none;
+            text-align: left;
+        }
+        .alert-error {
+            background: #ffe3e3;
+            color: #c92a2a;
+            border: 1px solid #ffa8a8;
+        }
+        .back-home {
+            margin-top: 20px;
+            display: inline-block;
+            font-size: 14px;
+            color: #747d8c;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .back-home:hover {
+            color: #ff4757;
+        }
+    </style>
+</head>
+<body class="login-page">
+
+    <div class="login-card">
+        <img src="../tai-nguyen/logo.jpg" alt="Kitten Cake Logo" class="login-logo">
+        <h1 class="login-title">Kitten Cake CMS</h1>
+        <p class="login-subtitle">Hệ thống quản trị nội dung tiệm bánh ngọt</p>
+
+        <div id="alertBox" class="alert-box alert-error"></div>
+
+        <form id="loginForm" class="login-form">
+            <div class="form-group">
+                <label for="username">Tên đăng nhập</label>
+                <div class="input-group">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" id="username" placeholder="Nhập tên đăng nhập..." required autocomplete="username">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mật khẩu</label>
+                <div class="input-group">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="password" placeholder="Nhập mật khẩu..." required autocomplete="current-password">
+                    <button type="button" class="toggle-password" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login" id="btnLogin">
+                <span>Đăng nhập hệ thống</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </form>
+
+        <div class="demo-credentials">
+            <div>💡 <strong>Tài khoản mặc định:</strong></div>
+            <div>Tên: <strong>admin</strong> | Mật khẩu: <strong>123</strong></div>
+            <button type="button" class="quick-fill-btn" id="btnQuickFill">
+                <i class="fas fa-magic"></i> Tự điền nhanh tài khoản mẫu
+            </button>
+        </div>
+
+        <a href="/" class="back-home">
+            <i class="fas fa-angle-left"></i> Quay lại trang chủ website
+        </a>
+    </div>
+
+    <script>
+        // Password toggle
+        const toggleBtn = document.getElementById('togglePassword');
+        const passInput = document.getElementById('password');
+        toggleBtn.addEventListener('click', () => {
+            const isPassword = passInput.type === 'password';
+            passInput.type = isPassword ? 'text' : 'password';
+            toggleBtn.innerHTML = isPassword ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+        });
+
+        // Quick fill
+        document.getElementById('btnQuickFill').addEventListener('click', () => {
+            document.getElementById('username').value = 'admin';
+            document.getElementById('password').value = '123';
+        });
+
+        // Login handle
+        const form = document.getElementById('loginForm');
+        const alertBox = document.getElementById('alertBox');
+        const btnLogin = document.getElementById('btnLogin');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            alertBox.style.display = 'none';
+            btnLogin.disabled = true;
+            btnLogin.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang đăng nhập...';
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    localStorage.setItem('kitten_admin_token', data.token);
+                    localStorage.setItem('kitten_admin_user', JSON.stringify(data.user));
+                    window.location.href = '/admin/';
+                } else {
+                    alertBox.textContent = data.error || 'Tên đăng nhập hoặc mật khẩu không đúng!';
+                    alertBox.style.display = 'block';
+                    btnLogin.disabled = false;
+                    btnLogin.innerHTML = '<span>Đăng nhập hệ thống</span> <i class="fas fa-arrow-right"></i>';
+                }
+            } catch (err) {
+                // If offline or testing directly without server
+                if (username === 'admin' && password === '123') {
+                    localStorage.setItem('kitten_admin_token', 'local_demo_token');
+                    localStorage.setItem('kitten_admin_user', JSON.stringify({ username: 'admin' }));
+                    window.location.href = '/admin/';
+                } else {
+                    alertBox.textContent = 'Không thể kết nối máy chủ! (Tài khoản thử nghiệm: admin / 123)';
+                    alertBox.style.display = 'block';
+                    btnLogin.disabled = false;
+                    btnLogin.innerHTML = '<span>Đăng nhập hệ thống</span> <i class="fas fa-arrow-right"></i>';
+                }
+            }
+        });
+
+        // Auto redirect if already logged in
+        if (localStorage.getItem('kitten_admin_token')) {
+            window.location.href = '/admin/';
+        }
+    </script>
+</body>
+</html>
