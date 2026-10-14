@@ -203,9 +203,84 @@ app.post('/api/restore', (req, res) => {
   }
 });
 
-// ---------------- ORDERS (Đặt bánh nhanh) ----------------
+// ---------------- PRODUCTS ----------------
+// GET /api/products/:id
+app.get('/api/products/:id', (req, res) => {
+  const { id } = req.params;
+  const data = readContent();
+  if (!data || !data.menu || !data.menu.items) {
+    return res.status(500).json({ error: 'Không thể đọc dữ liệu sản phẩm.' });
+  }
+
+  const product = data.menu.items.find(i => i.id === id);
+  if (!product) {
+    return res.status(404).json({ error: 'Không tìm thấy sản phẩm.' });
+  }
+
+  // Related products (other active items in menu)
+  const related = data.menu.items
+    .filter(i => i.id !== id && i.status !== 'inactive')
+    .slice(0, 3);
+
+  res.json({
+    success: true,
+    data: product,
+    related,
+    paymentConfig: data.paymentConfig,
+    shippingConfig: data.shippingConfig
+  });
+});
+
+// ---------------- VOUCHER CHECK ----------------
+// POST /api/voucher/apply
+app.post('/api/voucher/apply', (req, res) => {
+  const { code, subtotal } = req.body;
+  if (!code) {
+    return res.status(400).json({ error: 'Vui lòng cung cấp mã voucher.' });
+  }
+
+  const data = readContent();
+  const vouchers = data?.vouchers || [];
+  const found = vouchers.find(v => v.code.toUpperCase() === code.trim().toUpperCase());
+
+  if (!found) {
+    return res.status(404).json({ success: false, error: 'Mã giảm giá không tồn tại hoặc đã hết hạn.' });
+  }
+
+  let discountAmount = 0;
+  if (found.discountPercent) {
+    discountAmount = Math.round((subtotal * found.discountPercent) / 100);
+  } else if (found.discountFixed) {
+    discountAmount = found.discountFixed;
+  }
+
+  res.json({
+    success: true,
+    voucher: {
+      code: found.code,
+      description: found.description,
+      discountAmount: Math.min(discountAmount, subtotal)
+    }
+  });
+});
+
+// ---------------- ORDERS (Đặt bánh & Giỏ hàng đa món) ----------------
 app.post('/api/orders', (req, res) => {
-  const { customerName, phone, note, items } = req.body;
+  const {
+    customerName,
+    phone,
+    address,
+    district,
+    note,
+    paymentMethod,
+    items,
+    subtotal,
+    shippingFee,
+    discount,
+    total,
+    voucherCode
+  } = req.body;
+
   if (!customerName || !phone) {
     return res.status(400).json({ error: 'Vui lòng cung cấp họ tên và số điện thoại.' });
   }
@@ -213,12 +288,25 @@ app.post('/api/orders', (req, res) => {
   const data = readContent();
   if (!data.orders) data.orders = [];
 
+  const calculatedSubtotal = Number(subtotal) || 0;
+  const calculatedShipping = Number(shippingFee) || 0;
+  const calculatedDiscount = Number(discount) || 0;
+  const calculatedTotal = Number(total) || (calculatedSubtotal + calculatedShipping - calculatedDiscount);
+
   const newOrder = {
     id: 'ord_' + Date.now(),
     customerName,
     phone,
+    address: address || '',
+    district: district || 'Quận 7',
     note: note || '',
-    items: items || [],
+    paymentMethod: paymentMethod || 'cod',
+    items: Array.isArray(items) ? items : [],
+    subtotal: calculatedSubtotal,
+    shippingFee: calculatedShipping,
+    discount: calculatedDiscount,
+    total: calculatedTotal,
+    voucherCode: voucherCode || '',
     status: 'pending',
     createdAt: new Date().toISOString()
   };
@@ -228,8 +316,9 @@ app.post('/api/orders', (req, res) => {
 
   res.json({
     success: true,
-    message: 'Đặt bánh thành công! Tiệm sẽ gọi lại cho bạn sớm nhất.',
-    orderId: newOrder.id
+    message: 'Đặt bánh thành công! Kitten Cake sẽ gọi lại xác nhận ngay.',
+    orderId: newOrder.id,
+    order: newOrder
   });
 });
 

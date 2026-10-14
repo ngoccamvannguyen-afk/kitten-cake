@@ -21,10 +21,34 @@ app.get('/app.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'app.js'));
 });
 
+app.get('/product.js', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'application/javascript; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'product.js'));
+});
+
+app.get('/cart.js', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'application/javascript; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'cart.js'));
+});
+
 app.get('/index.html', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.setHeader('Content-Type', 'text/html; charset=UTF-8');
   res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get(['/product', '/product.html'], (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'product.html'));
+});
+
+app.get(['/cart', '/cart.html'], (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'cart.html'));
 });
 
 app.use(express.static(__dirname));

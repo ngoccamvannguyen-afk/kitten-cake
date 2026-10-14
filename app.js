@@ -169,17 +169,24 @@ function applyContentToDOM(data) {
                 card.innerHTML = `
                     ${item.badge ? `<span class="hot-badge"><i class="fas fa-fire"></i> ${item.badge}</span>` : ''}
                     <div class="menu-img">
-                        <img src="${item.image}" alt="${item.name}">
+                        <a href="product.html?id=${item.id}">
+                            <img src="${item.image}" alt="${item.name}">
+                        </a>
                     </div>
                     <div class="menu-info">
                         <span class="item-tag">${item.tag || '🍩 Món Bánh'}</span>
-                        <h3>${item.name}</h3>
+                        <h3><a href="product.html?id=${item.id}" style="color:inherit; text-decoration:none;">${item.name}</a></h3>
                         <p>${item.description || ''}</p>
                         <div class="menu-card-bottom">
                             <div class="menu-price">${formatCurrency(item.price)}</div>
-                            <button type="button" class="menu-order-btn btn-open-order" data-item-id="${item.id}">
-                                <i class="fas fa-cart-plus"></i> Đặt ngay
-                            </button>
+                            <div class="menu-card-actions" style="display:flex; gap:6px;">
+                                <a href="product.html?id=${item.id}" class="menu-order-btn btn-view-detail" title="Xem chi tiết bánh">
+                                    <i class="fas fa-eye"></i> Chi tiết
+                                </a>
+                                <button type="button" class="menu-order-btn btn-quick-add-cart" data-item-id="${item.id}" title="Thêm vào giỏ hàng">
+                                    <i class="fas fa-cart-plus"></i> Thêm giỏ
+                                </button>
+                            </div>
                         </div>
                     </div>
                 `;

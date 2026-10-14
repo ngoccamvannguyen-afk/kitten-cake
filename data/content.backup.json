@@ -20,6 +20,29 @@
     },
     "copyright": "© 2026 Kitten Cake Bakery. Thiết kế bởi chuyên gia Web."
   },
+  "shippingConfig": {
+    "district7Fee": 15000,
+    "otherDistrictFee": 25000,
+    "freeShippingMin": 120000
+  },
+  "paymentConfig": {
+    "bankId": "MB",
+    "bankName": "MBBank (Quân Đội)",
+    "accountNumber": "0901234567",
+    "accountName": "TIEM BANH KITTEN CAKE"
+  },
+  "vouchers": [
+    {
+      "code": "KITTEN10",
+      "discountPercent": 10,
+      "description": "Ưu đãi học sinh - sinh viên giảm 10%"
+    },
+    {
+      "code": "FREESHIPQ7",
+      "discountFixed": 15000,
+      "description": "Miễn phí giao hàng nội thành Quận 7"
+    }
+  ],
   "hero": {
     "titlePart1": "Thiên Đường Donut",
     "titleHighlight": "Đồng Giá Chỉ 10K",
@@ -148,25 +171,26 @@
       "id": "ord_1791960429119",
       "customerName": "Khách Hàng Thử Nghiệm",
       "phone": "0901234567",
-      "note": "Test đặt 2 Donut",
+      "address": "Phường Tân Phong, Quận 7",
+      "district": "Quận 7",
+      "note": "Giao giờ hành chính, gọi trước khi đến",
+      "paymentMethod": "cod",
+      "shippingFee": 15000,
+      "subtotal": 20000,
+      "discount": 0,
+      "total": 35000,
       "items": [
         {
-          "name": "Donut Xốp Mềm",
+          "id": "menu_1",
+          "name": "Donut Xốp Mềm Signature",
+          "flavor": "Socola Bỉ Thượng Hạng",
           "price": 10000,
-          "quantity": 2
+          "quantity": 2,
+          "image": "tai-nguyen/donut-signature.jpg"
         }
       ],
-      "status": "pending",
+      "status": "completed",
       "createdAt": "2026-10-14T06:47:09.119Z"
-    },
-    {
-      "id": "ord_1791957020498",
-      "customerName": "Học Viên Kstudy",
-      "phone": "0987654321",
-      "note": "Cho mình 1 hộp Combo 5 Donut tặng 1 nhé tiệm!",
-      "items": [],
-      "status": "pending",
-      "createdAt": "2026-10-14T05:50:20.498Z"
     }
   ]
 }

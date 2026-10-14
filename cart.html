@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ Hàng & Thanh Toán - Kitten Cake Quận 7</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="cart-page">
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo" style="text-decoration:none;">
+                <img src="tai-nguyen/logo.jpg" alt="Kitten Cake Logo">
+                <span>Kitten Cake</span>
+            </a>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="index.html#home">Trang chủ</a></li>
+                    <li><a href="index.html#menu">Thực đơn</a></li>
+                    <li><a href="cart.html" class="active">Giỏ hàng</a></li>
+                    <li><a href="index.html#contact">Liên hệ</a></li>
+                </ul>
+            </nav>
+            <div class="header-right-actions">
+                <a href="index.html#menu" class="btn btn-outline" style="padding:8px 16px; font-size:0.9rem;">
+                    <i class="fas fa-plus"></i> Chọn thêm bánh
+                </a>
+            </div>
+            <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-bar">
+        <div class="container">
+            <ul class="breadcrumb-list">
+                <li><a href="index.html"><i class="fas fa-home"></i> Trang chủ</a></li>
+                <li><i class="fas fa-chevron-right"></i></li>
+                <li><a href="index.html#menu">Thực đơn</a></li>
+                <li><i class="fas fa-chevron-right"></i></li>
+                <li class="active">Giỏ hàng & Thanh toán</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Checkout Section -->
+    <section class="checkout-section">
+        <div class="container">
+            <div class="section-title text-left" style="text-align:left; margin-bottom:30px;">
+                <h2>Giỏ Hàng & <span class="highlight">Thanh Toán</span></h2>
+                <p>Kiểm tra danh sách bánh và điền thông tin để tiệm giao tận tay bạn nhé!</p>
+            </div>
+
+            <!-- Empty Cart Warning -->
+            <div class="cart-empty-state" id="cartEmptyState" style="display:none;">
+                <div class="empty-icon"><i class="fas fa-shopping-basket"></i></div>
+                <h3>Giỏ hàng của bạn đang trống!</h3>
+                <p>Chưa có món bánh nào được thêm. Hãy ghé xem thực đơn Donut 10K và bánh ngọt siêu ngon nhé.</p>
+                <a href="index.html#menu" class="btn btn-primary">
+                    <i class="fas fa-utensils"></i> Xem thực đơn ngay
+                </a>
+            </div>
+
+            <!-- Active Cart & Checkout Form -->
+            <form id="checkoutForm" class="checkout-layout">
+                
+                <!-- Left Column: Items & Delivery Info -->
+                <div class="checkout-left">
+                    
+                    <!-- 1. Danh sách món trong giỏ -->
+                    <div class="checkout-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-cookie-bite"></i> Món Đã Chọn (<span id="cartTotalItemsBadge">0</span>)</h3>
+                            <button type="button" class="btn-clear-cart" id="btnClearCart" title="Xóa toàn bộ giỏ">
+                                <i class="fas fa-trash-alt"></i> Xóa tất cả
+                            </button>
+                        </div>
+                        <div class="card-body" style="padding:0;">
+                            <!-- Promo alert inside cart -->
+                            <div class="cart-promo-banner" id="cartComboAlert" style="display:none;"></div>
+                            
+                            <div class="cart-items-table-wrap">
+                                <table class="cart-items-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Sản phẩm</th>
+                                            <th>Đơn giá</th>
+                                            <th style="text-align:center;">Số lượng</th>
+                                            <th style="text-align:right;">Thành tiền</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cartTableBody">
+                                        <!-- Dynamic items -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Thông tin giao hàng -->
+                    <div class="checkout-card" style="margin-top:24px;">
+                        <div class="card-header">
+                            <h3><i class="fas fa-map-marker-alt"></i> Thông Tin Giao Hàng</h3>
+                            <span class="header-hint">Giao tận nơi hoặc nhận tại tiệm</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-grid-checkout">
+                                <div class="form-group">
+                                    <label for="custName">Họ và tên người nhận <span class="required">*</span></label>
+                                    <input type="text" id="custName" class="form-input" placeholder="Ví dụ: Bạn Linh, Anh Nam..." required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="custPhone">Số điện thoại liên hệ <span class="required">*</span></label>
+                                    <input type="tel" id="custPhone" class="form-input" placeholder="09xx xxx xxx" required>
+                                </div>
+                                
+                                <div class="form-group form-full">
+                                    <label for="deliveryArea">Khu vực nhận bánh <span class="required">*</span></label>
+                                    <select id="deliveryArea" class="form-input">
+                                        <option value="q7" data-fee="15000">Nội thành Quận 7 (Phí ship 15.000đ • Giao 30-45 phút)</option>
+                                        <option value="near" data-fee="25000">Quận lân cận: Q1, Q4, Q8, Nhà Bè (Phí ship 25.000đ)</option>
+                                        <option value="other" data-fee="30000">Các quận khác tại TP.HCM (Phí ship 30.000đ)</option>
+                                        <option value="pickup" data-fee="0">Tự đến tiệm nhận bánh tại Quận 7 (Miễn phí ship)</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group form-full">
+                                    <label for="custAddress">Địa chỉ nhận bánh chi tiết <span class="required">*</span></label>
+                                    <input type="text" id="custAddress" class="form-input" placeholder="Số nhà, tên đường, toà nhà/chung cư, phòng..." required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="deliveryTime"><i class="fas fa-clock"></i> Thời gian giao mong muốn</label>
+                                    <select id="deliveryTime" class="form-input">
+                                        <option value="now">Giao sớm nhất có thể (trong 30-45 phút)</option>
+                                        <option value="lunch">Giao giờ nghỉ trưa (11:30 - 13:00)</option>
+                                        <option value="afternoon">Giao buổi chiều (15:00 - 17:00)</option>
+                                        <option value="evening">Giao buổi tối (18:30 - 20:30)</option>
+                                        <option value="custom">Giờ hẹn khác (ghi ở ô bên dưới)</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="custGreeting"><i class="fas fa-heart"></i> Viết thiệp / Lời chúc tặng</label>
+                                    <input type="text" id="custGreeting" class="form-input" placeholder="Ví dụ: Chúc mừng sinh nhật Lan 20 tuổi...">
+                                </div>
+
+                                <div class="form-group form-full">
+                                    <label for="custNote"><i class="fas fa-sticky-note"></i> Ghi chú thêm cho tiệm</label>
+                                    <textarea id="custNote" class="form-input" rows="2" placeholder="Ví dụ: Không lấy muỗng nhựa, cho nhiều socola, gọi trước khi giao 10 phút..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Column: Summary & Payment -->
+                <div class="checkout-right">
+                    
+                    <!-- 1. Voucher box -->
+                    <div class="checkout-card voucher-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-ticket-alt"></i> Mã Giảm Giá</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="voucher-input-group">
+                                <input type="text" id="voucherCodeInput" placeholder="Nhập mã ưu đãi..." style="text-transform:uppercase;">
+                                <button type="button" class="btn btn-primary" id="btnApplyVoucher">Áp dụng</button>
+                            </div>
+                            <div class="voucher-hints">
+                                <span>Gợi ý mã:</span>
+                                <button type="button" class="chip-voucher" data-code="KITTEN10">KITTEN10 (-10%)</button>
+                                <button type="button" class="chip-voucher" data-code="FREESHIPQ7">FREESHIPQ7 (-15K)</button>
+                            </div>
+                            <div id="voucherFeedback" class="voucher-feedback" style="display:none;"></div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Order summary -->
+                    <div class="checkout-card summary-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-receipt"></i> Tóm Tắt Đơn Hàng</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="summary-line">
+                                <span>Tiền bánh:</span>
+                                <strong id="summarySubtotal">0đ</strong>
+                            </div>
+                            <div class="summary-line">
+                                <span>Phí giao hàng:</span>
+                                <strong id="summaryShipping">15.000đ</strong>
+                            </div>
+                            <div class="summary-line discount-line" id="summaryDiscountRow" style="display:none;">
+                                <span>Giảm giá voucher:</span>
+                                <strong id="summaryDiscount">-0đ</strong>
+                            </div>
+                            <div class="summary-line bonus-line" id="summaryBonusRow" style="display:none;">
+                                <span>Quà tặng combo:</span>
+                                <strong id="summaryBonus">Tặng 1 Donut (0đ)</strong>
+                            </div>
+
+                            <hr class="summary-divider">
+
+                            <div class="summary-total-line">
+                                <span>Tổng thanh toán:</span>
+                                <strong id="summaryTotal">15.000đ</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Payment Method -->
+                    <div class="checkout-card payment-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-credit-card"></i> Phương Thức Thanh Toán</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="payment-options">
+                                <label class="payment-option-label active">
+                                    <input type="radio" name="paymentMethod" value="cod" checked>
+                                    <div class="payment-option-content">
+                                        <div class="payment-title"><i class="fas fa-money-bill-wave"></i> Tiền mặt khi nhận bánh (COD)</div>
+                                        <div class="payment-desc">Kiểm tra bánh tươi ngon, ưng ý rồi mới thanh toán cho shipper.</div>
+                                    </div>
+                                </label>
+
+                                <label class="payment-option-label">
+                                    <input type="radio" name="paymentMethod" value="banking">
+                                    <div class="payment-option-content">
+                                        <div class="payment-title"><i class="fas fa-qrcode"></i> Chuyển khoản VietQR (Napas 24/7)</div>
+                                        <div class="payment-desc">Quét mã QR tự động điền đúng số tiền và nội dung đơn. Tiện lợi, không cần dùng tiền mặt.</div>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- VietQR Box Preview -->
+                            <div class="vietqr-preview-box" id="vietqrBox" style="display:none;">
+                                <div class="vietqr-header">
+                                    <img src="https://img.vietqr.io/image/MB-0901234567-compact2.png" alt="Mã VietQR Kitten Cake" id="vietqrImage" class="vietqr-img">
+                                    <div class="vietqr-info">
+                                        <div class="bank-title"><i class="fas fa-university"></i> MBBank (Quân Đội)</div>
+                                        <div class="acc-num">Số TK: <strong>0901234567</strong></div>
+                                        <div class="acc-name">Chủ TK: <strong>TIEM BANH KITTEN CAKE</strong></div>
+                                        <div class="acc-note">Vui lòng quét mã trên app ngân hàng để chuyển khoản chính xác nhất.</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit button -->
+                            <button type="submit" class="btn btn-primary btn-submit-checkout" id="btnPlaceOrder">
+                                <i class="fas fa-paper-plane"></i> Gửi Đơn Đặt Bánh Ngay
+                            </button>
+                            <p class="checkout-guarantee">
+                                <i class="fas fa-shield-alt"></i> Tiệm bánh sẽ gọi điện xác nhận đơn ngay trong vòng 5-10 phút.
+                            </p>
+                            <div id="checkoutErrorMsg" class="checkout-err-msg" style="display:none;"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+    </section>
+
+    <!-- Modal Đặt Hàng Thành Công -->
+    <div class="order-success-modal" id="orderSuccessModal" style="display:none;">
+        <div class="success-box">
+            <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+            <h2>Đặt Bánh Thành Công!</h2>
+            <p class="success-sub">Cảm ơn bạn đã lựa chọn những vị ngọt từ <strong>Kitten Cake</strong>.</p>
+            
+            <div class="success-meta-card">
+                <div class="success-meta-row">
+                    <span>Mã đơn hàng:</span>
+                    <strong id="successOrderId">#ord_123</strong>
+                </div>
+                <div class="success-meta-row">
+                    <span>Khách hàng:</span>
+                    <strong id="successCustName">Ngọc Lan</strong>
+                </div>
+                <div class="success-meta-row">
+                    <span>Số điện thoại:</span>
+                    <strong id="successCustPhone">090xxxxxxx</strong>
+                </div>
+                <div class="success-meta-row">
+                    <span>Địa chỉ giao:</span>
+                    <strong id="successCustAddress">Quận 7</strong>
+                </div>
+                <div class="success-meta-row total-highlight">
+                    <span>Tổng số tiền:</span>
+                    <strong id="successTotal">50.000đ</strong>
+                </div>
+                <div class="success-meta-row">
+                    <span>Hình thức:</span>
+                    <strong id="successPaymentMethod">Tiền mặt khi nhận bánh</strong>
+                </div>
+            </div>
+
+            <!-- VietQR Modal Box if banking -->
+            <div class="success-qr-box" id="successQrBox" style="display:none;">
+                <p><strong>Quét mã QR để hoàn tất thanh toán:</strong></p>
+                <img src="" id="successQrImg" alt="VietQR Thanh Toán" style="max-width:240px; margin:10px auto; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.1);">
+                <p class="qr-sub-text">Nội dung chuyển khoản đã được tạo sẵn theo mã đơn của bạn.</p>
+            </div>
+
+            <div class="success-actions">
+                <a href="index.html" class="btn btn-primary"><i class="fas fa-home"></i> Quay lại trang chủ</a>
+                <a href="https://www.facebook.com/profile.php?id=61594490844705" target="_blank" class="btn btn-outline">
+                    <i class="fa-brands fa-facebook-messenger"></i> Chat Fanpage xác nhận
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <div class="logo">
+                    <img src="tai-nguyen/logo.jpg" alt="Kitten Cake Logo">
+                    <span class="text-white">Kitten Cake</span>
+                </div>
+                <p>Tiệm bánh ngọt nhỏ xinh tại Quận 7 - Nơi gửi gắm yêu thương qua từng vị ngọt.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Liên hệ đặt bánh</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Quận 7, TP. Hồ Chí Minh</li>
+                    <li><i class="fas fa-phone-alt"></i> Hotline: 09xx xxx xxx</li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h3>Giờ mở cửa</h3>
+                <ul>
+                    <li>Thứ 2 - Thứ 6: 08:00 - 22:00</li>
+                    <li>Thứ 7 - CN: 07:30 - 22:30</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Kitten Cake Bakery. Thiết kế bởi chuyên gia Web.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="cart.js"></script>
+    <script>
+        // Controller riêng cho trang Cart & Checkout
+        document.addEventListener('DOMContentLoaded', () => {
+            initCartPage();
+        });
+
+        let appliedVoucher = null;
+        let siteSettings = null;
+
+        async function initCartPage() {
+            // Tải cấu hình ngân hàng & ship từ content
+            try {
+                const res = await fetch('/api/content?_t=' + Date.now());
+                if (res.ok) {
+                    const json = await res.json();
+                    siteSettings = json.data;
+                }
+            } catch (e) {
+                console.warn('Không tải được settings');
+            }
+
+            renderCartTable();
+            setupCheckoutEvents();
+
+            window.addEventListener('cart:updated', () => {
+                renderCartTable();
+            });
+        }
+
+        function renderCartTable() {
+            const items = window.KittenCart.getItems();
+            const emptyState = document.getElementById('cartEmptyState');
+            const form = document.getElementById('checkoutForm');
+            const tbody = document.getElementById('cartTableBody');
+            const totalBadge = document.getElementById('cartTotalItemsBadge');
+            const comboAlert = document.getElementById('cartComboAlert');
+
+            if (!tbody) return;
+
+            if (items.length === 0) {
+                if (emptyState) emptyState.style.display = 'block';
+                if (form) form.style.display = 'none';
+                return;
+            }
+
+            if (emptyState) emptyState.style.display = 'none';
+            if (form) form.style.display = 'grid';
+
+            totalBadge.textContent = window.KittenCart.getTotalCount();
+
+            // Check combo 5 tặng 1
+            const donutCount = window.KittenCart.getDonutCount();
+            if (donutCount >= 5) {
+                const bonusDonut = Math.floor(donutCount / 5);
+                comboAlert.innerHTML = `🎉 <b>CHÚC MỪNG:</b> Bạn đặt ${donutCount} chiếc Donut, được <b>TẶNG ${bonusDonut} CHIẾC DONUT</b> miễn phí đóng hộp quà xinh xắn!`;
+                comboAlert.className = 'cart-promo-banner success';
+                comboAlert.style.display = 'block';
+            } else if (donutCount > 0) {
+                const needed = 5 - donutCount;
+                comboAlert.innerHTML = `🍩 Mua thêm <b>${needed}</b> chiếc Donut để nhận ngay <b>1 Donut tặng kèm</b> miễn phí!`;
+                comboAlert.className = 'cart-promo-banner info';
+                comboAlert.style.display = 'block';
+            } else {
+                comboAlert.style.display = 'none';
+            }
+
+            // Render bảng
+            tbody.innerHTML = '';
+            items.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                const lineTotal = Number(item.price) * Number(item.quantity);
+
+                tr.innerHTML = `
+                    <td>
+                        <div class="cart-table-prod">
+                            <img src="${item.image}" alt="${item.name}">
+                            <div>
+                                <h4 class="prod-name">${item.name}</h4>
+                                <span class="prod-flavor"><i class="fas fa-cookie"></i> ${item.flavor}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="prod-unit-price">${window.formatVNCurrency(item.price)}</td>
+                    <td style="text-align:center;">
+                        <div class="cart-qty-ctrl-table">
+                            <button type="button" class="btn-tb-minus" data-index="${index}"><i class="fas fa-minus"></i></button>
+                            <input type="number" class="tb-qty-input" data-index="${index}" value="${item.quantity}" min="1" max="99">
+                            <button type="button" class="btn-tb-plus" data-index="${index}"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </td>
+                    <td class="prod-line-total" style="text-align:right;">${window.formatVNCurrency(lineTotal)}</td>
+                    <td style="text-align:center;">
+                        <button type="button" class="btn-tb-remove" data-index="${index}" title="Xóa món">&times;</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            calculateAndRenderTotals();
+        }
+
+        function calculateAndRenderTotals() {
+            const subtotal = window.KittenCart.getSubtotal();
+            const subtotalEl = document.getElementById('summarySubtotal');
+            const shippingEl = document.getElementById('summaryShipping');
+            const discountRow = document.getElementById('summaryDiscountRow');
+            const discountEl = document.getElementById('summaryDiscount');
+            const bonusRow = document.getElementById('summaryBonusRow');
+            const bonusEl = document.getElementById('summaryBonus');
+            const totalEl = document.getElementById('summaryTotal');
+
+            if (subtotalEl) subtotalEl.textContent = window.formatVNCurrency(subtotal);
+
+            // Phí ship theo khu vực
+            const areaSelect = document.getElementById('deliveryArea');
+            const selectedOpt = areaSelect ? areaSelect.options[areaSelect.selectedIndex] : null;
+            let shippingFee = selectedOpt ? parseInt(selectedOpt.getAttribute('data-fee'), 10) : 15000;
+
+            // Miễn phí ship nếu đơn >= 120.000đ
+            const freeShipMin = siteSettings?.shippingConfig?.freeShippingMin || 120000;
+            if (subtotal >= freeShipMin && shippingFee > 0) {
+                shippingFee = 0;
+                if (shippingEl) shippingEl.innerHTML = `<span style="color:#2ed573;"><i class="fas fa-gift"></i> Miễn phí (Đơn > 120k)</span>`;
+            } else {
+                if (shippingEl) shippingEl.textContent = window.formatVNCurrency(shippingFee);
+            }
+
+            // Voucher giảm giá
+            let discount = 0;
+            if (appliedVoucher) {
+                discount = appliedVoucher.discountAmount || 0;
+                if (discountRow) {
+                    discountRow.style.display = 'flex';
+                    discountEl.textContent = `-${window.formatVNCurrency(discount)}`;
+                }
+            } else {
+                if (discountRow) discountRow.style.display = 'none';
+            }
+
+            // Combo bonus
+            const donutCount = window.KittenCart.getDonutCount();
+            if (donutCount >= 5) {
+                const bonusCount = Math.floor(donutCount / 5);
+                if (bonusRow) {
+                    bonusRow.style.display = 'flex';
+                    bonusEl.textContent = `Tặng ${bonusCount} Donut (0đ)`;
+                }
+            } else {
+                if (bonusRow) bonusRow.style.display = 'none';
+            }
+
+            // Tổng cuối
+            const total = Math.max(0, subtotal + shippingFee - discount);
+            if (totalEl) totalEl.textContent = window.formatVNCurrency(total);
+
+            // Cập nhật mã VietQR nếu đang chọn Banking
+            updateVietQRImage(total);
+        }
+
+        function updateVietQRImage(amount) {
+            const qrImg = document.getElementById('vietqrImage');
+            const phone = document.getElementById('custPhone')?.value.trim() || 'KHACH';
+            const bankConfig = siteSettings?.paymentConfig || {
+                bankId: 'MB',
+                accountNumber: '0901234567',
+                accountName: 'TIEM BANH KITTEN CAKE'
+            };
+
+            const qrUrl = `https://img.vietqr.io/image/${bankConfig.bankId}-${bankConfig.accountNumber}-compact2.png?amount=${amount}&addInfo=KC ${phone}&accountName=${encodeURIComponent(bankConfig.accountName)}`;
+            if (qrImg) qrImg.src = qrUrl;
+        }
+
+        function setupCheckoutEvents() {
+            // Thay đổi khu vực giao hàng
+            const areaSelect = document.getElementById('deliveryArea');
+            if (areaSelect) {
+                areaSelect.addEventListener('change', calculateAndRenderTotals);
+            }
+
+            // Cập nhật số lượng qua nút trong bảng
+            document.addEventListener('click', (e) => {
+                const minus = e.target.closest('.btn-tb-minus');
+                if (minus) {
+                    const idx = parseInt(minus.getAttribute('data-index'), 10);
+                    const current = window.KittenCart.getItems()[idx]?.quantity || 1;
+                    window.KittenCart.updateQuantity(idx, current - 1);
+                    return;
+                }
+
+                const plus = e.target.closest('.btn-tb-plus');
+                if (plus) {
+                    const idx = parseInt(plus.getAttribute('data-index'), 10);
+                    const current = window.KittenCart.getItems()[idx]?.quantity || 1;
+                    window.KittenCart.updateQuantity(idx, current + 1);
+                    return;
+                }
+
+                const remove = e.target.closest('.btn-tb-remove');
+                if (remove) {
+                    const idx = parseInt(remove.getAttribute('data-index'), 10);
+                    window.KittenCart.removeItem(idx);
+                    return;
+                }
+            });
+
+            // Xóa sạch giỏ
+            const btnClear = document.getElementById('btnClearCart');
+            if (btnClear) {
+                btnClear.addEventListener('click', () => {
+                    if (confirm('Bạn có chắc muốn xóa sạch toàn bộ bánh trong giỏ hàng?')) {
+                        window.KittenCart.clearCart();
+                    }
+                });
+            }
+
+            // Radio phương thức thanh toán
+            const paymentRadios = document.querySelectorAll('input[name="paymentMethod"]');
+            const vietqrBox = document.getElementById('vietqrBox');
+            paymentRadios.forEach(radio => {
+                radio.addEventListener('change', () => {
+                    document.querySelectorAll('.payment-option-label').forEach(l => l.classList.remove('active'));
+                    radio.closest('.payment-option-label').classList.add('active');
+
+                    if (radio.value === 'banking') {
+                        if (vietqrBox) vietqrBox.style.display = 'block';
+                    } else {
+                        if (vietqrBox) vietqrBox.style.display = 'none';
+                    }
+                });
+            });
+
+            // Áp dụng voucher
+            const btnVoucher = document.getElementById('btnApplyVoucher');
+            const voucherInput = document.getElementById('voucherCodeInput');
+            const voucherFb = document.getElementById('voucherFeedback');
+
+            async function applyVoucher(code) {
+                if (!code) return;
+                const subtotal = window.KittenCart.getSubtotal();
+                try {
+                    const res = await fetch('/api/voucher/apply', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ code, subtotal })
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        appliedVoucher = data.voucher;
+                        voucherFb.className = 'voucher-feedback success';
+                        voucherFb.innerHTML = `<i class="fas fa-check-circle"></i> Đã áp dụng <b>${data.voucher.code}</b>: Giảm ${window.formatVNCurrency(data.voucher.discountAmount)}`;
+                        voucherFb.style.display = 'block';
+                        calculateAndRenderTotals();
+                    } else {
+                        appliedVoucher = null;
+                        voucherFb.className = 'voucher-feedback error';
+                        voucherFb.textContent = data.error || 'Mã ưu đãi không hợp lệ!';
+                        voucherFb.style.display = 'block';
+                        calculateAndRenderTotals();
+                    }
+                } catch (e) {
+                    voucherFb.className = 'voucher-feedback error';
+                    voucherFb.textContent = 'Lỗi kiểm tra mã giảm giá!';
+                    voucherFb.style.display = 'block';
+                }
+            }
+
+            if (btnVoucher && voucherInput) {
+                btnVoucher.addEventListener('click', () => {
+                    applyVoucher(voucherInput.value.trim());
+                });
+            }
+
+            // Bấm chip gợi ý mã
+            document.querySelectorAll('.chip-voucher').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    const code = chip.getAttribute('data-code');
+                    if (voucherInput) voucherInput.value = code;
+                    applyVoucher(code);
+                });
+            });
+
+            // Gửi đơn hàng
+            const form = document.getElementById('checkoutForm');
+            const btnPlaceOrder = document.getElementById('btnPlaceOrder');
+            const errBox = document.getElementById('checkoutErrorMsg');
+
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    const customerName = document.getElementById('custName').value.trim();
+                    const phone = document.getElementById('custPhone').value.trim();
+                    const address = document.getElementById('custAddress').value.trim();
+                    const areaSelect = document.getElementById('deliveryArea');
+                    const district = areaSelect ? areaSelect.options[areaSelect.selectedIndex].text : 'Quận 7';
+                    const timeChoice = document.getElementById('deliveryTime').value;
+                    const greeting = document.getElementById('custGreeting').value.trim();
+                    const rawNote = document.getElementById('custNote').value.trim();
+                    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value || 'cod';
+
+                    const items = window.KittenCart.getItems();
+                    if (items.length === 0) {
+                        alert('Giỏ hàng đang trống!');
+                        return;
+                    }
+
+                    // Ghép ghi chú chi tiết
+                    let fullNote = [];
+                    if (greeting) fullNote.push(`[Thiệp: ${greeting}]`);
+                    if (timeChoice !== 'now') fullNote.push(`[Giờ hẹn: ${timeChoice}]`);
+                    if (rawNote) fullNote.push(rawNote);
+
+                    // Phí ship & giảm giá
+                    const subtotal = window.KittenCart.getSubtotal();
+                    let shippingFee = areaSelect ? parseInt(areaSelect.options[areaSelect.selectedIndex].getAttribute('data-fee'), 10) : 15000;
+                    if (subtotal >= 120000 && shippingFee > 0) shippingFee = 0;
+                    const discount = appliedVoucher ? (appliedVoucher.discountAmount || 0) : 0;
+                    const total = Math.max(0, subtotal + shippingFee - discount);
+
+                    btnPlaceOrder.disabled = true;
+                    btnPlaceOrder.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi đơn đặt bánh...';
+                    if (errBox) errBox.style.display = 'none';
+
+                    try {
+                        const res = await fetch('/api/orders', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                customerName,
+                                phone,
+                                address,
+                                district,
+                                note: fullNote.join(' - '),
+                                paymentMethod,
+                                items,
+                                subtotal,
+                                shippingFee,
+                                discount,
+                                total,
+                                voucherCode: appliedVoucher?.code || ''
+                            })
+                        });
+
+                        const resJson = await res.json();
+                        if (res.ok && resJson.success) {
+                            // Đặt thành công -> xóa giỏ hàng
+                            window.KittenCart.clearCart();
+
+                            // Hiển thị modal thành công
+                            showOrderSuccessModal(resJson.order || {
+                                id: resJson.orderId,
+                                customerName,
+                                phone,
+                                address,
+                                total,
+                                paymentMethod
+                            });
+                        } else {
+                            throw new Error(resJson.error || 'Có lỗi xảy ra khi tạo đơn!');
+                        }
+                    } catch (err) {
+                        if (errBox) {
+                            errBox.textContent = err.message || 'Không thể kết nối đến máy chủ!';
+                            errBox.style.display = 'block';
+                        }
+                    } finally {
+                        btnPlaceOrder.disabled = false;
+                        btnPlaceOrder.innerHTML = '<i class="fas fa-paper-plane"></i> Gửi Đơn Đặt Bánh Ngay';
+                    }
+                });
+            }
+        }
+
+        function showOrderSuccessModal(order) {
+            const modal = document.getElementById('orderSuccessModal');
+            document.getElementById('successOrderId').textContent = '#' + order.id;
+            document.getElementById('successCustName').textContent = order.customerName;
+            document.getElementById('successCustPhone').textContent = order.phone;
+            document.getElementById('successCustAddress').textContent = order.address || 'Quận 7';
+            document.getElementById('successTotal').textContent = window.formatVNCurrency(order.total);
+            document.getElementById('successPaymentMethod').textContent = order.paymentMethod === 'banking' ? 'Chuyển khoản VietQR' : 'Tiền mặt khi nhận bánh (COD)';
+
+            const qrBox = document.getElementById('successQrBox');
+            if (order.paymentMethod === 'banking') {
+                const bankConfig = siteSettings?.paymentConfig || {
+                    bankId: 'MB',
+                    accountNumber: '0901234567',
+                    accountName: 'TIEM BANH KITTEN CAKE'
+                };
+                const qrUrl = `https://img.vietqr.io/image/${bankConfig.bankId}-${bankConfig.accountNumber}-compact2.png?amount=${order.total}&addInfo=KC ${order.id}&accountName=${encodeURIComponent(bankConfig.accountName)}`;
+                document.getElementById('successQrImg').src = qrUrl;
+                if (qrBox) qrBox.style.display = 'block';
+            } else {
+                if (qrBox) qrBox.style.display = 'none';
+            }
+
+            modal.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
