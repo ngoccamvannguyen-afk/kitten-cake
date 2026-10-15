@@ -13,8 +13,9 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // URL normalization middleware for Vercel Serverless environment
 app.use((req, res, next) => {
-  if (!req.url.startsWith('/api')) {
-    req.url = '/api' + (req.url.startsWith('/') ? req.url : '/' + req.url);
+  const apiEndpoints = ['/content', '/orders', '/auth', '/products', '/voucher', '/upload', '/backup', '/restore'];
+  if (apiEndpoints.some(ep => req.url.startsWith(ep))) {
+    req.url = '/api' + req.url;
   }
   next();
 });
