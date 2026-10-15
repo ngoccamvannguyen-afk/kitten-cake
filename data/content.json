@@ -6,7 +6,7 @@
     "brandTagline": "Tiệm bánh ngọt nhỏ xinh tại Quận 7 - Nơi gửi gắm yêu thương qua từng vị ngọt.",
     "hotline": "0898575717",
     "address": "Quận 7, TP. Hồ Chí Minh",
-    "email": "hello@kittencake.vn",
+    "email": "kittencake7dis@gmail.com",
     "orderButtonText": "Đặt bánh ngay",
     "orderButtonLink": "https://www.facebook.com/profile.php?id=61594490844705",
     "socialLinks": {
@@ -26,10 +26,11 @@
     "freeShippingMin": 120000
   },
   "paymentConfig": {
-    "bankId": "MB",
-    "bankName": "MBBank (Quân Đội)",
-    "accountNumber": "0901234567",
-    "accountName": "TIEM BANH KITTEN CAKE"
+    "bankId": "VPB",
+    "bankName": "VPBank (Ngân hàng TMCP Việt Nam Thịnh Vượng)",
+    "accountNumber": "1821004654",
+    "accountName": "NGUYEN NGOC CAM VAN",
+    "qrImage": "tai-nguyen/qr-vpbank.png"
   },
   "vouchers": [
     {
@@ -71,39 +72,33 @@
         "price": 10000,
         "isFeatured": true,
         "badge": "Best Seller • Món Chính",
-        "description": "Món bánh chủ đạo nướng tươi mỗi ngày, ruột mềm xốp với 4 phân loại vị trứ danh: Chocolate Trắng, Matcha, Dâu, Chocolate cùng các loại topping thơm giòn tự chọn (+3k/loại).",
-        "image": "tai-nguyen/donut-choco.jpg",
+        "description": "Món bánh chủ đạo nướng tươi mỗi ngày, ruột mềm xốp phủ socola Bỉ, cốm cầu vồng, dâu tây hoặc matcha ngọt dịu.",
+        "image": "tai-nguyen/donut-collection-1791974653397.jpg",
         "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
         "status": "active",
         "inStock": true,
         "flavors": [
           {
-            "name": "Chocolate Trắng",
-            "image": "tai-nguyen/donut-vani.jpg",
-            "desc": "Lớp kem chocolate trắng mịn màng, ngọt thanh dịu"
+            "name": "Vị Choco",
+            "image": "tai-nguyen/donut-choco.jpg"
           },
           {
-            "name": "Matcha",
-            "image": "tai-nguyen/donut-matcha.jpg",
-            "desc": "Sốt trà xanh matcha Uji thơm mát kết hợp lát hạnh nhân giòn"
+            "name": "Vị Vani",
+            "image": "tai-nguyen/donut-vani.jpg"
           },
           {
-            "name": "Dâu",
-            "image": "tai-nguyen/donut-dau.jpg",
-            "desc": "Men dâu tây hồng pastel chua ngọt dịu dàng, kèm dâu tây sấy rắc mặt"
+            "name": "Vị Matcha",
+            "image": "tai-nguyen/donut-matcha.jpg"
           },
           {
-            "name": "Chocolate",
-            "image": "tai-nguyen/donut-choco.jpg",
-            "desc": "Phủ sốt chocolate Bỉ đậm đà, đường vân choco và vụn socola giòn"
+            "name": "Vị Dâu",
+            "image": "tai-nguyen/donut-dau.jpg"
           }
         ],
-        "gallery": [
-          "tai-nguyen/donut-choco.jpg",
-          "tai-nguyen/donut-vani.jpg",
-          "tai-nguyen/donut-matcha.jpg",
-          "tai-nguyen/donut-dau.jpg"
-        ]
+        "details": {
+          "shelfLife": "",
+          "ingredients": ""
+        }
       },
       {
         "id": "menu_2",
@@ -115,7 +110,18 @@
         "description": "Lớp vỏ ngàn lớp giòn rụm kết hợp cùng nhân trứng sữa nướng thơm lừng, béo ngậy chuẩn vị Hồng Kông.",
         "image": "tai-nguyen/tart-trung.jpg",
         "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
-        "status": "active"
+        "status": "active",
+        "inStock": true,
+        "flavors": [
+          {
+            "name": "Tart trứng",
+            "image": "tai-nguyen/tart-trung.jpg"
+          }
+        ],
+        "details": {
+          "shelfLife": "",
+          "ingredients": ""
+        }
       },
       {
         "id": "menu_3",
@@ -127,7 +133,18 @@
         "description": "Sự kết hợp hoàn hảo giữa phô mai kem béo ngậy và vụn bánh Oreo giòn rụm đóng hũ mang đi cực tiện lợi.",
         "image": "tai-nguyen/oreo-cheesecake.jpg",
         "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
-        "status": "active"
+        "status": "active",
+        "inStock": true,
+        "flavors": [
+          {
+            "name": "Vị Chuẩn Signature",
+            "image": "tai-nguyen/oreo-cheesecake.jpg"
+          }
+        ],
+        "details": {
+          "shelfLife": "",
+          "ingredients": ""
+        }
       },
       {
         "id": "menu_4",
@@ -139,7 +156,22 @@
         "description": "Món tráng miệng thanh mát từ Ý, mềm mịn tan ngay trong miệng hòa quyện cùng sốt quả mọng chua ngọt.",
         "image": "tai-nguyen/panna-cotta.jpg",
         "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
-        "status": "active"
+        "status": "active",
+        "inStock": true,
+        "flavors": [
+          {
+            "name": "Vị Kiwi",
+            "image": "tai-nguyen/panna-cotta.jpg"
+          },
+          {
+            "name": "Vị Dứa",
+            "image": "tai-nguyen/panna-cotta.jpg"
+          }
+        ],
+        "details": {
+          "shelfLife": "",
+          "ingredients": ""
+        }
       }
     ]
   },
@@ -190,99 +222,5 @@
     "username": "admin",
     "password": "123"
   },
-  "orders": [
-    {
-      "id": "ord_1791967047743",
-      "customerName": "Khách Test Mua 5 Tặng 1",
-      "phone": "0912345678",
-      "address": "456 Huỳnh Tấn Phát",
-      "district": "Quận 7",
-      "note": "Kiểm tra giảm giá bánh rẻ nhất",
-      "paymentMethod": "cod",
-      "items": [
-        {
-          "id": "menu_1",
-          "name": "Donut Xốp Mềm",
-          "price": 13000,
-          "flavor": "Vị Choco",
-          "toppings": [
-            "Hạt cốm"
-          ],
-          "quantity": 5
-        },
-        {
-          "id": "menu_1",
-          "name": "Donut Xốp Mềm",
-          "price": 10000,
-          "flavor": "Vị Vani",
-          "toppings": [],
-          "quantity": 1
-        }
-      ],
-      "subtotal": 75000,
-      "shippingFee": 15000,
-      "discount": 10000,
-      "total": 80000,
-      "voucherCode": "",
-      "status": "pending",
-      "createdAt": "2026-10-14T08:37:27.743Z"
-    },
-    {
-      "id": "ord_1791962406557",
-      "customerName": "Hoàng Minh",
-      "phone": "0912345678",
-      "address": "15 Huỳnh Tấn Phát, Tân Thuận",
-      "district": "Quận 7",
-      "note": "Giao nhanh trước 16h",
-      "paymentMethod": "cod",
-      "items": [
-        {
-          "id": "menu_1",
-          "name": "Donut Xốp Mềm Signature",
-          "flavor": "Matcha Trà Xanh Uji",
-          "price": 10000,
-          "quantity": 3
-        }
-      ],
-      "subtotal": 30000,
-      "shippingFee": 15000,
-      "discount": 0,
-      "total": 45000,
-      "voucherCode": "",
-      "status": "completed",
-      "createdAt": "2026-10-14T07:20:06.557Z"
-    },
-    {
-      "id": "ord_1791962316567",
-      "customerName": "Lan Hương",
-      "phone": "0988112233",
-      "address": "Chung cư Sunrise City, Nguyễn Hữu Thọ",
-      "district": "Quận 7",
-      "note": "Viết thiệp mừng sinh nhật Minh",
-      "paymentMethod": "banking",
-      "items": [
-        {
-          "id": "menu_1",
-          "name": "Donut Xốp Mềm Signature",
-          "flavor": "Socola Bỉ Thượng Hạng",
-          "price": 10000,
-          "quantity": 5
-        },
-        {
-          "id": "menu_2",
-          "name": "Tart Trứng Béo Ngậy",
-          "flavor": "Truyền Thống",
-          "price": 18000,
-          "quantity": 2
-        }
-      ],
-      "subtotal": 86000,
-      "shippingFee": 15000,
-      "discount": 8600,
-      "total": 92400,
-      "voucherCode": "KITTEN10",
-      "status": "completed",
-      "createdAt": "2026-10-14T07:18:36.567Z"
-    }
-  ]
+  "orders": []
 }

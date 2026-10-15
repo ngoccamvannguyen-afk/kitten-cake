@@ -609,11 +609,11 @@
                             </div>
                             <div class="form-group">
                                 <label>Hotline đặt bánh</label>
-                                <input type="text" id="setHotline" class="form-control" placeholder="09xx xxx xxx">
+                                <input type="text" id="setHotline" class="form-control" placeholder="0898575717">
                             </div>
                             <div class="form-group">
                                 <label>Email tiệm</label>
-                                <input type="text" id="setEmail" class="form-control" placeholder="hello@kittencake.vn">
+                                <input type="text" id="setEmail" class="form-control" placeholder="kittencake7dis@gmail.com">
                             </div>
                             <div class="form-group">
                                 <label>Giờ mở cửa ngày thường (Thứ 2 - Thứ 6)</label>
@@ -813,10 +813,33 @@
                             <option value="true">Nổi bật (Viền hồng Best Seller)</option>
                         </select>
                     </div>
-                    <div class="form-group form-full">
-                        <label>Danh sách hương vị (Phân tách bằng dấu phẩy ",")</label>
-                        <input type="text" id="modalMenuFlavors" class="form-control" placeholder="Ví dụ: Chocolate Trắng, Matcha, Dâu, Chocolate">
+                    <!-- KHU VỰC QUẢN LÝ HƯƠNG VỊ & HÌNH ẢNH BIỂU TRƯNG CHO TỪNG VỊ -->
+                    <div class="form-group form-full flavor-manager-card">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+                            <div>
+                                <label style="font-weight:800; color:#ff4757; font-size:14px; display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                                    <i class="fas fa-palette"></i> Phân Loại Hương Vị & Hình Ảnh Biểu Trưng Từng Vị
+                                </label>
+                                <p style="font-size:12px; color:#57606f; margin:0; line-height:1.4;">
+                                    Thêm từng vị kèm ảnh biểu trưng tương ứng (Ví dụ: <em>Vị Choco, Vani, Matcha, Dâu...</em>). Khi khách chọn vị trên web, hệ thống sẽ tự động đổi sang ảnh minh họa của vị đó!
+                                </p>
+                            </div>
+                            <div style="display:flex; gap:8px;">
+                                <button type="button" class="btn btn-sm btn-outline" id="btnQuickPresetFlavors" style="font-size:12px; border-color:#ff6b81; color:#ff6b81;" title="Nạp nhanh 4 vị Donut Choco, Vani, Matcha, Dâu kèm ảnh chuẩn">
+                                    <i class="fas fa-magic"></i> Nạp mẫu 4 vị Donut
+                                </button>
+                                <button type="button" class="btn btn-sm btn-primary" id="btnAddFlavorRow" style="font-size:12px;">
+                                    <i class="fas fa-plus"></i> Thêm vị mới
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Container danh sách các dòng vị và ảnh -->
+                        <div id="modalFlavorsContainer" class="modal-flavors-container">
+                            <!-- Render bằng JavaScript -->
+                        </div>
                     </div>
+
                     <div class="form-group">
                         <label>Tình trạng bánh hôm nay</label>
                         <select id="modalMenuInStock" class="form-control">
@@ -837,17 +860,33 @@
                         <textarea id="modalMenuDesc" class="form-control" rows="2" placeholder="Ruột mềm xốp phủ socola Bỉ, dâu tây hoặc matcha ngọt dịu..."></textarea>
                     </div>
                     <div class="form-group form-full">
-                        <label>Hình ảnh món bánh</label>
+                        <label style="font-weight:700; color:#2f3542;">Hình ảnh đại diện món bánh <span style="color:#ff4757;">*</span></label>
                         <div class="image-uploader-box">
                             <div class="img-preview-wrap">
                                 <img id="modalMenuImgPreview" src="../tai-nguyen/donut-signature.jpg" alt="Preview">
                             </div>
                             <div class="uploader-controls">
-                                <label class="btn-upload">
-                                    <i class="fas fa-cloud-upload-alt"></i> Tải ảnh bánh từ máy tính
-                                    <input type="file" id="modalMenuImgInput" accept="image/*">
-                                </label>
-                                <div class="uploader-hint">Chụp ảnh đĩa bánh rõ nét dưới ánh sáng tự nhiên.</div>
+                                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                                    <label class="btn-upload">
+                                        <i class="fas fa-cloud-upload-alt"></i> Tải ảnh từ máy tính
+                                        <input type="file" id="modalMenuImgInput" accept="image/*">
+                                    </label>
+                                    <span style="font-size:12px; color:#a4b0be;">hoặc</span>
+                                </div>
+                                <div style="margin-top:8px;">
+                                    <input type="text" id="modalMenuImgUrl" class="form-control" placeholder="Dán link hoặc đường dẫn ảnh (ví dụ: tai-nguyen/donut-signature.jpg)" style="font-size:12px; padding:7px 10px;">
+                                </div>
+                                <div class="uploader-hint" style="margin-top:6px;">
+                                    <i class="fas fa-info-circle"></i> Ảnh đại diện món bánh sẽ xuất hiện tại Thực đơn trang chủ và danh sách món.
+                                </div>
+                                <div class="menu-quick-thumbs">
+                                    <span style="font-size:11px; font-weight:700; color:#747d8c;">Chọn nhanh ảnh tiệm:</span>
+                                    <button type="button" class="quick-thumb-chip" onclick="quickSelectMainImg('tai-nguyen/donut-signature.jpg')"><img src="../tai-nguyen/donut-signature.jpg"> Donut Signature</button>
+                                    <button type="button" class="quick-thumb-chip" onclick="quickSelectMainImg('tai-nguyen/donut-box.jpg')"><img src="../tai-nguyen/donut-box.jpg"> Hộp Donut</button>
+                                    <button type="button" class="quick-thumb-chip" onclick="quickSelectMainImg('tai-nguyen/tart-trung.jpg')"><img src="../tai-nguyen/tart-trung.jpg"> Tart Trứng</button>
+                                    <button type="button" class="quick-thumb-chip" onclick="quickSelectMainImg('tai-nguyen/oreo-cheesecake.jpg')"><img src="../tai-nguyen/oreo-cheesecake.jpg"> Oreo Cheesecake</button>
+                                    <button type="button" class="quick-thumb-chip" onclick="quickSelectMainImg('tai-nguyen/panna-cotta.jpg')"><img src="../tai-nguyen/panna-cotta.jpg"> Panna Cotta</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -909,7 +948,7 @@
                 <!-- Printable packing slip -->
                 <div class="packing-slip-header" style="text-align:center; padding-bottom:14px; border-bottom:2px dashed #e9ecef; margin-bottom:16px;">
                     <h2 style="font-size:20px; color:#ff4757; margin-bottom:4px;">🍰 TIỆM BÁNH KITTEN CAKE</h2>
-                    <p style="font-size:12px; color:#747d8c; margin:0;">Quận 7, TP. Hồ Chí Minh • Hotline: 09xx xxx xxx</p>
+                    <p style="font-size:12px; color:#747d8c; margin:0;">Quận 7, TP. Hồ Chí Minh • Hotline: 0898575717 • Email: kittencake7dis@gmail.com</p>
                     <div style="font-weight:700; font-size:14px; margin-top:6px; color:#2f3542;" id="slipOrderCode">PHIẾU ĐÓNG HỘP BÁNH - #ord_123</div>
                 </div>
 

@@ -364,41 +364,60 @@ h1, h2, h3 {
 /* Hàng giá tiền và nút đặt bên dưới card */
 .menu-card-bottom {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-top: 1px dashed rgba(0, 0, 0, 0.08);
-    padding-top: 15px;
+    flex-direction: column;
+    gap: 12px;
+    border-top: 1px dashed rgba(255, 107, 129, 0.25);
+    padding-top: 16px;
     margin-top: auto;
 }
 
+.menu-price-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    width: 100%;
+}
+
 .menu-price {
-    font-size: 1.35rem;
+    font-size: 1.45rem;
     font-weight: 800;
     color: var(--accent-color);
     display: flex;
     align-items: baseline;
     gap: 4px;
+    line-height: 1.2;
 }
 
 .menu-price small {
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     color: #999;
     font-weight: 500;
+}
+
+.menu-price-subtext {
+    font-size: 0.82rem;
+    color: #8395a7;
+    font-weight: 600;
+    background: #f8f9fa;
+    padding: 2px 8px;
+    border-radius: 6px;
 }
 
 .menu-order-btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 0.85rem;
+    padding: 9px 14px;
+    border-radius: 25px;
+    font-size: 0.88rem;
     font-weight: 700;
     background: #fff0f3;
     color: var(--accent-color);
     text-decoration: none;
     transition: all 0.25s ease;
     border: 1px solid rgba(246, 65, 108, 0.25);
+    white-space: nowrap;
 }
 
 .menu-order-btn:hover {
@@ -961,35 +980,71 @@ h1, h2, h3 {
 /* Card Action Buttons */
 .menu-card-actions {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     align-items: center;
+    width: 100%;
 }
-.btn-view-detail {
-    background: #fff !important;
-    color: var(--accent-color) !important;
-    border: 1.5px solid var(--accent-color) !important;
-    padding: 8px 12px !important;
-    font-size: 0.85rem !important;
-}
-.btn-view-detail:hover {
-    background: var(--accent-color) !important;
-    color: #fff !important;
-}
-.btn-quick-add-cart {
-    background: var(--primary-color) !important;
-    color: #fff !important;
-    padding: 8px 14px !important;
-    font-size: 0.85rem !important;
-    border: none !important;
-    border-radius: 20px !important;
+
+.menu-card-actions .menu-order-btn,
+.menu-card-actions .btn-view-detail,
+.menu-card-actions .btn-quick-add-cart {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 10px 14px !important;
+    border-radius: 25px !important;
+    font-size: 0.88rem !important;
+    font-weight: 700 !important;
+    text-decoration: none;
+    white-space: nowrap !important;
     cursor: pointer;
-    font-weight: 700;
-    transition: all 0.2s;
+    box-sizing: border-box;
+    transition: all 0.25s ease;
 }
-.btn-quick-add-cart:hover {
-    background: var(--accent-color) !important;
+
+.btn-view-detail {
+    background: #ffffff !important;
+    color: var(--accent-color) !important;
+    border: 1.5px solid #ffccd5 !important;
+    box-shadow: 0 2px 6px rgba(255, 107, 129, 0.08);
+}
+
+.btn-view-detail:hover {
+    background: #fff0f3 !important;
+    border-color: var(--accent-color) !important;
+    color: var(--accent-color) !important;
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 129, 0.2);
 }
+
+.btn-quick-add-cart {
+    background: linear-gradient(135deg, #ff6b81 0%, #ff4757 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 3px 10px rgba(255, 71, 87, 0.3);
+}
+
+.btn-quick-add-cart:hover {
+    background: linear-gradient(135deg, #ff4757 0%, #ee5253 100%) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 71, 87, 0.45);
+}
+
+@media (max-width: 380px) {
+    .menu-card-actions {
+        gap: 6px;
+    }
+    .menu-card-actions .menu-order-btn,
+    .menu-card-actions .btn-view-detail,
+    .menu-card-actions .btn-quick-add-cart {
+        padding: 8px 8px !important;
+        font-size: 0.8rem !important;
+        gap: 4px;
+    }
+}
+
 
 /* --- 2. Mini-Cart Drawer & Backdrop --- */
 .mini-cart-backdrop {
@@ -2272,48 +2327,184 @@ body.cart-page {
     line-height: 1.4;
 }
 
-/* VietQR Preview Box */
-.vietqr-preview-box {
-    background: #fff5f5;
-    border: 1.5px solid #ffd1d8;
-    border-radius: 14px;
-    padding: 16px;
+/* Khung Thông Tin Chuyển Khoản kèm QR */
+.checkout-bank-qr-box {
+    background: #fff8f9;
+    border: 1.5px solid #ffccd5;
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-top: 14px;
     margin-bottom: 20px;
     animation: fadeIn 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 129, 0.08);
 }
-.vietqr-header {
+.checkout-bank-qr-box .qr-box-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #ff4757;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #ffd1d8;
     display: flex;
-    gap: 16px;
+    align-items: center;
+    gap: 8px;
+}
+.checkout-bank-qr-box .qr-box-inner {
+    display: flex;
+    gap: 20px;
     align-items: center;
 }
-.vietqr-img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 10px;
+.checkout-bank-qr-box .qr-box-img-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+}
+.checkout-bank-qr-box .checkout-qr-img {
+    width: 145px;
+    height: 145px;
+    object-fit: contain;
+    border-radius: 12px;
     border: 1px solid #ffd8e0;
-    background: #fff;
+    background: #ffffff;
+    padding: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
-.vietqr-info {
+.checkout-bank-qr-box .qr-scan-tag {
+    font-size: 0.72rem;
+    color: #747d8c;
+    font-weight: 600;
+    margin-top: 6px;
+    text-align: center;
+}
+.checkout-bank-qr-box .qr-box-details {
     flex: 1;
-    font-size: 0.85rem;
+    font-size: 0.88rem;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
 }
-.bank-title {
-    font-weight: 700;
+.checkout-bank-qr-box .qr-detail-line {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    line-height: 1.4;
+}
+.checkout-bank-qr-box .qr-detail-line .lbl {
+    color: #747d8c;
+    font-size: 0.82rem;
+    min-width: 90px;
+}
+.checkout-bank-qr-box .qr-detail-line .val {
     color: #2f3542;
-    margin-bottom: 4px;
+    font-weight: 700;
 }
-.acc-num {
-    color: #57606f;
-    margin-bottom: 2px;
+.checkout-bank-qr-box .qr-detail-line .val-highlight {
+    color: #ff4757;
+    font-size: 1.08rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
 }
-.acc-name {
-    color: #57606f;
-    margin-bottom: 6px;
+.checkout-bank-qr-box .qr-detail-line .val-total {
+    color: #2ed573;
+    font-size: 1.15rem;
+    font-weight: 800;
 }
-.acc-note {
-    font-size: 0.75rem;
+.checkout-bank-qr-box .qr-guide-text {
+    margin-top: 6px;
+    background: #ffffff;
+    border-left: 3px solid #ff4757;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    color: #2f3542;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.4;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+.checkout-bank-qr-box .qr-guide-text i {
+    color: #ff4757;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 576px) {
+    .checkout-bank-qr-box .qr-box-inner {
+        flex-direction: column;
+        text-align: center;
+    }
+    .checkout-bank-qr-box .qr-detail-line {
+        justify-content: center;
+    }
+}
+
+.btn-copy-chip {
+    background: #fff;
+    border: 1px solid #ffd1d8;
     color: #ff6b81;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    vertical-align: middle;
+}
+.btn-copy-chip:hover {
+    background: #ff6b81;
+    color: #fff;
+    border-color: #ff6b81;
+    transform: translateY(-1px);
+}
+
+/* Modal VietQR Styles */
+.success-qr-header {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ff4757;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.success-bank-card {
+    background: #fffafb;
+    border: 1.5px dashed #ff9a9e;
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin: 12px auto;
+    max-width: 380px;
+    font-size: 0.92rem;
+    text-align: left;
+    line-height: 1.8;
+}
+.s-bank-line {
+    color: #57606f;
+}
+.s-bank-line strong {
+    color: #2f3542;
+}
+.s-bank-line.s-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.success-guide-banner {
+    background: #fff0f3;
+    color: #2f3542;
+    font-weight: 600;
+    font-size: 0.88rem;
+    border-radius: 8px;
+    padding: 8px 14px;
+    margin-top: 10px;
+    display: inline-block;
+    border: 1px solid #ffd1d8;
 }
 
 /* Submit checkout */

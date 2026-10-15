@@ -49,7 +49,27 @@ async function initProductPage() {
         renderRelatedProducts(relatedProducts);
         setupTabs();
         setupEvents();
+        syncFooterContact();
     }
+}
+
+async function syncFooterContact() {
+    try {
+        const res = await fetch(`/api/content?_t=${Date.now()}`);
+        if (res.ok) {
+            const json = await res.json();
+            const g = json?.data?.general;
+            if (g) {
+                const contactList = document.querySelectorAll('.footer-links')[0];
+                if (contactList) {
+                    const items = contactList.querySelectorAll('li');
+                    if (items[0] && g.address) items[0].innerHTML = `<i class="fas fa-map-marker-alt"></i> ${g.address}`;
+                    if (items[1] && g.hotline) items[1].innerHTML = `<i class="fas fa-phone-alt"></i> Hotline: <a href="tel:${g.hotline}" style="color:inherit; text-decoration:none;">${g.hotline}</a>`;
+                    if (items[2] && g.email) items[2].innerHTML = `<i class="fas fa-envelope"></i> Email: <a href="mailto:${g.email}" style="color:inherit; text-decoration:none;">${g.email}</a>`;
+                }
+            }
+        }
+    } catch (e) {}
 }
 
 function renderProductDetails(product) {
@@ -136,10 +156,10 @@ function renderProductDetails(product) {
     const flavorDisplay = document.getElementById('selectedFlavorName');
 
     const defaultFlavors = [
-        { name: 'Chocolate Trắng', image: 'tai-nguyen/donut-vani.jpg' },
-        { name: 'Matcha', image: 'tai-nguyen/donut-matcha.jpg' },
-        { name: 'Dâu', image: 'tai-nguyen/donut-dau.jpg' },
-        { name: 'Chocolate', image: 'tai-nguyen/donut-choco.jpg' }
+        { name: 'Vị Choco', image: 'tai-nguyen/donut-choco.jpg' },
+        { name: 'Vị Vani', image: 'tai-nguyen/donut-vani.jpg' },
+        { name: 'Vị Matcha', image: 'tai-nguyen/donut-matcha.jpg' },
+        { name: 'Vị Dâu', image: 'tai-nguyen/donut-dau.jpg' }
     ];
 
     const rawFlavors = (product.flavors && product.flavors.length > 0)
@@ -423,14 +443,54 @@ function renderRelatedProducts(products) {
                 <h3><a href="product.html?id=${item.id}" style="color:inherit; text-decoration:none;">${item.name}</a></h3>
                 <p>${item.description || ''}</p>
                 <div class="menu-card-bottom">
-                    <div class="menu-price">${formatCurrency(item.price)}</div>
-                    <a href="product.html?id=${item.id}" class="menu-order-btn">
-                        <i class="fas fa-eye"></i> Xem bánh
-                    </a>
+                    <div class="menu-price-row">
+                        <div class="menu-price">${formatCurrency(item.price)}</div>
+                        <span class="menu-price-subtext">${item.id === 'menu_1' ? 'Đồng giá 10K' : (item.id === 'menu_3' || item.id === 'menu_4' ? 'Bánh hũ lạnh' : 'Bánh nướng nóng')}</span>
+                    </div>
+                    <div class="menu-card-actions">
+                        <a href="product.html?id=${item.id}" class="menu-order-btn btn-view-detail" title="Xem chi tiết bánh">
+                            <i class="fas fa-eye"></i> Chi tiết
+                        </a>
+                        <button type="button" class="menu-order-btn btn-quick-add-cart" data-item-id="${item.id}" title="Thêm vào giỏ hàng">
+                            <i class="fas fa-cart-plus"></i> Thêm giỏ
+                        </button>
+                    </div>
                 </div>
             </div>
         `;
         grid.appendChild(card);
+    });
+
+    // Lắng nghe nút Thêm giỏ từ sản phẩm gợi ý
+    grid.addEventListener('click', (e) => {
+        const quickAddBtn = e.target.closest('.btn-quick-add-cart');
+        if (quickAddBtn) {
+            e.preventDefault();
+            const itemId = quickAddBtn.getAttribute('data-item-id');
+            const targetItem = products.find(p => p.id === itemId);
+            if (targetItem && window.KittenCart) {
+                let flavorName = 'Vị Chuẩn Signature';
+                let itemImage = targetItem.image || 'tai-nguyen/donut-choco.jpg';
+                if (targetItem.flavors && targetItem.flavors.length > 0) {
+                    const f0 = targetItem.flavors[0];
+                    if (typeof f0 === 'string') {
+                        flavorName = f0;
+                    } else if (f0 && f0.name) {
+                        flavorName = f0.name;
+                        if (f0.image) itemImage = f0.image;
+                    }
+                }
+                window.KittenCart.addItem({
+                    id: targetItem.id,
+                    name: targetItem.name,
+                    price: targetItem.price,
+                    flavor: flavorName,
+                    toppings: [],
+                    image: itemImage,
+                    quantity: 1
+                }, true);
+            }
+        }
     });
 }
 
@@ -438,3 +498,4 @@ function formatCurrency(val) {
     if (isNaN(val)) return '0đ';
     return Number(val).toLocaleString('vi-VN') + 'đ';
 }
+

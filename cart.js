@@ -107,26 +107,37 @@
             return items.reduce((sum, item) => sum + Number(item.quantity), 0);
         },
 
+        // Kiểm tra sản phẩm có phải là bánh Donut hay không
+        isDonut(item) {
+            if (!item) return false;
+            const name = (item.name || '').toLowerCase();
+            const tag = (item.tag || '').toLowerCase();
+            const id = (item.id || '').toLowerCase();
+            return name.includes('donut') || tag.includes('donut') || id === 'menu_1';
+        },
+
         // Đếm số bánh Donut để áp dụng chương trình Mua 5 tặng 1
         getDonutCount() {
             const items = this.getItems();
             return items
-                .filter(i => (i.name || '').toLowerCase().includes('donut') || (i.id === 'menu_1'))
+                .filter(i => this.isDonut(i))
                 .reduce((sum, i) => sum + Number(i.quantity), 0);
         },
 
-        // Tính toán chương trình khuyến mãi Mua 5 tặng 1:
-        // Cứ mỗi cụm 6 chiếc bánh trong giỏ, khách hàng được MIỄN PHÍ 1 chiếc có giá trị thấp nhất.
+        // Tính toán chương trình khuyến mãi Mua 5 tặng 1 (CHỈ ÁP DỤNG VỚI BÁNH DONUT):
+        // Cứ mỗi 6 chiếc bánh Donut trong giỏ, khách hàng được MIỄN PHÍ 1 chiếc Donut có giá trị thấp nhất.
         getPromoBuy5Get1() {
             const items = this.getItems();
-            const allCakes = [];
+            const allDonuts = [];
 
-            // Mở rộng từng đơn vị chiếc bánh riêng lẻ trong giỏ hàng
+            // Mở rộng từng đơn vị chiếc bánh Donut riêng lẻ trong giỏ hàng
             items.forEach((item, itemIdx) => {
+                if (!this.isDonut(item)) return; // Chỉ áp dụng với bánh Donut
+
                 const qty = parseInt(item.quantity, 10) || 0;
                 const price = Number(item.price) || 0;
                 for (let q = 0; q < qty; q++) {
-                    allCakes.push({
+                    allDonuts.push({
                         itemIndex: itemIdx,
                         id: item.id,
                         name: item.name,
@@ -137,32 +148,34 @@
                 }
             });
 
-            const totalCakes = allCakes.length;
-            const freeCount = Math.floor(totalCakes / 6);
-            const remainder = totalCakes % 6;
+            const totalDonuts = allDonuts.length;
+            const freeCount = Math.floor(totalDonuts / 6);
+            const remainder = totalDonuts % 6;
             const neededForNext = remainder === 0 ? 6 : (6 - remainder);
 
             if (freeCount === 0) {
                 return {
                     eligible: false,
-                    totalCakes,
-                    neededForNext: totalCakes === 0 ? 6 : neededForNext,
+                    totalDonuts,
+                    totalCakes: totalDonuts,
+                    neededForNext: totalDonuts === 0 ? 6 : neededForNext,
                     freeCount: 0,
                     discountAmount: 0,
                     freeItems: []
                 };
             }
 
-            // Sắp xếp tăng dần theo giá: chiếc rẻ nhất nằm đầu tiên
-            allCakes.sort((a, b) => a.price - b.price);
+            // Sắp xếp tăng dần theo giá: chiếc Donut rẻ nhất nằm đầu tiên
+            allDonuts.sort((a, b) => a.price - b.price);
 
-            // Lấy ra freeCount chiếc bánh rẻ nhất
-            const freeItems = allCakes.slice(0, freeCount);
+            // Lấy ra freeCount chiếc bánh Donut rẻ nhất
+            const freeItems = allDonuts.slice(0, freeCount);
             const discountAmount = freeItems.reduce((sum, c) => sum + c.price, 0);
 
             return {
                 eligible: true,
-                totalCakes,
+                totalDonuts,
+                totalCakes: totalDonuts,
                 neededForNext: neededForNext === 0 ? 6 : neededForNext,
                 freeCount,
                 discountAmount,
@@ -239,15 +252,15 @@
                 }
             }
 
-            // Banner combo Mua 5 tặng 1
+            // Banner combo Mua 5 tặng 1 (Chỉ áp dụng với Donut)
             if (promoNoticeEl) {
                 if (promo.eligible) {
                     const freeNames = promo.freeItems.map(f => `${f.name}${f.flavor ? ` (${f.flavor})` : ''}`).join(', ');
-                    promoNoticeEl.innerHTML = `🎉 <b>Đã áp dụng Mua 5 Tặng 1:</b> Miễn phí <b>${promo.freeCount} bánh</b> giá thấp nhất (-${formatVNCurrency(promo.discountAmount)})! <div style="font-size:0.75rem; margin-top:3px; opacity:0.9;">Tặng miễn phí: <b>${freeNames}</b></div>`;
+                    promoNoticeEl.innerHTML = `🎉 <b>Đã áp dụng Mua 5 Tặng 1 (Donut):</b> Miễn phí <b>${promo.freeCount} Donut</b> giá thấp nhất (-${formatVNCurrency(promo.discountAmount)})! <div style="font-size:0.75rem; margin-top:3px; opacity:0.9;">Tặng miễn phí: <b>${freeNames}</b></div>`;
                     promoNoticeEl.className = 'mini-cart-promo success';
                     promoNoticeEl.style.display = 'block';
-                } else if (promo.totalCakes > 0) {
-                    promoNoticeEl.innerHTML = `🍩 Chọn thêm <b>${promo.neededForNext}</b> chiếc bánh nữa (đủ 6 bánh) để được <b>TẶNG MIỄN PHÍ</b> 1 bánh có giá thấp nhất!`;
+                } else if (promo.totalDonuts > 0) {
+                    promoNoticeEl.innerHTML = `🍩 Bạn có <b>${promo.totalDonuts} Donut</b>. Chọn thêm <b>${promo.neededForNext}</b> chiếc Donut nữa (đủ 6 Donut) để được <b>TẶNG MIỄN PHÍ</b> 1 Donut rẻ nhất!`;
                     promoNoticeEl.className = 'mini-cart-promo info';
                     promoNoticeEl.style.display = 'block';
                 } else {

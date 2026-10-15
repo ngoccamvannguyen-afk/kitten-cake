@@ -220,7 +220,7 @@ function populateAllForms() {
     // Payment & Shipping Config
     if (siteData.paymentConfig) {
         const p = siteData.paymentConfig;
-        if (document.getElementById('setBankId')) document.getElementById('setBankId').value = p.bankId || 'MB';
+        if (document.getElementById('setBankId')) document.getElementById('setBankId').value = p.bankId || 'VPB';
         if (document.getElementById('setBankAccountNo')) document.getElementById('setBankAccountNo').value = p.accountNumber || '';
         if (document.getElementById('setBankAccountName')) document.getElementById('setBankAccountName').value = p.accountName || '';
     }
@@ -326,6 +326,28 @@ function renderMenuItemsTable() {
         const isActive = item.status !== 'inactive';
         const imgPath = item.image.startsWith('http') || item.image.startsWith('data:') ? item.image : `../${item.image}`;
 
+        const itemFlavors = (Array.isArray(item.flavors) ? item.flavors : []).map(f => {
+            if (typeof f === 'string') return { name: f, image: item.image || 'tai-nguyen/donut-signature.jpg' };
+            return f;
+        });
+
+        let flavorsHtml = '';
+        if (itemFlavors.length > 0) {
+            flavorsHtml = `
+                <div class="admin-flavor-chips-wrap" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px;">
+                    ${itemFlavors.map(f => {
+                        const fImg = f.image ? (f.image.startsWith('http') || f.image.startsWith('data:') ? f.image : `../${f.image}`) : '../tai-nguyen/donut-signature.jpg';
+                        return `
+                            <span class="admin-flavor-chip" title="${f.name}">
+                                <img src="${fImg}" onerror="this.src='../tai-nguyen/donut-signature.jpg'">
+                                <span>${f.name}</span>
+                            </span>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
         tr.innerHTML = `
             <td style="font-weight:700; color:#a4b0be;">#${index + 1}</td>
             <td>
@@ -335,6 +357,7 @@ function renderMenuItemsTable() {
                         <h4>${item.name}</h4>
                         <span>${item.description ? item.description.slice(0, 45) + '...' : ''}</span>
                         ${item.inStock === false ? '<span style="display:inline-block; margin-top:3px; background:#ffebee; color:#ff4757; font-size:11px; padding:2px 6px; border-radius:4px; font-weight:700;"><i class="fas fa-ban"></i> Hết hàng hôm nay</span>' : ''}
+                        ${flavorsHtml}
                     </div>
                 </div>
             </td>
@@ -357,7 +380,7 @@ function renderMenuItemsTable() {
                     <button class="btn-action" title="Di chuyển xuống" onclick="moveMenuItem(${index}, 1)" ${index === items.length - 1 ? 'disabled style="opacity:0.4;"' : ''}>
                         <i class="fas fa-arrow-down"></i>
                     </button>
-                    <button class="btn-action" title="Chỉnh sửa món này" onclick="openEditMenuModal('${item.id}')">
+                    <button class="btn-action" title="Chỉnh sửa món & vị bánh" onclick="openEditMenuModal('${item.id}')">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
                     <button class="btn-action delete" title="Xóa món" onclick="deleteMenuItem('${item.id}')">
@@ -418,6 +441,133 @@ function updateModalPricePreview() {
 }
 document.getElementById('modalMenuPrice').addEventListener('input', updateModalPricePreview);
 
+// ---------------- FLAVORS & VARIANT IMAGE MANAGER ----------------
+function renderModalFlavorRows(flavorsList) {
+    const container = document.getElementById('modalFlavorsContainer');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const list = (Array.isArray(flavorsList) && flavorsList.length > 0)
+        ? flavorsList
+        : [{ name: 'Vị Chuẩn Signature', image: 'tai-nguyen/donut-signature.jpg' }];
+
+    list.forEach(flavor => {
+        const name = typeof flavor === 'string' ? flavor : (flavor.name || '');
+        let img = typeof flavor === 'object' && flavor.image ? flavor.image : 'tai-nguyen/donut-signature.jpg';
+        addFlavorRow(name, img);
+    });
+}
+
+function addFlavorRow(name = '', image = 'tai-nguyen/donut-signature.jpg') {
+    const container = document.getElementById('modalFlavorsContainer');
+    if (!container) return;
+
+    let cleanImg = image;
+    if (cleanImg.startsWith('../')) cleanImg = cleanImg.substring(3);
+
+    const row = document.createElement('div');
+    row.className = 'flavor-row-item';
+
+    const imgSrc = cleanImg.startsWith('http') || cleanImg.startsWith('data:') ? cleanImg : `../${cleanImg}`;
+
+    row.innerHTML = `
+        <div class="flavor-row-thumb-wrap">
+            <img class="flavor-row-thumb" src="${imgSrc}" alt="${name}" onerror="this.src='../tai-nguyen/donut-signature.jpg'">
+            <label class="flavor-thumb-upload-btn" title="Tải ảnh mới từ máy tính cho vị này">
+                <i class="fas fa-camera"></i>
+                <input type="file" class="flavor-row-file-input" accept="image/*" style="display:none;">
+            </label>
+        </div>
+
+        <div class="flavor-field-group" style="flex:1.2;">
+            <label>Tên hương vị <span style="color:#ff4757;">*</span></label>
+            <input type="text" class="form-control flavor-name-input" value="${name}" placeholder="Ví dụ: Vị Choco, Vani, Matcha..." style="padding:6px 10px; font-size:13px;">
+        </div>
+
+        <div class="flavor-field-group" style="flex:1.5;">
+            <label>Đường dẫn ảnh biểu trưng</label>
+            <div style="display:flex; gap:6px;">
+                <input type="text" class="form-control flavor-img-input" value="${cleanImg}" placeholder="tai-nguyen/donut-choco.jpg" style="padding:6px 10px; font-size:12px;">
+                <label class="btn btn-sm btn-outline" style="padding:6px 10px; font-size:12px; cursor:pointer; white-space:nowrap; border-color:#ffd1d8; color:#ff6b81;" title="Tải ảnh từ máy">
+                    <i class="fas fa-upload"></i> Tải ảnh
+                    <input type="file" class="flavor-row-file-btn" accept="image/*" style="display:none;">
+                </label>
+            </div>
+        </div>
+
+        <div class="flavor-row-actions">
+            <button type="button" class="btn-action delete btn-remove-flavor" title="Xóa vị này">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+        </div>
+    `;
+
+    const thumbImg = row.querySelector('.flavor-row-thumb');
+    const imgInput = row.querySelector('.flavor-img-input');
+    const nameInput = row.querySelector('.flavor-name-input');
+    const fileInputs = row.querySelectorAll('.flavor-row-file-input, .flavor-row-file-btn');
+    const removeBtn = row.querySelector('.btn-remove-flavor');
+
+    // Sync input typing to thumbnail
+    imgInput.addEventListener('input', () => {
+        let val = imgInput.value.trim();
+        if (val.startsWith('../')) val = val.substring(3);
+        thumbImg.src = val.startsWith('http') || val.startsWith('data:') ? val : `../${val}`;
+    });
+
+    // Handle file upload for this flavor
+    fileInputs.forEach(fi => {
+        fi.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Instant preview
+            thumbImg.src = URL.createObjectURL(file);
+            showToast(`Đang tải ảnh biểu trưng cho vị "${nameInput.value || 'mới'}"...`, 'success');
+
+            try {
+                const uploadedUrl = await uploadFile(file);
+                imgInput.value = uploadedUrl;
+                thumbImg.src = uploadedUrl.startsWith('http') || uploadedUrl.startsWith('data:') ? uploadedUrl : `../${uploadedUrl}`;
+                showToast(`Đã tải ảnh biểu trưng cho vị "${nameInput.value || 'mới'}" thành công!`, 'success');
+            } catch (err) {
+                showToast('Lỗi tải ảnh vị: ' + err.message, 'error');
+            }
+        });
+    });
+
+    // Delete row
+    removeBtn.addEventListener('click', () => {
+        const totalRows = container.querySelectorAll('.flavor-row-item').length;
+        if (totalRows <= 1) {
+            if (!confirm('Đây là hương vị duy nhất của món bánh. Bạn có chắc muốn xóa không?')) return;
+        }
+        row.remove();
+    });
+
+    container.appendChild(row);
+}
+
+// Preset 4 donut flavors
+window.presetDonutFlavors = function() {
+    renderModalFlavorRows([
+        { name: 'Vị Choco', image: 'tai-nguyen/donut-choco.jpg' },
+        { name: 'Vị Vani', image: 'tai-nguyen/donut-vani.jpg' },
+        { name: 'Vị Matcha', image: 'tai-nguyen/donut-matcha.jpg' },
+        { name: 'Vị Dâu', image: 'tai-nguyen/donut-dau.jpg' }
+    ]);
+    showToast('Đã nạp mẫu 4 vị Donut kèm ảnh biểu trưng!', 'success');
+};
+
+// Quick select main dish image
+window.quickSelectMainImg = function(url) {
+    const preview = document.getElementById('modalMenuImgPreview');
+    const urlInput = document.getElementById('modalMenuImgUrl');
+    if (preview) preview.src = `../${url}`;
+    if (urlInput) urlInput.value = url;
+    showToast('Đã chọn ảnh đại diện: ' + url, 'success');
+};
+
 // Add & Edit Menu Modal Logic
 document.getElementById('btnOpenAddMenuModal').addEventListener('click', () => {
     currentEditingMenuItemId = null;
@@ -429,13 +579,20 @@ document.getElementById('btnOpenAddMenuModal').addEventListener('click', () => {
     updateModalPricePreview();
     document.getElementById('modalMenuBadge').value = '';
     document.getElementById('modalMenuFeatured').value = 'false';
-    document.getElementById('modalMenuFlavors').value = 'Chocolate Trắng, Matcha, Dâu, Chocolate';
     document.getElementById('modalMenuInStock').value = 'true';
     document.getElementById('modalMenuShelfLife').value = 'Dùng ngon nhất trong ngày, ngăn mát 2-3 ngày';
     document.getElementById('modalMenuIngredients').value = 'Bột mì Nhật cao cấp, Bơ Anchor, Trứng tươi, Socola Bỉ';
     document.getElementById('modalMenuDesc').value = '';
-    document.getElementById('modalMenuImgPreview').src = '../tai-nguyen/donut-signature.jpg';
+    
+    const defaultImg = 'tai-nguyen/donut-signature.jpg';
+    document.getElementById('modalMenuImgPreview').src = `../${defaultImg}`;
+    const urlInput = document.getElementById('modalMenuImgUrl');
+    if (urlInput) urlInput.value = defaultImg;
     document.getElementById('modalMenuOrderLink').value = siteData.general?.socialLinks?.facebook || '';
+
+    // Render default 4 flavors
+    presetDonutFlavors();
+
     openModal('menuModal');
 });
 
@@ -453,11 +610,6 @@ window.openEditMenuModal = function(id) {
     document.getElementById('modalMenuBadge').value = item.badge || '';
     document.getElementById('modalMenuFeatured').value = item.isFeatured ? 'true' : 'false';
 
-    const defaultFlavorsStr = 'Chocolate Trắng, Matcha, Dâu, Chocolate';
-    const flavorsStr = (Array.isArray(item.flavors) && item.flavors.length > 0)
-        ? item.flavors.join(', ')
-        : defaultFlavorsStr;
-    document.getElementById('modalMenuFlavors').value = flavorsStr;
     document.getElementById('modalMenuInStock').value = item.inStock !== false ? 'true' : 'false';
     document.getElementById('modalMenuShelfLife').value = item.details?.shelfLife || '';
     document.getElementById('modalMenuIngredients').value = item.details?.ingredients || '';
@@ -467,9 +619,60 @@ window.openEditMenuModal = function(id) {
 
     const imgPath = item.image.startsWith('http') || item.image.startsWith('data:') ? item.image : `../${item.image}`;
     document.getElementById('modalMenuImgPreview').src = imgPath;
+    const urlInput = document.getElementById('modalMenuImgUrl');
+    if (urlInput) urlInput.value = item.image;
+
+    // Render flavors with their respective images
+    let itemFlavors = item.flavors || [];
+    if (!Array.isArray(itemFlavors) || itemFlavors.length === 0) {
+        itemFlavors = [{ name: 'Vị Chuẩn Signature', image: item.image || 'tai-nguyen/donut-signature.jpg' }];
+    } else {
+        itemFlavors = itemFlavors.map(f => {
+            if (typeof f === 'string') {
+                const fLower = f.toLowerCase();
+                let fImg = item.image || 'tai-nguyen/donut-signature.jpg';
+                if (fLower.includes('choco')) fImg = 'tai-nguyen/donut-choco.jpg';
+                else if (fLower.includes('vani') || fLower.includes('trắng')) fImg = 'tai-nguyen/donut-vani.jpg';
+                else if (fLower.includes('matcha')) fImg = 'tai-nguyen/donut-matcha.jpg';
+                else if (fLower.includes('dâu')) fImg = 'tai-nguyen/donut-dau.jpg';
+                return { name: f, image: fImg };
+            }
+            return f;
+        });
+    }
+    renderModalFlavorRows(itemFlavors);
 
     openModal('menuModal');
 };
+
+// Wire up Buttons for Flavors Manager
+const btnAddFlavor = document.getElementById('btnAddFlavorRow');
+if (btnAddFlavor) {
+    btnAddFlavor.addEventListener('click', () => {
+        let currentDishImg = 'tai-nguyen/donut-signature.jpg';
+        const urlInput = document.getElementById('modalMenuImgUrl');
+        if (urlInput && urlInput.value.trim()) currentDishImg = urlInput.value.trim();
+        addFlavorRow('', currentDishImg);
+    });
+}
+
+const btnPresetFlavors = document.getElementById('btnQuickPresetFlavors');
+if (btnPresetFlavors) {
+    btnPresetFlavors.addEventListener('click', presetDonutFlavors);
+}
+
+// Sync modalMenuImgUrl typing to main preview
+const modalImgUrlInput = document.getElementById('modalMenuImgUrl');
+if (modalImgUrlInput) {
+    modalImgUrlInput.addEventListener('input', () => {
+        let val = modalImgUrlInput.value.trim();
+        if (val.startsWith('../')) val = val.substring(3);
+        const preview = document.getElementById('modalMenuImgPreview');
+        if (preview) {
+            preview.src = val.startsWith('http') || val.startsWith('data:') ? val : `../${val}`;
+        }
+    });
+}
 
 document.getElementById('btnSaveMenuItem').addEventListener('click', async () => {
     const name = document.getElementById('modalMenuName').value.trim();
@@ -480,18 +683,37 @@ document.getElementById('btnSaveMenuItem').addEventListener('click', async () =>
     const description = document.getElementById('modalMenuDesc').value.trim();
     const orderLink = document.getElementById('modalMenuOrderLink').value.trim();
     const inStock = document.getElementById('modalMenuInStock').value === 'true';
-    const flavorsRaw = document.getElementById('modalMenuFlavors').value.trim();
     const shelfLife = document.getElementById('modalMenuShelfLife').value.trim();
     const ingredients = document.getElementById('modalMenuIngredients').value.trim();
 
-    const flavors = flavorsRaw
-        ? flavorsRaw.split(',').map(f => f.trim()).filter(Boolean)
-        : ['Vị Chuẩn Signature'];
-
-    let imageSrc = document.getElementById('modalMenuImgPreview').getAttribute('src');
-
-    // Clean relative path prefix if needed
+    // Get Main Image URL
+    let imageSrc = '';
+    const imgUrlField = document.getElementById('modalMenuImgUrl');
+    if (imgUrlField && imgUrlField.value.trim()) {
+        imageSrc = imgUrlField.value.trim();
+    } else {
+        imageSrc = document.getElementById('modalMenuImgPreview').getAttribute('src');
+    }
     if (imageSrc.startsWith('../')) imageSrc = imageSrc.substring(3);
+
+    // Collect Flavors & Variant Images
+    const flavorRows = document.querySelectorAll('#modalFlavorsContainer .flavor-row-item');
+    const flavors = [];
+    flavorRows.forEach(r => {
+        const fNameInput = r.querySelector('.flavor-name-input');
+        const fImgInput = r.querySelector('.flavor-img-input');
+        const fName = fNameInput ? fNameInput.value.trim() : '';
+        let fImg = fImgInput ? fImgInput.value.trim() : '';
+        if (fImg.startsWith('../')) fImg = fImg.substring(3);
+        if (!fImg) fImg = imageSrc || 'tai-nguyen/donut-signature.jpg';
+        if (fName) {
+            flavors.push({ name: fName, image: fImg });
+        }
+    });
+
+    if (flavors.length === 0) {
+        flavors.push({ name: 'Vị Chuẩn Signature', image: imageSrc || 'tai-nguyen/donut-signature.jpg' });
+    }
 
     if (!name) {
         alert('Vui lòng nhập tên món bánh!');
@@ -555,7 +777,10 @@ document.getElementById('btnSaveMenuItem').addEventListener('click', async () =>
 });
 
 // Setup image upload for Menu Modal
-setupImageUpload('modalMenuImgInput', 'modalMenuImgPreview');
+setupImageUpload('modalMenuImgInput', 'modalMenuImgPreview', (uploadedUrl) => {
+    const urlInput = document.getElementById('modalMenuImgUrl');
+    if (urlInput) urlInput.value = uploadedUrl;
+});
 
 // ---------------- GALLERY MANAGEMENT ----------------
 function renderGalleryGrid() {

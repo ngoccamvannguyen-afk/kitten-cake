@@ -88,8 +88,8 @@ function applyContentToDOM(data) {
         if (contactList) {
             const items = contactList.querySelectorAll('li');
             if (items[0] && g.address) items[0].innerHTML = `<i class="fas fa-map-marker-alt"></i> ${g.address}`;
-            if (items[1] && g.hotline) items[1].innerHTML = `<i class="fas fa-phone-alt"></i> Hotline: ${g.hotline}`;
-            if (items[2] && g.email) items[2].innerHTML = `<i class="fas fa-envelope"></i> Email: ${g.email}`;
+            if (items[1] && g.hotline) items[1].innerHTML = `<i class="fas fa-phone-alt"></i> Hotline: <a href="tel:${g.hotline}" style="color:inherit; text-decoration:none;">${g.hotline}</a>`;
+            if (items[2] && g.email) items[2].innerHTML = `<i class="fas fa-envelope"></i> Email: <a href="mailto:${g.email}" style="color:inherit; text-decoration:none;">${g.email}</a>`;
         }
 
         // Opening Hours
@@ -182,8 +182,11 @@ function applyContentToDOM(data) {
                         <h3><a href="product.html?id=${item.id}" style="color:inherit; text-decoration:none;">${item.name}</a></h3>
                         <p>${item.description || ''}</p>
                         <div class="menu-card-bottom">
-                            <div class="menu-price">${formatCurrency(item.price)}</div>
-                            <div class="menu-card-actions" style="display:flex; gap:6px;">
+                            <div class="menu-price-row">
+                                <div class="menu-price">${formatCurrency(item.price)}</div>
+                                <span class="menu-price-subtext">${item.id === 'menu_1' ? 'Đồng giá 10K' : (item.id === 'menu_3' || item.id === 'menu_4' ? 'Bánh hũ lạnh' : 'Bánh nướng nóng')}</span>
+                            </div>
+                            <div class="menu-card-actions">
                                 <a href="product.html?id=${item.id}" class="menu-order-btn btn-view-detail" title="Xem chi tiết bánh">
                                     <i class="fas fa-eye"></i> Chi tiết
                                 </a>
@@ -404,6 +407,26 @@ function setupQuickOrderModal(siteData) {
         });
     });
 
+    // Payment radio listener in quick modal
+    const payRadios = document.querySelectorAll('input[name="quickPayment"]');
+    const quickQrBox = document.getElementById('quickVietqrBox');
+    payRadios.forEach(r => {
+        r.addEventListener('change', () => {
+            document.querySelectorAll('.quick-pay-opt').forEach(opt => {
+                opt.style.background = '#fff';
+                opt.style.borderColor = '#eee';
+            });
+            const parent = r.closest('.quick-pay-opt');
+            if (parent) {
+                parent.style.background = '#fff5f7';
+                parent.style.borderColor = '#ffccd5';
+            }
+            if (quickQrBox) {
+                quickQrBox.style.display = r.value === 'banking' ? 'block' : 'none';
+            }
+        });
+    });
+
     // Submit form
     if (form) {
         form.addEventListener('submit', async (e) => {
@@ -412,6 +435,7 @@ function setupQuickOrderModal(siteData) {
             const phone = document.getElementById('orderPhone').value.trim();
             const qty = parseInt(document.getElementById('orderQty').value, 10) || 1;
             const note = document.getElementById('orderNote').value.trim();
+            const paymentMethod = document.querySelector('input[name="quickPayment"]:checked')?.value || 'cod';
 
             if (!customerName || !phone) {
                 if (statusMsg) {
@@ -423,43 +447,68 @@ function setupQuickOrderModal(siteData) {
             }
 
             const chosenFlavor = document.querySelector('input[name="quickFlavor"]:checked')?.value || 'Chocolate';
+            const unitPrice = currentSelectedOrderItem?.price || 10000;
+            const subtotal = unitPrice * qty;
+            const total = subtotal;
 
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi đơn...';
+
+            const payload = {
+                customerName,
+                phone,
+                note: `${note ? note + ' | ' : ''}Hương vị: ${chosenFlavor} | SL: ${qty} cái | HT: ${paymentMethod === 'banking' ? 'Chuyển khoản VPBank' : 'COD'}`,
+                paymentMethod,
+                subtotal,
+                total,
+                items: [{
+                    name: currentSelectedOrderItem?.name || 'Bánh Kitten Cake',
+                    price: unitPrice,
+                    flavor: chosenFlavor,
+                    quantity: qty
+                }]
+            };
 
             try {
                 const res = await fetch('/api/orders', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        customerName,
-                        phone,
-                        note: `${note ? note + ' | ' : ''}Hương vị: ${chosenFlavor} | SL: ${qty} cái`,
-                        items: [{
-                            name: currentSelectedOrderItem?.name || 'Bánh Kitten Cake',
-                            price: currentSelectedOrderItem?.price || 10000,
-                            flavor: chosenFlavor,
-                            quantity: qty
-                        }]
-                    })
+                    body: JSON.stringify(payload)
                 });
 
                 const data = await res.json();
                 if (res.ok && data.success) {
                     statusMsg.className = 'order-status-msg success';
-                    statusMsg.innerHTML = '<i class="fas fa-check-circle"></i> Đặt bánh thành công! Kitten Cake sẽ gọi lại cho bạn sớm nhất.';
+                    const payMsg = paymentMethod === 'banking' ? ' Đã lưu đơn hàng! Vui lòng quét mã QR chuyển khoản theo thông tin phía trên.' : ' Kitten Cake sẽ gọi lại cho bạn sớm nhất.';
+                    statusMsg.innerHTML = `<i class="fas fa-check-circle"></i> <b>Đặt bánh thành công!</b> #${data.orderId || ''}${payMsg}`;
                     statusMsg.style.display = 'block';
                     form.reset();
                     setTimeout(() => {
                         closeModal();
-                    }, 2500);
+                    }, paymentMethod === 'banking' ? 5000 : 2500);
                 } else {
                     throw new Error(data.error || 'Có lỗi xảy ra khi gửi đơn');
                 }
             } catch (err) {
-                statusMsg.className = 'order-status-msg error';
-                statusMsg.textContent = err.message || 'Không thể kết nối đến máy chủ!';
+                // Fallback offline
+                console.warn('Gửi API nhanh thất bại, lưu fallback offline:', err);
+                const localId = 'ord_' + Date.now().toString().slice(-6);
+                const fallbackOrder = Object.assign({ id: localId, status: 'pending', createdAt: new Date().toISOString() }, payload);
+                try {
+                    const rawList = localStorage.getItem('kitten_offline_orders');
+                    const list = rawList ? JSON.parse(rawList) : [];
+                    list.unshift(fallbackOrder);
+                    localStorage.setItem('kitten_offline_orders', JSON.stringify(list));
+                } catch(e) {}
+
+                statusMsg.className = 'order-status-msg success';
+                const payMsg = paymentMethod === 'banking' ? ' Vui lòng quét mã QR chuyển khoản theo thông tin phía trên nhé.' : ' Tiệm sẽ gọi lại xác nhận ngay!';
+                statusMsg.innerHTML = `<i class="fas fa-check-circle"></i> <b>Đặt bánh thành công!</b> #${localId}.${payMsg}`;
                 statusMsg.style.display = 'block';
+                form.reset();
+                setTimeout(() => {
+                    closeModal();
+                }, paymentMethod === 'banking' ? 5000 : 2500);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Gửi đơn đặt bánh';

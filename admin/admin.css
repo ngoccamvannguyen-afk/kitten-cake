@@ -919,3 +919,137 @@ input:checked + .slider:before {
         grid-template-columns: 1fr;
     }
 }
+
+/* Flavor & Variant Image Manager in Menu Modal */
+.flavor-manager-card {
+    background: #fff8f9;
+    border: 1.5px solid #ffd1d8;
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+.flavor-row-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #ffffff;
+    border: 1px solid #ffd8e0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 6px rgba(255, 107, 129, 0.05);
+    transition: all 0.2s ease;
+}
+.flavor-row-item:hover {
+    border-color: #ff6b81;
+    box-shadow: 0 4px 12px rgba(255, 107, 129, 0.12);
+}
+.flavor-row-thumb-wrap {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+}
+.flavor-row-thumb {
+    width: 52px;
+    height: 52px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1.5px solid #ffccd5;
+    background: #fff;
+    display: block;
+}
+.flavor-thumb-upload-btn {
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #ff4757;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    border: 1.5px solid #fff;
+    transition: transform 0.2s;
+}
+.flavor-thumb-upload-btn:hover {
+    transform: scale(1.15);
+    background: #e84118;
+}
+.flavor-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.flavor-field-group label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #747d8c;
+    margin: 0;
+}
+.flavor-name-input {
+    font-weight: 700 !important;
+    color: #2f3542 !important;
+}
+.flavor-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.menu-quick-thumbs {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.quick-thumb-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    border: 1px solid #ffd1d8;
+    border-radius: 8px;
+    padding: 3px 8px 3px 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    color: #57606f;
+    transition: all 0.2s ease;
+}
+.quick-thumb-chip:hover {
+    border-color: #ff4757;
+    color: #ff4757;
+    background: #fff0f3;
+}
+.quick-thumb-chip img {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+.admin-flavor-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #fff0f3;
+    border: 1px solid #ffd1d8;
+    border-radius: 12px;
+    padding: 2px 8px 2px 3px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #ff4757;
+}
+.admin-flavor-chip img {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
