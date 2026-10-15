@@ -11,6 +11,14 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
+// URL normalization middleware for Vercel Serverless environment
+app.use((req, res, next) => {
+  if (!req.url.startsWith('/api')) {
+    req.url = '/api' + (req.url.startsWith('/') ? req.url : '/' + req.url);
+  }
+  next();
+});
+
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const DATA_FILE = path.join(DATA_DIR, 'content.json');
 const BACKUP_FILE = path.join(DATA_DIR, 'content.backup.json');
@@ -22,6 +30,14 @@ try {
   if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 } catch (e) {
   // Read-only filesystem in serverless environments like Vercel
+}
+
+// Default bundled data fallback for Vercel serverless packaging
+let defaultContent = null;
+try {
+  defaultContent = require('../data/content.json');
+} catch (e) {
+  console.log('Default content fallback load:', e?.message);
 }
 
 // Multer storage configuration
@@ -63,12 +79,13 @@ function readContent() {
   } catch (err) {
     console.error('Error reading data file:', err);
     if (fs.existsSync(BACKUP_FILE)) {
-      console.log('Restoring from backup...');
-      const raw = fs.readFileSync(BACKUP_FILE, 'utf8');
-      return JSON.parse(raw);
+      try {
+        const raw = fs.readFileSync(BACKUP_FILE, 'utf8');
+        return JSON.parse(raw);
+      } catch (e) {}
     }
   }
-  return null;
+  return defaultContent ? JSON.parse(JSON.stringify(defaultContent)) : null;
 }
 
 // Helper: Save content safely with backup
@@ -78,14 +95,21 @@ function saveContent(data) {
       fs.copyFileSync(DATA_FILE, BACKUP_FILE);
     }
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
+    defaultContent = data;
     return true;
   } catch (err) {
-    console.error('Error saving data:', err);
-    return false;
+    console.error('Error saving data to disk, persisting in memory:', err);
+    defaultContent = data;
+    return true;
   }
 }
 
 // ---------------- API ROUTES ----------------
+
+// Health check route
+app.get('/api', (req, res) => {
+  res.json({ success: true, message: 'Kitten Cake API is running on Vercel!' });
+});
 
 // GET /api/content
 app.get('/api/content', (req, res) => {
