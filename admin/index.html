@@ -6,14 +6,14 @@
     <title>Hệ Thống Quản Trị CMS - Kitten Cake</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="/admin/admin.css">
 </head>
 <body>
 
     <!-- Sidebar -->
     <aside class="cms-sidebar" id="sidebar">
         <div class="sidebar-header">
-            <img src="../tai-nguyen/logo.jpg" alt="Logo" class="sidebar-logo" id="sidebarLogo">
+            <img src="/tai-nguyen/logo.jpg" alt="Logo" class="sidebar-logo" id="sidebarLogo">
             <div class="brand-text">
                 <h2 id="sidebarBrandName">Kitten Cake</h2>
                 <span>Bảng Quản Trị Web</span>
@@ -29,9 +29,21 @@
                 </a>
             </li>
             <li>
+                <a href="#categories" class="menu-link" data-tab="tab-categories">
+                    <i class="fas fa-th-large"></i>
+                    <span>Danh mục sản phẩm</span>
+                </a>
+            </li>
+            <li>
                 <a href="#menu" class="menu-link" data-tab="tab-menu">
                     <i class="fas fa-birthday-cake"></i>
                     <span>Thực đơn & Món bánh</span>
+                </a>
+            </li>
+            <li>
+                <a href="#articles" class="menu-link" data-tab="tab-articles">
+                    <i class="fas fa-newspaper"></i>
+                    <span>Bài viết & Mẹo bánh</span>
                 </a>
             </li>
             <li>
@@ -202,6 +214,40 @@
                 </div>
             </div>
 
+            <!-- 1.5. TAB CATEGORIES MANAGEMENT -->
+            <div class="tab-pane" id="tab-categories">
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-th-large" style="color:#ff6b81;"></i> Danh Sách Danh Mục Sản Phẩm</h3>
+                            <p>Phân loại các dòng bánh ngọt: Donut 10K, Bánh nướng nóng, Bánh lạnh hũ, Hộp combo quà tặng...</p>
+                        </div>
+                        <button class="btn btn-primary btn-sm" id="btnOpenAddCategoryModal">
+                            <i class="fas fa-plus"></i> Thêm danh mục mới
+                        </button>
+                    </div>
+                    <div class="cms-card-body" style="padding:0;">
+                        <div class="table-responsive">
+                            <table class="cms-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:60px; text-align:center;">Icon</th>
+                                        <th>Tên danh mục</th>
+                                        <th>Đường dẫn (Slug)</th>
+                                        <th>Huy hiệu</th>
+                                        <th>Mô tả</th>
+                                        <th style="width:140px; text-align:right;">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="categoriesTableBody">
+                                    <!-- Dynamic categories -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- 2. TAB MENU MANAGEMENT -->
             <div class="tab-pane" id="tab-menu">
                 <div class="cms-card">
@@ -262,6 +308,41 @@
                 </div>
             </div>
 
+            <!-- 2.5. TAB ARTICLES & BLOG MANAGEMENT -->
+            <div class="tab-pane" id="tab-articles">
+                <div class="cms-card">
+                    <div class="cms-card-header">
+                        <div>
+                            <h3><i class="fas fa-newspaper" style="color:#ff6b81;"></i> Quản Lý Bài Viết & Mẹo Bánh</h3>
+                            <p>Đăng bài chia sẻ mẹo làm bánh, hướng dẫn bảo quản và các chương trình khuyến mãi SEO</p>
+                        </div>
+                        <button class="btn btn-primary btn-sm" id="btnOpenAddArticleModal">
+                            <i class="fas fa-plus"></i> Viết bài mới
+                        </button>
+                    </div>
+                    <div class="cms-card-body" style="padding:0;">
+                        <div class="table-responsive">
+                            <table class="cms-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:70px;">Ảnh bìa</th>
+                                        <th>Tiêu đề bài viết</th>
+                                        <th>Chuyên mục</th>
+                                        <th>Tác giả</th>
+                                        <th>Ngày đăng</th>
+                                        <th>Lượt xem</th>
+                                        <th style="width:140px; text-align:right;">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="articlesTableBody">
+                                    <!-- Dynamic articles -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- 3. TAB PROMO BANNER -->
             <div class="tab-pane" id="tab-promo">
                 <div class="cms-card">
@@ -300,7 +381,7 @@
                                 <label>Hình ảnh hộp quà Donut</label>
                                 <div class="image-uploader-box">
                                     <div class="img-preview-wrap">
-                                        <img id="promoImgPreview" src="../tai-nguyen/donut-box.jpg" alt="Donut Box">
+                                        <img id="promoImgPreview" src="/tai-nguyen/donut-box.jpg" alt="Donut Box">
                                     </div>
                                     <div class="uploader-controls">
                                         <label class="btn-upload">
@@ -361,7 +442,7 @@
                                 <label>Ảnh bộ sưu tập Donut chính</label>
                                 <div class="image-uploader-box">
                                     <div class="img-preview-wrap">
-                                        <img id="heroImgPreview" src="../tai-nguyen/donut-collection.jpg" alt="Hero Donut">
+                                        <img id="heroImgPreview" src="/tai-nguyen/donut-collection.jpg" alt="Hero Donut">
                                     </div>
                                     <div class="uploader-controls">
                                         <label class="btn-upload">
@@ -393,7 +474,7 @@
                     <div class="cms-card-body">
                         <div class="image-uploader-box">
                             <div class="img-preview-wrap" style="width:180px; height:80px;">
-                                <img id="coverBannerPreview" src="../tai-nguyen/cover-banner.png" alt="Cover Banner" style="object-fit:cover;">
+                                <img id="coverBannerPreview" src="/tai-nguyen/cover-banner.png" alt="Cover Banner" style="object-fit:cover;">
                             </div>
                             <div class="uploader-controls">
                                 <label class="btn-upload">
@@ -483,7 +564,7 @@
                                 <label>Ảnh Poster giới thiệu bên trái</label>
                                 <div class="image-uploader-box">
                                     <div class="img-preview-wrap" style="width:100px; height:120px;">
-                                        <img id="aboutImgPreview" src="../tai-nguyen/about-poster.jpg" alt="About Poster">
+                                        <img id="aboutImgPreview" src="/tai-nguyen/about-poster.jpg" alt="About Poster">
                                     </div>
                                     <div class="uploader-controls">
                                         <label class="btn-upload">
@@ -579,7 +660,7 @@
                                 <label>Logo tiệm bánh</label>
                                 <div class="image-uploader-box">
                                     <div class="img-preview-wrap" style="width:70px; height:70px; border-radius:50%;">
-                                        <img id="setLogoPreview" src="../tai-nguyen/logo.jpg" alt="Logo" style="border-radius:50%;">
+                                        <img id="setLogoPreview" src="/tai-nguyen/logo.jpg" alt="Logo" style="border-radius:50%;">
                                     </div>
                                     <div class="uploader-controls">
                                         <label class="btn-upload">
@@ -680,6 +761,11 @@
                             <div class="form-group form-full">
                                 <label>Tên chủ tài khoản (In hoa không dấu)</label>
                                 <input type="text" id="setBankAccountName" class="form-control" placeholder="TIEM BANH KITTEN CAKE">
+                            </div>
+
+                            <div class="form-group form-full">
+                                <label><i class="fab fa-paypal" style="color:#0079C1;"></i> Link PayPal.Me (Dành cho khách quốc tế)</label>
+                                <input type="text" id="setPaypalUrl" class="form-control" placeholder="https://www.paypal.com/paypalme/emmeoVN">
                             </div>
 
                             <div class="form-group">
@@ -785,12 +871,19 @@
                         <input type="text" id="modalMenuName" class="form-control" placeholder="Ví dụ: Donut Xốp Mềm, Bánh Chuối Nướng..." required>
                     </div>
                     <div class="form-group">
+                        <label>Danh mục sản phẩm <span style="color:#ff4757;">*</span></label>
+                        <select id="modalMenuCategory" class="form-control">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Phân loại / Tag</label>
                         <select id="modalMenuTag" class="form-control">
                             <option value="🍩 Món Signature">🍩 Món Signature</option>
                             <option value="🥧 Bánh Nướng Nóng">🥧 Bánh Nướng Nóng</option>
                             <option value="🍰 Bánh Lạnh Hũ">🍰 Bánh Lạnh Hũ</option>
                             <option value="🍮 Tráng Miệng Ý">🍮 Tráng Miệng Ý</option>
+                            <option value="🎁 Combo Tiết Kiệm">🎁 Combo Tiết Kiệm</option>
                             <option value="🍪 Bánh Quy Giòn">🍪 Bánh Quy Giòn</option>
                             <option value="🥖 Bánh Mì Tươi">🥖 Bánh Mì Tươi</option>
                         </select>
@@ -801,6 +894,10 @@
                         <div id="modalMenuPriceFormatted" style="font-size:13px; color:#2ed573; font-weight:700; margin-top:6px; display:flex; align-items:center; gap:6px;">
                             <i class="fas fa-tag"></i> <span>Xem trước: 10.000 đ</span>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Giá niêm yết gạch ngang (Tùy chọn)</label>
+                        <input type="number" id="modalMenuOriginalPrice" class="form-control" placeholder="Ví dụ: 15000">
                     </div>
                     <div class="form-group">
                         <label>Huy hiệu nổi bật (Tùy chọn)</label>
@@ -863,7 +960,7 @@
                         <label style="font-weight:700; color:#2f3542;">Hình ảnh đại diện món bánh <span style="color:#ff4757;">*</span></label>
                         <div class="image-uploader-box">
                             <div class="img-preview-wrap">
-                                <img id="modalMenuImgPreview" src="../tai-nguyen/donut-signature.jpg" alt="Preview">
+                                <img id="modalMenuImgPreview" src="/tai-nguyen/donut-signature.jpg" alt="Preview">
                             </div>
                             <div class="uploader-controls">
                                 <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
@@ -881,11 +978,11 @@
                                 </div>
                                 <div class="menu-quick-thumbs">
                                     <span style="font-size:11px; font-weight:700; color:#747d8c;">Chọn nhanh ảnh tiệm:</span>
-                                    <button type="button" class="quick-thumb-chip" onclick="quickSelectMainImg('tai-nguyen/donut-signature.jpg')"><img src="../tai-nguyen/donut-signature.jpg"> Donut Signature</button>
-                                    <button type="button" class="quick-thumb-chip" onclick="quickSelectMainImg('tai-nguyen/donut-box.jpg')"><img src="../tai-nguyen/donut-box.jpg"> Hộp Donut</button>
-                                    <button type="button" class="quick-thumb-chip" onclick="quickSelectMainImg('tai-nguyen/tart-trung.jpg')"><img src="../tai-nguyen/tart-trung.jpg"> Tart Trứng</button>
-                                    <button type="button" class="quick-thumb-chip" onclick="quickSelectMainImg('tai-nguyen/oreo-cheesecake.jpg')"><img src="../tai-nguyen/oreo-cheesecake.jpg"> Oreo Cheesecake</button>
-                                    <button type="button" class="quick-thumb-chip" onclick="quickSelectMainImg('tai-nguyen/panna-cotta.jpg')"><img src="../tai-nguyen/panna-cotta.jpg"> Panna Cotta</button>
+                                    <button type="button" class="quick-thumb-chip" onclick="quickSelectMainImg('tai-nguyen/donut-signature.jpg')"><img src="/tai-nguyen/donut-signature.jpg"> Donut Signature</button>
+                                    <button type="button" class="quick-thumb-chip" onclick="quickSelectMainImg('tai-nguyen/donut-box.jpg')"><img src="/tai-nguyen/donut-box.jpg"> Hộp Donut</button>
+                                    <button type="button" class="quick-thumb-chip" onclick="quickSelectMainImg('tai-nguyen/tart-trung.jpg')"><img src="/tai-nguyen/tart-trung.jpg"> Tart Trứng</button>
+                                    <button type="button" class="quick-thumb-chip" onclick="quickSelectMainImg('tai-nguyen/oreo-cheesecake.jpg')"><img src="/tai-nguyen/oreo-cheesecake.jpg"> Oreo Cheesecake</button>
+                                    <button type="button" class="quick-thumb-chip" onclick="quickSelectMainImg('tai-nguyen/panna-cotta.jpg')"><img src="/tai-nguyen/panna-cotta.jpg"> Panna Cotta</button>
                                 </div>
                             </div>
                         </div>
@@ -899,6 +996,124 @@
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="closeModal('menuModal')">Hủy bỏ</button>
                 <button class="btn btn-primary" id="btnSaveMenuItem">Lưu món bánh</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD / EDIT CATEGORY -->
+    <div class="modal-overlay" id="categoryModal">
+        <div class="modal-container" style="max-width:550px;">
+            <div class="modal-header">
+                <h3 id="categoryModalTitle">Thêm Danh Mục Bánh Mới</h3>
+                <button class="modal-close" onclick="closeModal('categoryModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="modalCatId">
+                <div class="form-grid">
+                    <div class="form-group form-full">
+                        <label>Tên danh mục <span style="color:#ff4757;">*</span></label>
+                        <input type="text" id="modalCatName" class="form-control" placeholder="Ví dụ: Bánh Sinh Nhật & Set Tiệc" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Đường dẫn Slug</label>
+                        <input type="text" id="modalCatSlug" class="form-control" placeholder="banh-sinh-nhat">
+                    </div>
+                    <div class="form-group">
+                        <label>Biểu tượng Icon (FontAwesome)</label>
+                        <select id="modalCatIcon" class="form-control">
+                            <option value="fa-cookie-bite">🍪 Donut / Cookie (fa-cookie-bite)</option>
+                            <option value="fa-fire-alt">🔥 Bánh Nướng (fa-fire-alt)</option>
+                            <option value="fa-ice-cream">🍨 Bánh Lạnh / Kem (fa-ice-cream)</option>
+                            <option value="fa-lemon">🍋 Tráng Miệng / Panna (fa-lemon)</option>
+                            <option value="fa-gift">🎁 Hộp Quà / Combo (fa-gift)</option>
+                            <option value="fa-birthday-cake">🎂 Bánh Sinh Nhật (fa-birthday-cake)</option>
+                            <option value="fa-bread-slice">🍞 Bánh Mì (fa-bread-slice)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Huy hiệu nhỏ (Badge)</label>
+                        <input type="text" id="modalCatBadge" class="form-control" placeholder="Ví dụ: Hot, Mới, Bestseller">
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Mô tả ngắn danh mục</label>
+                        <textarea id="modalCatDesc" class="form-control" rows="2" placeholder="Mô tả các sản phẩm nổi bật thuộc danh mục này..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('categoryModal')">Hủy bỏ</button>
+                <button class="btn btn-primary" id="btnSaveCategory">Lưu danh mục</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD / EDIT ARTICLE -->
+    <div class="modal-overlay" id="articleModal">
+        <div class="modal-container" style="max-width:750px;">
+            <div class="modal-header">
+                <h3 id="articleModalTitle">Soạn Thảo Bài Viết Mới</h3>
+                <button class="modal-close" onclick="closeModal('articleModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="modalArtId">
+                <div class="form-grid">
+                    <div class="form-group form-full">
+                        <label>Tiêu đề bài viết <span style="color:#ff4757;">*</span></label>
+                        <input type="text" id="modalArtTitle" class="form-control" placeholder="Ví dụ: Bí Quyết Bảo Quản Bánh Donut 10K Nướng Mềm Xốp..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>Chuyên mục bài viết <span style="color:#ff4757;">*</span></label>
+                        <select id="modalArtCategory" class="form-control">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tác giả</label>
+                        <input type="text" id="modalArtAuthor" class="form-control" placeholder="Kitten Cake Team">
+                    </div>
+                    <div class="form-group">
+                        <label>Thời gian đọc</label>
+                        <input type="text" id="modalArtReadTime" class="form-control" placeholder="3 phút đọc">
+                    </div>
+                    <div class="form-group">
+                        <label>Món bánh gắn trong bài (Shoppable)</label>
+                        <select id="modalArtFeaturedProduct" class="form-control">
+                            <option value="">-- Không gắn món bánh --</option>
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Tóm tắt ngắn (Excerpt)</label>
+                        <textarea id="modalArtExcerpt" class="form-control" rows="2" placeholder="Tóm tắt 1-2 câu thu hút người đọc..."></textarea>
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Ảnh bìa bài viết</label>
+                        <div class="image-uploader-box">
+                            <div class="img-preview-wrap" style="width:120px; height:80px;">
+                                <img id="modalArtCoverPreview" src="/tai-nguyen/donut-collection.jpg" alt="Article Cover">
+                            </div>
+                            <div class="uploader-controls">
+                                <label class="btn-upload">
+                                    <i class="fas fa-cloud-upload-alt"></i> Tải ảnh từ máy tính
+                                    <input type="file" id="modalArtCoverInput" accept="image/*">
+                                </label>
+                                <input type="text" id="modalArtCoverUrl" class="form-control" placeholder="Dán link ảnh (VD: tai-nguyen/donut-collection.jpg)" style="font-size:12px; margin-top:8px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Nội dung chi tiết bài viết (Hỗ trợ định dạng HTML: &lt;p&gt;, &lt;h3&gt;, &lt;ul&gt;, &lt;strong&gt;...)</label>
+                        <textarea id="modalArtContent" class="form-control" rows="8" placeholder="Nhập nội dung bài viết tại đây..."></textarea>
+                    </div>
+                    <div class="form-group form-full">
+                        <label>Thẻ Tags (phân cách bằng dấu phẩy)</label>
+                        <input type="text" id="modalArtTags" class="form-control" placeholder="Donut, Mẹo Hay, Bánh Ngọt, Quận 7">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('articleModal')">Hủy bỏ</button>
+                <button class="btn btn-primary" id="btnSaveArticle">Lưu bài viết</button>
             </div>
         </div>
     </div>
@@ -919,7 +1134,7 @@
                     <label>Chọn hình ảnh</label>
                     <div class="image-uploader-box">
                         <div class="img-preview-wrap" style="width:120px; height:100px;">
-                            <img id="modalGalleryImgPreview" src="../tai-nguyen/donut-varieties.jpg" alt="Gallery Preview">
+                            <img id="modalGalleryImgPreview" src="/tai-nguyen/donut-varieties.jpg" alt="Gallery Preview">
                         </div>
                         <div class="uploader-controls">
                             <label class="btn-upload">
@@ -1010,6 +1225,6 @@
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <script src="admin.js"></script>
+    <script src="/admin/admin.js"></script>
 </body>
 </html>

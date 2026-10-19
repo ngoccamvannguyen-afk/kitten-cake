@@ -6,7 +6,33 @@ const PORT = process.env.PORT || 3000;
 
 // Static serving for local development
 app.use('/tai-nguyen', express.static(path.join(__dirname, 'tai-nguyen')));
+app.use('/data', express.static(path.join(__dirname, 'data')));
 app.use('/admin', express.static(path.join(__dirname, 'admin')));
+
+// Admin routes & assets fallback
+app.get(['/admin', '/admin/'], (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'admin', 'index.html'));
+});
+
+app.get(['/admin/login', '/admin/login.html'], (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'admin', 'login.html'));
+});
+
+app.get(['/admin.css', '/admin/admin.css'], (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'text/css; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'admin', 'admin.css'));
+});
+
+app.get(['/admin.js', '/admin/admin.js'], (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'application/javascript; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'admin', 'admin.js'));
+});
 
 // Serve root static files
 app.get('/style.css', (req, res) => {
@@ -33,10 +59,16 @@ app.get('/cart.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'cart.js'));
 });
 
-app.get('/index.html', (req, res) => {
+app.get('/i18n.js', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'application/javascript; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'i18n.js'));
+});
+
+app.get(['/products', '/products.html'], (req, res) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.setHeader('Content-Type', 'text/html; charset=UTF-8');
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'products.html'));
 });
 
 app.get(['/product', '/product.html'], (req, res) => {
@@ -49,6 +81,30 @@ app.get(['/cart', '/cart.html'], (req, res) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.setHeader('Content-Type', 'text/html; charset=UTF-8');
   res.sendFile(path.join(__dirname, 'cart.html'));
+});
+
+app.get(['/blog', '/blog.html'], (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'blog.html'));
+});
+
+app.get(['/post', '/post.html'], (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'post.html'));
+});
+
+app.get(['/order-tracking', '/order-tracking.html', '/tracking', '/tracking.html'], (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'order-tracking.html'));
+});
+
+app.get('/index.html', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.use(express.static(__dirname));

@@ -253,14 +253,19 @@
             }
 
             // Banner combo Mua 5 tặng 1 (Chỉ áp dụng với Donut)
+            const isEn = window.KittenI18n?.getLang() === 'en';
             if (promoNoticeEl) {
                 if (promo.eligible) {
                     const freeNames = promo.freeItems.map(f => `${f.name}${f.flavor ? ` (${f.flavor})` : ''}`).join(', ');
-                    promoNoticeEl.innerHTML = `🎉 <b>Đã áp dụng Mua 5 Tặng 1 (Donut):</b> Miễn phí <b>${promo.freeCount} Donut</b> giá thấp nhất (-${formatVNCurrency(promo.discountAmount)})! <div style="font-size:0.75rem; margin-top:3px; opacity:0.9;">Tặng miễn phí: <b>${freeNames}</b></div>`;
+                    promoNoticeEl.innerHTML = isEn
+                        ? `🎉 <b>Buy 5 Get 1 Free (Donut) Applied:</b> Free <b>${promo.freeCount} lowest-priced Donut(s)</b> (-${formatVNCurrency(promo.discountAmount)})! <div style="font-size:0.75rem; margin-top:3px; opacity:0.9;">Complimentary: <b>${freeNames}</b></div>`
+                        : `🎉 <b>Đã áp dụng Mua 5 Tặng 1 (Donut):</b> Miễn phí <b>${promo.freeCount} Donut</b> giá thấp nhất (-${formatVNCurrency(promo.discountAmount)})! <div style="font-size:0.75rem; margin-top:3px; opacity:0.9;">Tặng miễn phí: <b>${freeNames}</b></div>`;
                     promoNoticeEl.className = 'mini-cart-promo success';
                     promoNoticeEl.style.display = 'block';
                 } else if (promo.totalDonuts > 0) {
-                    promoNoticeEl.innerHTML = `🍩 Bạn có <b>${promo.totalDonuts} Donut</b>. Chọn thêm <b>${promo.neededForNext}</b> chiếc Donut nữa (đủ 6 Donut) để được <b>TẶNG MIỄN PHÍ</b> 1 Donut rẻ nhất!`;
+                    promoNoticeEl.innerHTML = isEn
+                        ? `🍩 You have <b>${promo.totalDonuts} Donut(s)</b>. Add <b>${promo.neededForNext}</b> more Donut(s) to get 1 lowest-priced Donut <b>100% FREE</b>!`
+                        : `🍩 Bạn có <b>${promo.totalDonuts} Donut</b>. Chọn thêm <b>${promo.neededForNext}</b> chiếc Donut nữa (đủ 6 Donut) để được <b>TẶNG MIỄN PHÍ</b> 1 Donut rẻ nhất!`;
                     promoNoticeEl.className = 'mini-cart-promo info';
                     promoNoticeEl.style.display = 'block';
                 } else {
@@ -281,15 +286,19 @@
                 itemDiv.className = 'mini-cart-item';
                 const freeInThisRow = freeCountsPerIndex[index] || 0;
                 const freeTag = freeInThisRow > 0
-                    ? `<div style="font-size:0.75rem; color:#2ed573; font-weight:700; margin-bottom:3px;"><i class="fas fa-gift"></i> Tặng Free ${freeInThisRow} chiếc (0đ)</div>`
+                    ? `<div style="font-size:0.75rem; color:#2ed573; font-weight:700; margin-bottom:3px;"><i class="fas fa-gift"></i> ${isEn ? `Free Gift: ${freeInThisRow} item(s) (0 VND)` : `Tặng Free ${freeInThisRow} chiếc (0đ)`}</div>`
                     : '';
 
+                const prodName = isEn && window.KittenI18n ? window.KittenI18n.getTranslatedProductName(item.name) : item.name;
+                const flavorName = isEn && window.KittenI18n ? window.KittenI18n.getTranslatedFlavor(item.flavor) : item.flavor;
+                const toppingsList = (item.toppings || []).map(t => isEn && window.KittenI18n ? window.KittenI18n.getTranslatedTopping(t) : t);
+
                 itemDiv.innerHTML = `
-                    <img src="${item.image}" alt="${item.name}" class="mini-cart-item-img">
+                    <img src="${item.image}" alt="${prodName}" class="mini-cart-item-img">
                     <div class="mini-cart-item-detail">
-                        <div class="mini-cart-item-title">${item.name}</div>
-                        <div class="mini-cart-item-flavor"><i class="fas fa-cookie"></i> ${item.flavor}</div>
-                        ${(item.toppings && item.toppings.length > 0) ? `<div class="mini-cart-item-toppings" style="font-size:0.75rem; color:#747d8c; margin-bottom:4px;"><i class="fas fa-sparkles" style="color:#ffa502;"></i> + ${item.toppings.join(', ')}</div>` : ''}
+                        <div class="mini-cart-item-title">${prodName}</div>
+                        <div class="mini-cart-item-flavor"><i class="fas fa-cookie"></i> ${flavorName}</div>
+                        ${(toppingsList && toppingsList.length > 0) ? `<div class="mini-cart-item-toppings" style="font-size:0.75rem; color:#747d8c; margin-bottom:4px;"><i class="fas fa-sparkles" style="color:#ffa502;"></i> + ${toppingsList.join(', ')}</div>` : ''}
                         ${freeTag}
                         <div class="mini-cart-item-meta">
                             <span class="mini-cart-item-price">${formatVNCurrency(item.price)}</span>
@@ -300,7 +309,7 @@
                             </div>
                         </div>
                     </div>
-                    <button type="button" class="mini-cart-btn-remove" data-index="${index}" title="Xóa món này">&times;</button>
+                    <button type="button" class="mini-cart-btn-remove" data-index="${index}" title="${isEn ? 'Remove this item' : 'Xóa món này'}">&times;</button>
                 `;
                 listEl.appendChild(itemDiv);
             });
@@ -383,10 +392,18 @@
                     this.notifyUpdate();
                 }
             });
+
+            // Lắng nghe thay đổi ngôn ngữ
+            window.addEventListener('languageChanged', () => {
+                this.renderDrawer();
+            });
         }
     };
 
     function formatVNCurrency(val) {
+        if (window.KittenI18n && window.KittenI18n.formatMoney) {
+            return window.KittenI18n.formatMoney(val);
+        }
         if (isNaN(val)) return '0đ';
         return Number(val).toLocaleString('vi-VN') + 'đ';
     }

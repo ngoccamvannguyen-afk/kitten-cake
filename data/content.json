@@ -8,17 +8,17 @@
     "address": "Quận 7, TP. Hồ Chí Minh",
     "email": "kittencake7dis@gmail.com",
     "orderButtonText": "Đặt bánh ngay",
-    "orderButtonLink": "https://www.facebook.com/profile.php?id=61594490844705",
+    "orderButtonLink": "cart.html",
     "socialLinks": {
       "facebook": "https://www.facebook.com/profile.php?id=61594490844705",
-      "instagram": "#",
-      "tiktok": "#"
+      "instagram": "https://instagram.com/kittencake7",
+      "tiktok": "https://tiktok.com/@kittencake7"
     },
     "openingHours": {
       "weekdays": "Thứ 2 - Thứ 6: 08:00 - 22:00",
       "weekends": "Thứ 7 - CN: 07:30 - 22:30"
     },
-    "copyright": "© 2026 Kitten Cake Bakery. Thiết kế bởi chuyên gia Web."
+    "copyright": "© 2026 Kitten Cake Bakery. Nền tảng thương mại điện tử bánh ngọt hiện đại."
   },
   "shippingConfig": {
     "district7Fee": 15000,
@@ -30,30 +30,71 @@
     "bankName": "VPBank (Ngân hàng TMCP Việt Nam Thịnh Vượng)",
     "accountNumber": "1821004654",
     "accountName": "NGUYEN NGOC CAM VAN",
-    "qrImage": "tai-nguyen/qr-vpbank.png"
+    "qrImage": "tai-nguyen/qr-vpbank.png",
+    "paypalUrl": "https://www.paypal.com/paypalme/emmeoVN",
+    "paypalUser": "emmeoVN"
   },
+  "categories": [
+    {
+      "id": "cat_donut",
+      "slug": "donut-signature",
+      "name": "Donut Signature 10K",
+      "icon": "fa-cookie-bite",
+      "badge": "Hot",
+      "description": "Donut ruột mềm xốp đồng giá 10k nướng tươi mỗi ngày, ngập tràn vị ngọt ngào."
+    },
+    {
+      "id": "cat_baked",
+      "slug": "banh-nuong-nong",
+      "name": "Bánh Nướng Nóng",
+      "icon": "fa-fire-alt",
+      "badge": "Thơm Giòn",
+      "description": "Tart trứng vỏ ngàn lớp, bánh croissant nướng vàng rụm ngát hương bơ Pháp."
+    },
+    {
+      "id": "cat_cold",
+      "slug": "banh-lanh-hu",
+      "name": "Bánh Lạnh & Mousse Hũ",
+      "icon": "fa-ice-cream",
+      "badge": "Bestseller",
+      "description": "Oreo Cheesecake béo ngậy, Panna Cotta chua ngọt đóng hũ cực tiện lợi."
+    },
+    {
+      "id": "cat_combo",
+      "slug": "combo-hop-qua",
+      "name": "Combo & Hộp Quà Tặng",
+      "icon": "fa-gift",
+      "badge": "Tiết Kiệm",
+      "description": "Set bánh hộp mèo Kitten Cake siêu dễ thương cho sinh nhật, tiệc lớp, quà tặng."
+    }
+  ],
   "vouchers": [
     {
       "code": "KITTEN10",
       "discountPercent": 10,
-      "description": "Ưu đãi học sinh - sinh viên giảm 10%"
+      "description": "Ưu đãi học sinh - sinh viên giảm 10% tổng đơn bánh"
     },
     {
       "code": "FREESHIPQ7",
       "discountFixed": 15000,
-      "description": "Miễn phí giao hàng nội thành Quận 7"
+      "description": "Miễn phí giao hàng nội thành Quận 7 (trừ 15.000đ phí ship)"
+    },
+    {
+      "code": "DONUTLOVE",
+      "discountFixed": 20000,
+      "description": "Giảm ngay 20.000đ cho đơn hàng từ 100.000đ"
     }
   ],
   "hero": {
     "titlePart1": "Thiên Đường Donut",
     "titleHighlight": "Đồng Giá Chỉ 10K",
-    "description": "Khám phá món bánh Donut trứ danh tại Kitten Cake giữa lòng Quận 7. Bánh tươi mềm xốp nướng mỗi ngày, ngập tràn topping ngọt ngào với mức giá siêu hạt dẻ chỉ 10.000đ/chiếc dành riêng cho giới trẻ & học sinh sinh viên!",
+    "description": "Khám phá thế giới bánh ngọt tươi ngon tại <strong>Kitten Cake</strong> giữa lòng Quận 7. Bánh tươi mềm xốp nướng mới mỗi sáng, ngập tràn vị ngọt ngào chỉ từ <strong>10.000đ/chiếc</strong>!",
     "badgeText": "Donut Signature 10K",
-    "image": "tai-nguyen/donut-collection.jpg",
-    "btnPrimaryText": "Thử Ngay Donut 10K",
-    "btnPrimaryLink": "#menu",
-    "btnOutlineText": "Chỉ đường tới tiệm",
-    "btnOutlineLink": "#contact"
+    "image": "tai-nguyen/donut-collection-1791974653397.jpg",
+    "btnPrimaryText": "Khám Phá Menu Bánh",
+    "btnPrimaryLink": "products.html",
+    "btnOutlineText": "Xem Giỏ Hàng",
+    "btnOutlineLink": "cart.html"
   },
   "brandStrip": {
     "enabled": true,
@@ -67,14 +108,18 @@
     "items": [
       {
         "id": "menu_1",
-        "name": "Donut Xốp Mềm",
+        "name": "Donut Xốp Mềm Signature",
         "tag": "🍩 Món Signature",
+        "categoryId": "cat_donut",
         "price": 10000,
+        "originalPrice": 15000,
+        "rating": 5,
+        "reviewsCount": 128,
         "isFeatured": true,
         "badge": "Best Seller • Món Chính",
         "description": "Món bánh chủ đạo nướng tươi mỗi ngày, ruột mềm xốp phủ socola Bỉ, cốm cầu vồng, dâu tây hoặc matcha ngọt dịu.",
         "image": "tai-nguyen/donut-collection-1791974653397.jpg",
-        "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
+        "orderLink": "cart.html",
         "status": "active",
         "inStock": true,
         "flavors": [
@@ -96,92 +141,273 @@
           }
         ],
         "details": {
-          "shelfLife": "",
-          "ingredients": ""
+          "shelfLife": "Dùng ngon nhất trong ngày hoặc 2 ngày ngăn mát tủ lạnh.",
+          "ingredients": "Bột mì thượng hạng, bơ lạt nguyên chất, trứng gà tươi, men Pháp, sốt chocolate và matcha nhập khẩu."
         }
       },
       {
         "id": "menu_2",
-        "name": "Tart Trứng Béo Ngậy",
+        "name": "Tart Trứng Béo Ngậy Giòn Rụm",
         "tag": "🥧 Bánh Nướng Nóng",
+        "categoryId": "cat_baked",
         "price": 18000,
-        "isFeatured": false,
-        "badge": "",
-        "description": "Lớp vỏ ngàn lớp giòn rụm kết hợp cùng nhân trứng sữa nướng thơm lừng, béo ngậy chuẩn vị Hồng Kông.",
+        "originalPrice": 22000,
+        "rating": 4.9,
+        "reviewsCount": 94,
+        "isFeatured": true,
+        "badge": "Vỏ Ngàn Lớp",
+        "description": "Lớp vỏ ngàn lớp giòn tan rụm kết hợp cùng nhân kem trứng sữa nướng xém mặt thơm lừng béo ngậy chuẩn vị Hồng Kông.",
         "image": "tai-nguyen/tart-trung.jpg",
-        "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
+        "orderLink": "cart.html",
         "status": "active",
         "inStock": true,
         "flavors": [
           {
-            "name": "Tart trứng",
+            "name": "Tart Trứng Truyền Thống",
             "image": "tai-nguyen/tart-trung.jpg"
           }
         ],
         "details": {
-          "shelfLife": "",
-          "ingredients": ""
+          "shelfLife": "Ngon nhất khi ăn nóng trong ngày; bảo quản ngăn mát 2 ngày, làm nóng lại bằng nồi chiên không dầu 3 phút.",
+          "ingredients": "Bột ngàn lớp cao cấp, lòng đỏ trứng gà tươi, whipping cream, sữa tươi tiệt trùng, bơ Anchor."
         }
       },
       {
         "id": "menu_3",
-        "name": "Oreo Cheesecake Hũ",
+        "name": "Oreo Cheesecake",
         "tag": "🍰 Bánh Lạnh Hũ",
+        "categoryId": "cat_cold",
         "price": 35000,
-        "isFeatured": false,
-        "badge": "",
-        "description": "Sự kết hợp hoàn hảo giữa phô mai kem béo ngậy và vụn bánh Oreo giòn rụm đóng hũ mang đi cực tiện lợi.",
+        "originalPrice": 40000,
+        "rating": 5,
+        "reviewsCount": 86,
+        "isFeatured": true,
+        "badge": "Yêu Thích",
+        "description": "Sự kết hợp hoàn hảo giữa cream cheese béo ngậy chua dịu và vụn bánh quy Oreo giòn rụm, đóng hũ sạch sẽ tiện lợi.",
         "image": "tai-nguyen/oreo-cheesecake.jpg",
-        "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
+        "orderLink": "cart.html",
         "status": "active",
         "inStock": true,
         "flavors": [
           {
-            "name": "Vị Chuẩn Signature",
+            "name": "Oreo Vụn Giòn",
             "image": "tai-nguyen/oreo-cheesecake.jpg"
           }
         ],
         "details": {
-          "shelfLife": "",
-          "ingredients": ""
+          "shelfLife": "Bảo quản ngăn mát từ 3 - 5 ngày. Dùng lạnh trực tiếp.",
+          "ingredients": "Cream cheese New Zealand, bánh Oreo nguyên bản, whipping cream tươi, bơ lạt, đường ăn kiêng nhẹ."
         }
       },
       {
         "id": "menu_4",
-        "name": "Panna Cotta Trái Cây",
+        "name": "Panna Cotta Trái Cây Thanh Mát",
         "tag": "🍮 Tráng Miệng Ý",
+        "categoryId": "cat_cold",
         "price": 25000,
+        "originalPrice": 30000,
+        "rating": 4.8,
+        "reviewsCount": 62,
         "isFeatured": false,
-        "badge": "",
-        "description": "Món tráng miệng thanh mát từ Ý, mềm mịn tan ngay trong miệng hòa quyện cùng sốt quả mọng chua ngọt.",
+        "badge": "Thanh Mát",
+        "description": "Món tráng miệng thanh mát từ nước Ý, pudding sữa mềm mịn tan ngay trên đầu lưỡi cùng sốt mứt trái cây chua ngọt.",
         "image": "tai-nguyen/panna-cotta.jpg",
-        "orderLink": "https://www.facebook.com/profile.php?id=61594490844705",
+        "orderLink": "cart.html",
         "status": "active",
         "inStock": true,
         "flavors": [
           {
-            "name": "Vị Kiwi",
+            "name": "Sốt Dâu Tây Tươi",
             "image": "tai-nguyen/panna-cotta.jpg"
           },
           {
-            "name": "Vị Dứa",
+            "name": "Sốt Chanh Dây Chua Ngọt",
+            "image": "tai-nguyen/panna-cotta.jpg"
+          },
+          {
+            "name": "Sốt Kiwi Xanh",
             "image": "tai-nguyen/panna-cotta.jpg"
           }
         ],
         "details": {
-          "shelfLife": "",
-          "ingredients": ""
+          "shelfLife": "Dùng lạnh, bảo quản ngăn mát tủ lạnh trong 3 ngày.",
+          "ingredients": "Sữa tươi Đà Lạt, whipping cream, gelatin hữu cơ, mứt trái cây cô đặc tự nấu không chất bảo quản."
+        }
+      },
+      {
+        "id": "menu_5",
+        "name": "Combo Hộp 6 Donut Quà Tặng",
+        "tag": "🎁 Combo Tiết Kiệm",
+        "categoryId": "cat_combo",
+        "price": 50000,
+        "originalPrice": 60000,
+        "rating": 5,
+        "reviewsCount": 115,
+        "isFeatured": true,
+        "badge": "Mua 5 Tặng 1",
+        "description": "Hộp quà tặng mèo Kitten Cake siêu cưng gồm 6 chiếc Donut đủ vị (Choco, Vani, Dâu tây, Matcha, Hạnh nhân). Tặng kèm thiệp nhỏ!",
+        "image": "tai-nguyen/donut-box.jpg",
+        "orderLink": "cart.html",
+        "status": "active",
+        "inStock": true,
+        "flavors": [
+          {
+            "name": "Set Mix 6 Vị Đầy Đủ",
+            "image": "tai-nguyen/donut-box.jpg"
+          }
+        ],
+        "details": {
+          "shelfLife": "Dùng trong 24h - 48h. Thích hợp mang tặng bạn bè, người yêu, sinh nhật.",
+          "ingredients": "Đầy đủ các vị signature Donut Kitten Cake."
+        }
+      },
+      {
+        "id": "menu_6",
+        "name": "Hộp 4 Tart Trứng Nóng Giòn",
+        "tag": "🥧 Bánh Nướng Nóng",
+        "categoryId": "cat_baked",
+        "price": 65000,
+        "originalPrice": 72000,
+        "rating": 4.9,
+        "reviewsCount": 57,
+        "isFeatured": false,
+        "badge": "Tiết Kiệm",
+        "description": "Set 4 chiếc Tart trứng nướng nóng hổi đóng hộp sang trọng, giòn tan ngàn lớp cho bữa xế văn phòng ấm áp.",
+        "image": "tai-nguyen/tart-trung.jpg",
+        "orderLink": "cart.html",
+        "status": "active",
+        "inStock": true,
+        "flavors": [
+          {
+            "name": "Hộp 4 Chiếc Tiêu Chuẩn",
+            "image": "tai-nguyen/tart-trung.jpg"
+          }
+        ],
+        "details": {
+          "shelfLife": "Ăn ngon nhất khi còn ấm giòn trong ngày.",
+          "ingredients": "Trứng gà tươi, whipping cream, bơ lạt hảo hạng."
         }
       }
     ]
   },
+  "blogCategories": [
+    {
+      "id": "bcat_tips",
+      "slug": "meo-banh",
+      "name": "Mẹo Bánh & Thưởng Thức",
+      "icon": "fa-lightbulb"
+    },
+    {
+      "id": "bcat_stories",
+      "slug": "chuyen-tiem",
+      "name": "Chuyện Bếp Kitten Cake",
+      "icon": "fa-heart"
+    },
+    {
+      "id": "bcat_promos",
+      "slug": "khuyen-mai",
+      "name": "Khuyến Mãi & Ưu Đãi",
+      "icon": "fa-bullhorn"
+    },
+    {
+      "id": "bcat_storage",
+      "slug": "bao-quan",
+      "name": "Bảo Quản & Đặt Tiệc",
+      "icon": "fa-temperature-low"
+    }
+  ],
+  "articles": [
+    {
+      "id": "art_1",
+      "slug": "bi-quyet-an-donut-ngon-chuan-vi-quan-7",
+      "title": "Bí Quyết Thưởng Thức Donut 10K Giòn Xốp Chuẩn Vị Giới Trẻ Quận 7",
+      "categoryId": "bcat_tips",
+      "categoryName": "Mẹo Bánh & Thưởng Thức",
+      "coverImage": "tai-nguyen/donut-collection-1791974653397.jpg",
+      "author": "Bếp Trưởng Kitten Cake",
+      "publishDate": "2026-10-18",
+      "readTime": "3 phút đọc",
+      "featuredProductId": "menu_1",
+      "excerpt": "Làm thế nào để chiếc bánh Donut giữ trọn độ mềm xốp, thơm lừng lớp sốt chocolate Bỉ khi mang về nhà? Cùng khám phá mẹo cực hay này nhé!",
+      "content": "<p>Donut tại <strong>Kitten Cake</strong> luôn được nhào nặn và nướng mới mỗi sáng từ 7h30. Để chiếc bánh đạt độ phồng xốp hoàn hảo mà không bị ngấy dầu, tiệm áp dụng công thức ủ men chậm độc quyền kiểu Pháp.</p><h3>1. Nhiệt độ lý tưởng khi thưởng thức</h3><p>Khi nhận bánh từ shipper, bánh vẫn giữ được độ ấm mềm nhẹ. Nếu bạn để tủ lạnh, hãy cho bánh vào nồi chiên không dầu hoặc lò vi sóng ở mức 150°C trong vòng 30 - 45 giây. Lớp chocolate hoặc sốt matcha bên ngoài sẽ tan chảy nhẹ, ruột bánh nở mềm bông tơi như vừa mới ra lò!</p><h3>2. Món uống kết hợp 'bất bại'</h3><p>Một chiếc Donut Choco 10K kết hợp cùng một ly trà sữa ô long ít ngọt hoặc ly cà phê sữa đá Quận 7 sẽ giúp cân bằng hương vị, kích thích vị giác tối đa.</p><p>Đừng quên Kitten Cake có chương trình tặng 1 bánh khi mua combo 5 chiếc trong hộp mèo đáng yêu nhé!</p>",
+      "tags": [
+        "Donut",
+        "Mẹo Hay",
+        "Quận 7",
+        "Bánh Ngọt"
+      ],
+      "views": 342
+    },
+    {
+      "id": "art_2",
+      "slug": "tart-trung-ngan-lop-bi-quyet-vo-gion-tan",
+      "title": "Tart Trứng Ngàn Lớp: Vì Sao Ai Đến Kitten Cake Cũng Phải Gọi Thử?",
+      "categoryId": "bcat_stories",
+      "categoryName": "Chuyện Bếp Kitten Cake",
+      "coverImage": "tai-nguyen/tart-trung.jpg",
+      "author": "Kitten Baker",
+      "publishDate": "2026-10-16",
+      "readTime": "4 phút đọc",
+      "featuredProductId": "menu_2",
+      "excerpt": "Câu chuyện đằng sau chiếc Tart trứng thơm lừng béo ngậy với hơn 64 lớp bột mỏng tang giòn rụm được tạo ra như thế nào.",
+      "content": "<p>Không chỉ nổi danh với món Donut 10K, tiệm bánh nhỏ Kitten Cake tại Quận 7 còn có một 'ngôi sao thầm lặng' khác khiến các bạn trẻ mê mẩn: <strong>Tart trứng ngàn lớp nướng nóng</strong>.</p><h3>Vỏ bánh giòn rụm 64 lớp</h3><p>Điểm khác biệt của Tart trứng Kitten Cake là việc cán bột thủ công nhiều lần xen kẽ bơ Anchor nhập khẩu. Khi nướng ở nhiệt độ cao, từng lớp bột tách nở giòn tan, cắn một miếng nghe tiếng vỡ giòn rụm đã tai.</p><h3>Nhân kem sữa trứng xém mặt</h3><p>Phần nhân được nấu từ lòng đỏ trứng gà tươi và whipping cream béo ngậy, ngọt dịu vừa phải không hề gắt cổ. Mặt bánh được nướng xém nâu caramel tạo nên hương thơm khói nhẹ quyến rũ.</p>",
+      "tags": [
+        "Tart Trứng",
+        "Chuyện Bếp",
+        "Bánh Nướng Nóng"
+      ],
+      "views": 289
+    },
+    {
+      "id": "art_3",
+      "slug": "huong-dan-bao-quan-banh-lanh-hu-cheesecake-panna-cotta",
+      "title": "Hướng Dẫn Bảo Quản Bánh Lạnh Hũ: Oreo Cheesecake & Panna Cotta Đúng Cách",
+      "categoryId": "bcat_storage",
+      "categoryName": "Bảo Quản & Đặt Tiệc",
+      "coverImage": "tai-nguyen/oreo-cheesecake.jpg",
+      "author": "Kitten Cake Team",
+      "publishDate": "2026-10-14",
+      "readTime": "3 phút đọc",
+      "featuredProductId": "menu_3",
+      "excerpt": "Bánh lạnh hũ tiện lợi mang đi làm, đi học nhưng bảo quản thế nào để kem phô mai và sốt trái cây luôn thơm ngon nhất?",
+      "content": "<p>Bánh hũ thủy tinh tại Kitten Cake là giải pháp tuyệt vời cho các bạn học sinh - sinh viên và nhân viên văn phòng bận rộn. Bánh được niêm phong nắp kín, sạch sẽ và an toàn.</p><h3>Nhiệt độ bảo quản chuẩn</h3><p>Nhiệt độ tốt nhất cho các dòng bánh Cheesecake và Panna Cotta là từ <strong>3°C đến 6°C</strong> trong ngăn mát tủ lạnh. Không nên để bánh ở cánh cửa tủ lạnh vì nhiệt độ tại đó hay thay đổi khi đóng mở.</p><h3>Thời gian thưởng thức tốt nhất</h3><p>- <strong>Oreo Cheesecake:</strong> Dùng trong vòng 3 - 5 ngày để vụn bánh Oreo vẫn giữ được hương vị béo ngậy thơm ngon.<br>- <strong>Panna Cotta:</strong> Nên dùng trong vòng 2 - 3 ngày để sốt quả mọng giữ được độ tươi mọng tự nhiên.</p>",
+      "tags": [
+        "Cheesecake",
+        "Panna Cotta",
+        "Bảo Quản Bánh",
+        "Bánh Lạnh"
+      ],
+      "views": 215
+    },
+    {
+      "id": "art_4",
+      "slug": "uu-dai-sinh-vien-mua-5-tang-1-donut-box",
+      "title": "Ưu Đãi Đặc Biệt Cho Học Sinh - Sinh Viên: Mua Combo 5 Donut Tặng Ngay 1",
+      "categoryId": "bcat_promos",
+      "categoryName": "Khuyến Mãi & Ưu Đãi",
+      "coverImage": "tai-nguyen/donut-box.jpg",
+      "author": "Kitten Cake Marketing",
+      "publishDate": "2026-10-12",
+      "readTime": "2 phút đọc",
+      "featuredProductId": "menu_5",
+      "excerpt": "Chỉ 50.000đ sở hữu ngay hộp quà 6 chiếc Donut ngọt ngào bọc trong bao bì mèo Kitten Cake xinh xắn. Khám phá ngay!",
+      "content": "<p>Nhằm đồng hành cùng các bạn học sinh, sinh viên các trường ĐH Tôn Đức Thắng, ĐH RMIT, ĐH Tài chính - Marketing Quận 7, Kitten Cake chính thức triển khai chương trình ưu đãi dài hạn:</p><ul><li><strong>Mua 5 Donut tặng ngay 1 Donut</strong> (Chỉ 50.000đ được ngay 6 bánh).</li><li>Đóng gói trong hộp quà mèo Kitten Cake cực xinh, thích hợp sống ảo.</li><li>Nhập mã <code>KITTEN10</code> giảm thêm 10% hoặc <code>FREESHIPQ7</code> cho đơn giao nội thành Quận 7.</li></ul><p>Đặt bánh trực tiếp trên website để nhận bánh nóng sau 30-45 phút nhé!</p>",
+      "tags": [
+        "Khuyến Mãi",
+        "Sinh Viên",
+        "Donut Box",
+        "Quận 7"
+      ],
+      "views": 481
+    }
+  ],
   "promoBanner": {
     "enabled": true,
     "title": "🍩 Ưu Đãi Độc Quyền Cho Học Sinh - Sinh Viên",
     "description": "Mua Combo 5 Donut tặng ngay 1 Donut (chỉ 50.000đ được 6 bánh) đóng hộp mèo Kitten Cake xinh xắn mang về!",
     "image": "tai-nguyen/donut-box.jpg",
-    "btnText": "Inbox Nhận Ưu Đãi",
-    "btnLink": "https://www.facebook.com/profile.php?id=61594490844705"
+    "btnText": "Đặt Hộp Combo Ngay",
+    "btnLink": "products.html"
   },
   "gallery": {
     "sectionTitlePart1": "Khoảnh Khắc",
@@ -191,7 +417,7 @@
       {
         "id": "gal_2",
         "image": "tai-nguyen/donut-box.jpg",
-        "overlay": "Hộp quà tặng Donut 12 vị"
+        "overlay": "Hộp quà tặng Donut 6 vị xinh xắn"
       },
       {
         "id": "gal_3",
@@ -202,6 +428,11 @@
         "id": "gal_4",
         "image": "tai-nguyen/oreo-cheesecake.jpg",
         "overlay": "Oreo Cheesecake hũ tiện lợi"
+      },
+      {
+        "id": "gal_5",
+        "image": "tai-nguyen/panna-cotta.jpg",
+        "overlay": "Panna Cotta trái cây tươi mát"
       }
     ]
   },
@@ -209,18 +440,117 @@
     "sectionTitlePart1": "Về",
     "sectionTitleHighlight": "Kitten Cake",
     "image": "tai-nguyen/about-poster.jpg",
-    "paragraph1": "Nằm ẩn mình trong một góc nhỏ yên bình của Quận 7, Kitten Cake mang đến một không gian \"chill\" đúng điệu cho giới trẻ Sài Thành.",
+    "paragraph1": "Nằm ẩn mình trong một góc nhỏ yên bình của Quận 7, Kitten Cake mang đến một không gian thơm lừng mùi bơ sữa và sự ngọt ngào đúng điệu cho giới trẻ Sài Thành.",
     "paragraph2": "Chúng mình đặc biệt nổi tiếng với dòng bánh Donut 10K nướng mới mỗi ngày, mềm xốp và đa dạng hương vị. Với biểu tượng chú mèo lười đáng yêu, Kitten Cake hy vọng mỗi chiếc bánh trao tay đều mang lại niềm vui ngọt ngào, vừa túi tiền cho các bạn học sinh - sinh viên.",
     "features": [
-      "Donut nướng mới trong ngày, đồng giá 10K",
-      "Nguyên liệu cao cấp, vị ngọt thanh nhẹ",
-      "Đặt bánh giao ngay",
-      "Phục vụ chu đáo, thân thiện và nhiệt tình"
+      "Donut nướng mới trong ngày, đồng giá chỉ 10K",
+      "Nguyên liệu chọn lọc chuẩn Pháp & New Zealand",
+      "Giao hàng nhanh tận tay toàn Quận 7 và TP.HCM",
+      "Đóng gói hộp mèo xinh xắn, sạch sẽ và thân thiện"
     ]
   },
   "adminAuth": {
     "username": "admin",
     "password": "123"
   },
-  "orders": []
+  "orders": [
+    {
+      "id": "KC-98579",
+      "customerName": "Hoàng Minh Khôi",
+      "phone": "0933888999",
+      "address": "77 Đường số 10, P. Tân Quy, Quận 7",
+      "district": "Quận 7",
+      "note": "",
+      "paymentMethod": "banking",
+      "items": [
+        {
+          "id": "menu_1",
+          "name": "Donut Xốp Mềm Signature",
+          "flavor": "Vị Matcha",
+          "price": 10000,
+          "quantity": 5
+        },
+        {
+          "id": "menu_3",
+          "name": "Oreo Cheesecake Hũ Thủy Tinh",
+          "flavor": "Oreo Vụn Giòn",
+          "price": 35000,
+          "quantity": 1
+        }
+      ],
+      "subtotal": 85000,
+      "shippingFee": 15000,
+      "discount": 0,
+      "comboDiscount": 0,
+      "comboFreeDescription": "",
+      "total": 100000,
+      "voucherCode": "",
+      "status": "pending",
+      "createdAt": "2026-10-19T07:19:32.003Z"
+    },
+    {
+      "id": "KC-83921",
+      "customerName": "Trần Thị Mai Anh",
+      "phone": "0912345678",
+      "address": "15 Nguyễn Hữu Thọ, Phường Tân Phong",
+      "district": "Quận 7",
+      "note": "Giao bánh trước 11h trưa giúp mình nhé, viết thiệp chúc mừng",
+      "paymentMethod": "vietqr",
+      "items": [
+        {
+          "id": "menu_1",
+          "name": "Donut Xốp Mềm Signature",
+          "flavor": "Vị Choco",
+          "price": 10000,
+          "quantity": 5,
+          "image": "tai-nguyen/donut-collection-1791974653397.jpg"
+        },
+        {
+          "id": "menu_2",
+          "name": "Tart Trứng Béo Ngậy Giòn Rụm",
+          "flavor": "Tart Trứng Truyền Thống",
+          "price": 18000,
+          "quantity": 2,
+          "image": "tai-nguyen/tart-trung.jpg"
+        }
+      ],
+      "subtotal": 86000,
+      "shippingFee": 15000,
+      "discount": 10000,
+      "comboDiscount": 0,
+      "comboFreeDescription": "Tặng 1 Donut vị Vani",
+      "total": 91000,
+      "voucherCode": "KITTEN10",
+      "status": "baking",
+      "createdAt": "2026-10-19T09:15:00.000Z"
+    },
+    {
+      "id": "KC-72419",
+      "customerName": "Lê Hoàng Phúc",
+      "phone": "0987654321",
+      "address": "Ký túc xá ĐH Tôn Đức Thắng, Đường D6",
+      "district": "Quận 7",
+      "note": "Bánh lấy nhiều sốt choco nha tiệm",
+      "paymentMethod": "cod",
+      "items": [
+        {
+          "id": "menu_5",
+          "name": "Combo Hộp 6 Donut Quà Tặng",
+          "flavor": "Set Mix 6 Vị Đầy Đủ",
+          "price": 50000,
+          "quantity": 2,
+          "image": "tai-nguyen/donut-box.jpg"
+        }
+      ],
+      "subtotal": 100000,
+      "shippingFee": 15000,
+      "discount": 15000,
+      "comboDiscount": 0,
+      "comboFreeDescription": "",
+      "total": 100000,
+      "voucherCode": "FREESHIPQ7",
+      "status": "delivering",
+      "createdAt": "2026-10-19T10:30:00.000Z"
+    }
+  ]
 }

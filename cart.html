@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="i18n.js"></script>
 </head>
 <body class="cart-page">
 
@@ -21,15 +22,17 @@
             </a>
             <nav class="nav">
                 <ul class="nav-list">
-                    <li><a href="index.html#home">Trang chủ</a></li>
-                    <li><a href="index.html#menu">Thực đơn</a></li>
-                    <li><a href="cart.html" class="active">Giỏ hàng</a></li>
-                    <li><a href="index.html#contact">Liên hệ</a></li>
+                    <li><a href="index.html"><span data-i18n="nav_home">Trang chủ</span></a></li>
+                    <li><a href="products.html"><span data-i18n="nav_menu">Thực đơn</span></a></li>
+                    <li><a href="blog.html"><span data-i18n="nav_blog">Bài viết</span></a></li>
+                    <li><a href="order-tracking.html"><span data-i18n="nav_tracking">Tra cứu</span></a></li>
+                    <li><a href="cart.html" class="active"><span data-i18n="nav_cart">Giỏ hàng</span></a></li>
                 </ul>
             </nav>
             <div class="header-right-actions">
+                <div class="lang-switcher-wrap"></div>
                 <a href="index.html#menu" class="btn btn-outline" style="padding:8px 16px; font-size:0.9rem;">
-                    <i class="fas fa-plus"></i> Chọn thêm bánh
+                    <i class="fas fa-plus"></i> <span data-i18n="nav_add_more">Chọn thêm bánh</span>
                 </a>
             </div>
             <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
@@ -40,11 +43,11 @@
     <div class="breadcrumb-bar">
         <div class="container">
             <ul class="breadcrumb-list">
-                <li><a href="index.html"><i class="fas fa-home"></i> Trang chủ</a></li>
+                <li><a href="index.html"><i class="fas fa-home"></i> <span data-i18n="bc_home">Trang chủ</span></a></li>
                 <li><i class="fas fa-chevron-right"></i></li>
-                <li><a href="index.html#menu">Thực đơn</a></li>
+                <li><a href="index.html#menu" data-i18n="bc_menu">Thực đơn</a></li>
                 <li><i class="fas fa-chevron-right"></i></li>
-                <li class="active">Giỏ hàng & Thanh toán</li>
+                <li class="active" data-i18n="bc_cart">Giỏ hàng & Thanh toán</li>
             </ul>
         </div>
     </div>
@@ -53,17 +56,17 @@
     <section class="checkout-section">
         <div class="container">
             <div class="section-title text-left" style="text-align:left; margin-bottom:30px;">
-                <h2>Giỏ Hàng & <span class="highlight">Thanh Toán</span></h2>
-                <p>Kiểm tra danh sách bánh và điền thông tin để tiệm giao tận tay bạn nhé!</p>
+                <h2><span data-i18n="cart_title_part1">Giỏ Hàng &</span> <span class="highlight" data-i18n="cart_title_part2">Thanh Toán</span></h2>
+                <p data-i18n="cart_subtitle">Kiểm tra danh sách bánh và điền thông tin để tiệm giao tận tay bạn nhé!</p>
             </div>
 
             <!-- Empty Cart Warning -->
             <div class="cart-empty-state" id="cartEmptyState" style="display:none;">
                 <div class="empty-icon"><i class="fas fa-shopping-basket"></i></div>
-                <h3>Giỏ hàng của bạn đang trống!</h3>
-                <p>Chưa có món bánh nào được thêm. Hãy ghé xem thực đơn Donut 10K và bánh ngọt siêu ngon nhé.</p>
+                <h3 data-i18n="cart_empty_title">Giỏ hàng của bạn đang trống!</h3>
+                <p data-i18n="cart_empty_desc">Chưa có món bánh nào được thêm. Hãy ghé xem thực đơn Donut 10K và bánh ngọt siêu ngon nhé.</p>
                 <a href="index.html#menu" class="btn btn-primary">
-                    <i class="fas fa-utensils"></i> Xem thực đơn ngay
+                    <i class="fas fa-utensils"></i> <span data-i18n="cart_empty_btn">Xem thực đơn ngay</span>
                 </a>
             </div>
 
@@ -76,9 +79,9 @@
                     <!-- 1. Danh sách món trong giỏ -->
                     <div class="checkout-card">
                         <div class="card-header">
-                            <h3><i class="fas fa-cookie-bite"></i> Món Đã Chọn (<span id="cartTotalItemsBadge">0</span>)</h3>
+                            <h3><i class="fas fa-cookie-bite"></i> <span data-i18n="cart_card_order_items">Món Đã Chọn</span> (<span id="cartTotalItemsBadge">0</span>)</h3>
                             <button type="button" class="btn-clear-cart" id="btnClearCart" title="Xóa toàn bộ giỏ">
-                                <i class="fas fa-trash-alt"></i> Xóa tất cả
+                                <i class="fas fa-trash-alt"></i> <span data-i18n="cart_btn_clear_cart">Xóa tất cả</span>
                             </button>
                         </div>
                         <div class="card-body" style="padding:0;">
@@ -89,10 +92,10 @@
                                 <table class="cart-items-table">
                                     <thead>
                                         <tr>
-                                            <th>Sản phẩm</th>
-                                            <th>Đơn giá</th>
-                                            <th style="text-align:center;">Số lượng</th>
-                                            <th style="text-align:right;">Thành tiền</th>
+                                            <th data-i18n="cart_col_product">Sản phẩm</th>
+                                            <th data-i18n="cart_col_price">Đơn giá</th>
+                                            <th style="text-align:center;" data-i18n="cart_col_qty">Số lượng</th>
+                                            <th style="text-align:right;" data-i18n="cart_col_total">Thành tiền</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -107,54 +110,54 @@
                     <!-- 2. Thông tin giao hàng -->
                     <div class="checkout-card" style="margin-top:24px;">
                         <div class="card-header">
-                            <h3><i class="fas fa-map-marker-alt"></i> Thông Tin Giao Hàng</h3>
-                            <span class="header-hint">Giao tận nơi hoặc nhận tại tiệm</span>
+                            <h3><i class="fas fa-map-marker-alt"></i> <span data-i18n="cart_delivery_heading">Thông Tin Giao Hàng</span></h3>
+                            <span class="header-hint" data-i18n="opt_area_q7">Giao tận nơi hoặc nhận tại tiệm</span>
                         </div>
                         <div class="card-body">
                             <div class="form-grid-checkout">
                                 <div class="form-group">
-                                    <label for="custName">Họ và tên người nhận <span class="required">*</span></label>
-                                    <input type="text" id="custName" class="form-input" placeholder="Ví dụ: Bạn Linh, Anh Nam..." required>
+                                    <label for="custName"><span data-i18n="lbl_cust_name">Họ và tên người nhận</span> <span class="required">*</span></label>
+                                    <input type="text" id="custName" class="form-input" placeholder="Ví dụ: Bạn Linh, Anh Nam..." data-i18n-ph="ph_cust_name" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="custPhone">Số điện thoại liên hệ <span class="required">*</span></label>
-                                    <input type="tel" id="custPhone" class="form-input" placeholder="09xx xxx xxx" required>
+                                    <label for="custPhone"><span data-i18n="lbl_cust_phone">Số điện thoại liên hệ</span> <span class="required">*</span></label>
+                                    <input type="tel" id="custPhone" class="form-input" placeholder="09xx xxx xxx" data-i18n-ph="ph_cust_phone" required>
                                 </div>
                                 
                                 <div class="form-group form-full">
-                                    <label for="deliveryArea">Khu vực nhận bánh <span class="required">*</span></label>
+                                    <label for="deliveryArea"><span data-i18n="lbl_delivery_area">Khu vực nhận bánh</span> <span class="required">*</span></label>
                                     <select id="deliveryArea" class="form-input">
-                                        <option value="q7" data-fee="15000">Nội thành Quận 7 (Phí ship 15.000đ • Giao 30-45 phút)</option>
-                                        <option value="near" data-fee="25000">Quận lân cận: Q1, Q4, Q8, Nhà Bè (Phí ship 25.000đ)</option>
-                                        <option value="other" data-fee="30000">Các quận khác tại TP.HCM (Phí ship 30.000đ)</option>
-                                        <option value="pickup" data-fee="0">Tự đến tiệm nhận bánh tại Quận 7 (Miễn phí ship)</option>
+                                        <option value="q7" data-fee="15000" data-i18n="opt_area_q7">Nội thành Quận 7 (Phí ship 15.000đ • Giao 30-45 phút)</option>
+                                        <option value="near" data-fee="25000" data-i18n="opt_area_other">Quận lân cận: Q1, Q4, Q8, Nhà Bè (Phí ship 25.000đ)</option>
+                                        <option value="other" data-fee="30000" data-i18n="opt_area_other_hcm">Các quận khác tại TP.HCM (Phí ship 30.000đ)</option>
+                                        <option value="pickup" data-fee="0" data-i18n="opt_area_pickup">Tự đến tiệm nhận bánh tại Quận 7 (Miễn phí ship)</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group form-full">
-                                    <label for="custAddress">Địa chỉ nhận bánh chi tiết <span class="required">*</span></label>
-                                    <input type="text" id="custAddress" class="form-input" placeholder="Số nhà, tên đường, toà nhà/chung cư, phòng..." required>
+                                    <label for="custAddress"><span data-i18n="lbl_cust_address">Địa chỉ nhận bánh chi tiết</span> <span class="required">*</span></label>
+                                    <input type="text" id="custAddress" class="form-input" placeholder="Số nhà, tên đường, toà nhà/chung cư, phòng..." data-i18n-ph="ph_cust_address" required>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="deliveryTime"><i class="fas fa-clock"></i> Thời gian giao mong muốn</label>
+                                    <label for="deliveryTime"><i class="fas fa-clock"></i> <span data-i18n="lbl_delivery_time">Thời gian giao mong muốn</span></label>
                                     <select id="deliveryTime" class="form-input">
-                                        <option value="now">Giao sớm nhất có thể (trong 30-45 phút)</option>
-                                        <option value="lunch">Giao giờ nghỉ trưa (11:30 - 13:00)</option>
-                                        <option value="afternoon">Giao buổi chiều (15:00 - 17:00)</option>
-                                        <option value="evening">Giao buổi tối (18:30 - 20:30)</option>
-                                        <option value="custom">Giờ hẹn khác (ghi ở ô bên dưới)</option>
+                                        <option value="now" data-i18n="opt_time_now">Giao sớm nhất có thể (trong 30-45 phút)</option>
+                                        <option value="lunch" data-i18n="opt_time_morning">Giao giờ nghỉ trưa (11:30 - 13:00)</option>
+                                        <option value="afternoon" data-i18n="opt_time_afternoon">Giao buổi chiều (15:00 - 17:00)</option>
+                                        <option value="evening" data-i18n="opt_time_evening">Giao buổi tối (18:30 - 20:30)</option>
+                                        <option value="custom" data-i18n="opt_time_custom">Giờ hẹn khác (ghi ở ô bên dưới)</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="custGreeting"><i class="fas fa-heart"></i> Viết thiệp / Lời chúc tặng</label>
-                                    <input type="text" id="custGreeting" class="form-input" placeholder="Ví dụ: Chúc mừng sinh nhật Lan 20 tuổi...">
+                                    <label for="custGreeting"><i class="fas fa-heart"></i> <span data-i18n="lbl_greeting">Viết thiệp / Lời chúc tặng</span></label>
+                                    <input type="text" id="custGreeting" class="form-input" placeholder="Ví dụ: Chúc mừng sinh nhật Lan 20 tuổi..." data-i18n-ph="ph_greeting">
                                 </div>
 
                                 <div class="form-group form-full">
-                                    <label for="custNote"><i class="fas fa-sticky-note"></i> Ghi chú thêm cho tiệm</label>
-                                    <textarea id="custNote" class="form-input" rows="2" placeholder="Ví dụ: Không lấy muỗng nhựa, cho nhiều socola, gọi trước khi giao 10 phút..."></textarea>
+                                    <label for="custNote"><i class="fas fa-sticky-note"></i> <span data-i18n="lbl_note">Ghi chú thêm cho tiệm</span></label>
+                                    <textarea id="custNote" class="form-input" rows="2" placeholder="Ví dụ: Không lấy muỗng nhựa, cho nhiều socola, gọi trước khi giao 10 phút..." data-i18n-ph="ph_note"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -168,15 +171,15 @@
                     <!-- 1. Voucher box -->
                     <div class="checkout-card voucher-card">
                         <div class="card-header">
-                            <h3><i class="fas fa-ticket-alt"></i> Mã Giảm Giá</h3>
+                            <h3><i class="fas fa-ticket-alt"></i> <span data-i18n="voucher_heading">Mã Giảm Giá</span></h3>
                         </div>
                         <div class="card-body">
                             <div class="voucher-input-group">
-                                <input type="text" id="voucherCodeInput" placeholder="Nhập mã ưu đãi..." style="text-transform:uppercase;">
-                                <button type="button" class="btn btn-primary" id="btnApplyVoucher">Áp dụng</button>
+                                <input type="text" id="voucherCodeInput" placeholder="Nhập mã ưu đãi..." data-i18n-ph="ph_voucher" style="text-transform:uppercase;">
+                                <button type="button" class="btn btn-primary" id="btnApplyVoucher" data-i18n="btn_apply_voucher">Áp dụng</button>
                             </div>
                             <div class="voucher-hints">
-                                <span>Gợi ý mã:</span>
+                                <span data-i18n="voucher_suggestion">Gợi ý mã:</span>
                                 <button type="button" class="chip-voucher" data-code="KITTEN10">KITTEN10 (-10%)</button>
                                 <button type="button" class="chip-voucher" data-code="FREESHIPQ7">FREESHIPQ7 (-15K)</button>
                             </div>
@@ -187,33 +190,33 @@
                     <!-- 2. Order summary -->
                     <div class="checkout-card summary-card">
                         <div class="card-header">
-                            <h3><i class="fas fa-receipt"></i> Tóm Tắt Đơn Hàng</h3>
+                            <h3><i class="fas fa-receipt"></i> <span data-i18n="summary_heading">Tóm Tắt Đơn Hàng</span></h3>
                         </div>
                         <div class="card-body">
                             <div class="summary-line">
-                                <span>Tiền bánh:</span>
+                                <span data-i18n="summary_subtotal">Tiền bánh:</span>
                                 <strong id="summarySubtotal">0đ</strong>
                             </div>
                             <div class="summary-line">
-                                <span>Phí giao hàng:</span>
+                                <span data-i18n="summary_shipping">Phí giao hàng:</span>
                                 <strong id="summaryShipping">15.000đ</strong>
                             </div>
                             <div class="summary-line combo-discount-line" id="summaryComboRow" style="display:none; color:#2ed573;">
-                                <span><i class="fas fa-gift"></i> Mua 5 Tặng 1 (Free Donut rẻ nhất):</span>
+                                <span><i class="fas fa-gift"></i> <span data-i18n="summary_combo_discount">Mua 5 Tặng 1 (Free Donut rẻ nhất):</span></span>
                                 <strong id="summaryComboDiscount">-0đ</strong>
                             </div>
                             <div id="summaryComboDetail" style="display:none; font-size:0.8rem; color:#2ed573; margin-top:-6px; margin-bottom:8px; padding-left:18px;">
                                 <!-- Chi tiết chiếc bánh được miễn phí -->
                             </div>
                             <div class="summary-line discount-line" id="summaryDiscountRow" style="display:none;">
-                                <span><i class="fas fa-tag"></i> Giảm giá voucher:</span>
+                                <span><i class="fas fa-tag"></i> <span data-i18n="summary_voucher_discount">Giảm giá voucher:</span></span>
                                 <strong id="summaryDiscount">-0đ</strong>
                             </div>
 
                             <hr class="summary-divider">
 
                             <div class="summary-total-line">
-                                <span>Tổng thanh toán:</span>
+                                <span data-i18n="summary_total">Tổng thanh toán:</span>
                                 <strong id="summaryTotal">15.000đ</strong>
                             </div>
                         </div>
@@ -222,70 +225,123 @@
                     <!-- 3. Payment Method -->
                     <div class="checkout-card payment-card">
                         <div class="card-header">
-                            <h3><i class="fas fa-credit-card"></i> Phương Thức Thanh Toán</h3>
+                            <h3><i class="fas fa-credit-card"></i> <span data-i18n="payment_heading">Phương Thức Thanh Toán</span></h3>
                         </div>
                         <div class="card-body">
                             <div class="payment-options">
                                 <label class="payment-option-label active">
                                     <input type="radio" name="paymentMethod" value="cod" checked>
                                     <div class="payment-option-content">
-                                        <div class="payment-title"><i class="fas fa-money-bill-wave"></i> Tiền mặt khi nhận bánh (COD)</div>
-                                        <div class="payment-desc">Kiểm tra bánh tươi ngon, ưng ý rồi mới thanh toán cho shipper.</div>
+                                        <div class="payment-title"><i class="fas fa-money-bill-wave"></i> <span data-i18n="pay_cod_title">Tiền mặt khi nhận bánh (COD)</span></div>
+                                        <div class="payment-desc" data-i18n="pay_cod_desc">Kiểm tra bánh tươi ngon, ưng ý rồi mới thanh toán cho shipper.</div>
                                     </div>
                                 </label>
 
                                 <label class="payment-option-label">
                                     <input type="radio" name="paymentMethod" value="banking">
                                     <div class="payment-option-content">
-                                        <div class="payment-title"><i class="fas fa-qrcode"></i> Chuyển khoản VietQR (Napas 24/7)</div>
-                                        <div class="payment-desc">Quét mã QR VPBank tiện lợi, chính xác, không cần dùng tiền mặt.</div>
+                                        <div class="payment-title"><i class="fas fa-qrcode"></i> <span data-i18n="pay_banking_title">Chuyển khoản VietQR (Napas 24/7)</span></div>
+                                        <div class="payment-desc" data-i18n="pay_banking_desc">Quét mã QR VPBank tiện lợi, chính xác, không cần dùng tiền mặt.</div>
+                                    </div>
+                                </label>
+
+                                <label class="payment-option-label">
+                                    <input type="radio" name="paymentMethod" value="paypal">
+                                    <div class="payment-option-content">
+                                        <div class="payment-title"><i class="fab fa-paypal" style="color:#0079C1;"></i> <span data-i18n="pay_paypal_title">PayPal (Khách Quốc Tế / International)</span></div>
+                                        <div class="payment-desc" data-i18n="pay_paypal_desc">Thanh toán an toàn qua PayPal.Me cho khách quốc tế hoặc thẻ Visa/Mastercard.</div>
                                     </div>
                                 </label>
                             </div>
 
-                            <!-- Khung Thông Tin Chuyển Khoản kèm Mã QR -->
+                            <!-- Khung Thông Tin Chuyển Khoản kèm Mã VietQR -->
                             <div class="checkout-bank-qr-box" id="checkoutBankQrBox" style="display:none;">
                                 <div class="qr-box-title">
-                                    <i class="fas fa-qrcode"></i> Mã VietQR Kitten Cake
+                                    <i class="fas fa-qrcode"></i> <span data-i18n="vietqr_box_title">Mã VietQR Kitten Cake</span>
                                 </div>
                                 <div class="qr-box-inner">
                                     <div class="qr-box-img-wrap">
                                         <img src="tai-nguyen/qr-vpbank.png" alt="Mã VietQR Kitten Cake" id="checkoutQrImage" class="checkout-qr-img">
-                                        <span class="qr-scan-tag"><i class="fas fa-camera"></i> Quét trên App Ngân Hàng</span>
+                                        <span class="qr-scan-tag"><i class="fas fa-camera"></i> <span data-i18n="vietqr_scan_tag">Quét trên App Ngân Hàng</span></span>
                                     </div>
                                     <div class="qr-box-details">
                                         <div class="qr-detail-line">
-                                            <span class="lbl">Ngân hàng:</span>
+                                            <span class="lbl" data-i18n="lbl_bank">Ngân hàng:</span>
                                             <strong class="val">VPBank (Ngân hàng TMCP Việt Nam Thịnh Vượng)</strong>
                                         </div>
                                         <div class="qr-detail-line copy-line">
-                                            <span class="lbl">Số TK:</span>
+                                            <span class="lbl" data-i18n="lbl_acc_num">Số TK:</span>
                                             <strong class="val val-highlight" id="cardAccNum">1821004654</strong>
                                             <button type="button" class="btn-copy-chip" onclick="copyToClipboard('1821004654', 'Đã sao chép số tài khoản VPBank!')" title="Sao chép số tài khoản">
-                                                <i class="far fa-copy"></i> Sao chép
+                                                <i class="far fa-copy"></i> <span data-i18n="btn_copy">Sao chép</span>
                                             </button>
                                         </div>
                                         <div class="qr-detail-line">
-                                            <span class="lbl">Chủ TK:</span>
+                                            <span class="lbl" data-i18n="lbl_acc_name">Chủ TK:</span>
                                             <strong class="val">NGUYEN NGOC CAM VAN</strong>
                                         </div>
                                         <div class="qr-detail-line">
-                                            <span class="lbl">Số tiền cần CK:</span>
+                                            <span class="lbl" data-i18n="lbl_transfer_amount">Số tiền cần CK:</span>
                                             <strong class="val val-total" id="cardTransferTotal">0đ</strong>
                                         </div>
                                         <div class="qr-guide-text">
-                                            <i class="fas fa-info-circle"></i> Vui lòng quét mã trên app ngân hàng để chuyển khoản chính xác nhất.
+                                            <i class="fas fa-info-circle"></i> <span data-i18n="vietqr_guide">Vui lòng quét mã trên app ngân hàng để chuyển khoản chính xác nhất.</span>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Khung Thông Tin Thanh Toán PayPal -->
+                            <div class="checkout-paypal-box" id="checkoutPaypalBox" style="display:none;">
+                                <div class="paypal-box-title">
+                                    <div class="title-left">
+                                        <i class="fab fa-paypal"></i>
+                                        <span data-i18n="paypal_box_title">Cổng Thanh Toán Quốc Tế PayPal.Me</span>
+                                    </div>
+                                    <span class="paypal-intl-tag" data-i18n="paypal_tag">Khách Nước Ngoài & Thẻ Quốc Tế</span>
+                                </div>
+                                <div class="paypal-box-inner">
+                                    <div class="paypal-info-card">
+                                        <div class="paypal-detail-line">
+                                            <span class="lbl" data-i18n="lbl_paypal_acc">Tài khoản PayPal:</span>
+                                            <strong class="val">emmeoVN</strong>
+                                        </div>
+                                        <div class="paypal-detail-line">
+                                            <span class="lbl" data-i18n="lbl_paypal_link">Link PayPal.Me:</span>
+                                            <a href="https://www.paypal.com/paypalme/emmeoVN" target="_blank" class="val-link" id="paypalLinkText">https://www.paypal.com/paypalme/emmeoVN</a>
+                                        </div>
+                                        <div class="paypal-detail-line">
+                                            <span class="lbl" data-i18n="lbl_paypal_vnd">Số tiền VNĐ:</span>
+                                            <strong class="val" id="paypalTransferVnd">0đ</strong>
+                                        </div>
+                                        <div class="paypal-detail-line">
+                                            <span class="lbl" data-i18n="lbl_paypal_usd">Ước tính USD:</span>
+                                            <strong class="val val-usd" id="paypalTransferUsd">$0.00 USD</strong>
+                                        </div>
+                                    </div>
+
+                                    <div class="paypal-action-buttons">
+                                        <a href="https://www.paypal.com/paypalme/emmeoVN" target="_blank" class="btn-open-paypal-now" id="btnOpenPaypalNow">
+                                            <i class="fab fa-paypal"></i> <span data-i18n="btn_open_paypal">Mở PayPal Thanh Toán Ngay</span>
+                                        </a>
+                                        <button type="button" class="btn-copy-paypal-link" onclick="copyToClipboard('https://www.paypal.com/paypalme/emmeoVN', 'Đã sao chép link PayPal: https://www.paypal.com/paypalme/emmeoVN')">
+                                            <i class="far fa-copy"></i> <span data-i18n="btn_copy_paypal">Sao chép link PayPal</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="paypal-guide-note">
+                                        <p><i class="fas fa-info-circle" style="color:#0079C1;"></i> <span data-i18n="paypal_guide_1">Bấm nút <b>Mở PayPal Thanh Toán Ngay</b> để chuyển sang trang PayPal cá nhân của Kitten Cake.</span></p>
+                                        <p><i class="fas fa-check-circle" style="color:#2ed573;"></i> <span data-i18n="paypal_guide_2">Vui lòng nhập số tiền tương ứng và điền <b>Số điện thoại</b> hoặc <b>Tên của bạn</b> vào phần ghi chú trên PayPal để tiệm xác nhận đơn.</span></p>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Submit button -->
                             <button type="submit" class="btn btn-primary btn-submit-checkout" id="btnPlaceOrder">
-                                <i class="fas fa-paper-plane"></i> Gửi Đơn Đặt Bánh Ngay
+                                <i class="fas fa-paper-plane"></i> <span data-i18n="btn_submit_checkout">Gửi Đơn Đặt Bánh Ngay</span>
                             </button>
                             <p class="checkout-guarantee">
-                                <i class="fas fa-shield-alt"></i> Tiệm bánh sẽ gọi điện xác nhận đơn ngay trong vòng 5-10 phút.
+                                <i class="fas fa-shield-alt"></i> <span data-i18n="checkout_guarantee">Tiệm bánh sẽ gọi điện hoặc nhắn tin xác nhận đơn ngay trong vòng 5-10 phút.</span>
                             </p>
                             <div id="checkoutErrorMsg" class="checkout-err-msg" style="display:none;"></div>
                         </div>
@@ -301,32 +357,32 @@
     <div class="order-success-modal" id="orderSuccessModal" style="display:none;">
         <div class="success-box">
             <div class="success-icon"><i class="fas fa-check-circle"></i></div>
-            <h2>Đặt Bánh Thành Công!</h2>
-            <p class="success-sub">Cảm ơn bạn đã lựa chọn những vị ngọt từ <strong>Kitten Cake</strong>.</p>
+            <h2 data-i18n="success_title">Đặt Bánh Thành Công!</h2>
+            <p class="success-sub" data-i18n="success_sub">Cảm ơn bạn đã lựa chọn những vị ngọt từ <strong>Kitten Cake</strong>.</p>
             
             <div class="success-meta-card">
                 <div class="success-meta-row">
-                    <span>Mã đơn hàng:</span>
+                    <span data-i18n="lbl_order_id">Mã đơn hàng:</span>
                     <strong id="successOrderId" style="color:var(--primary-color);">#ord_123</strong>
                 </div>
                 <div class="success-meta-row">
-                    <span>Khách hàng:</span>
+                    <span data-i18n="lbl_cust">Khách hàng:</span>
                     <strong id="successCustName">Ngọc Lan</strong>
                 </div>
                 <div class="success-meta-row">
-                    <span>Số điện thoại:</span>
+                    <span data-i18n="lbl_phone">Số điện thoại:</span>
                     <strong id="successCustPhone">090xxxxxxx</strong>
                 </div>
                 <div class="success-meta-row">
-                    <span>Địa chỉ nhận:</span>
+                    <span data-i18n="lbl_address">Địa chỉ nhận:</span>
                     <strong id="successCustAddress">Quận 7</strong>
                 </div>
                 <div class="success-meta-row total-highlight">
-                    <span>Tổng số tiền:</span>
+                    <span data-i18n="lbl_total_amount">Tổng số tiền:</span>
                     <strong id="successTotal">50.000đ</strong>
                 </div>
                 <div class="success-meta-row">
-                    <span>Hình thức:</span>
+                    <span data-i18n="lbl_payment_method">Hình thức:</span>
                     <strong id="successPaymentMethod">Tiền mặt khi nhận bánh</strong>
                 </div>
             </div>
@@ -334,22 +390,22 @@
             <!-- VietQR Modal Box if banking -->
             <div class="success-qr-box" id="successQrBox" style="display:none;">
                 <div class="success-qr-header">
-                    <i class="fas fa-qrcode"></i> Mã VietQR Kitten Cake
+                    <i class="fas fa-qrcode"></i> <span data-i18n="vietqr_box_title">Mã VietQR Kitten Cake</span>
                 </div>
                 <div class="success-bank-card">
-                    <div class="s-bank-line">Ngân hàng: <strong id="modalBankName">VPBank</strong></div>
+                    <div class="s-bank-line"><span data-i18n="lbl_bank">Ngân hàng:</span> <strong id="modalBankName">VPBank</strong></div>
                     <div class="s-bank-line s-between">
-                        <span>Số TK: <strong id="modalAccNum" style="color:#ff4757; font-size:1.1rem; letter-spacing:0.5px;">1821004654</strong></span>
-                        <button type="button" class="btn-copy-chip" onclick="copyToClipboard(document.getElementById('modalAccNum').textContent, 'Đã sao chép số tài khoản VPBank!')"><i class="far fa-copy"></i> Sao chép</button>
+                        <span><span data-i18n="lbl_acc_num">Số TK:</span> <strong id="modalAccNum" style="color:#ff4757; font-size:1.1rem; letter-spacing:0.5px;">1821004654</strong></span>
+                        <button type="button" class="btn-copy-chip" onclick="copyToClipboard(document.getElementById('modalAccNum').textContent, 'Đã sao chép số tài khoản VPBank!')"><i class="far fa-copy"></i> <span data-i18n="btn_copy">Sao chép</span></button>
                     </div>
-                    <div class="s-bank-line">Chủ TK: <strong id="modalAccName">NGUYEN NGOC CAM VAN</strong></div>
+                    <div class="s-bank-line"><span data-i18n="lbl_acc_name">Chủ TK:</span> <strong id="modalAccName">NGUYEN NGOC CAM VAN</strong></div>
                     <div class="s-bank-line s-between">
-                        <span>Số tiền cần chuyển: <strong id="modalAmount" style="color:#2ed573; font-size:1.15rem;">0đ</strong></span>
-                        <button type="button" class="btn-copy-chip" onclick="copyToClipboard(document.getElementById('modalAmount').getAttribute('data-raw') || document.getElementById('modalAmount').textContent.replace(/[^\d]/g, ''), 'Đã sao chép số tiền!')"><i class="far fa-copy"></i> Sao chép</button>
+                        <span><span data-i18n="lbl_transfer_amount">Số tiền cần chuyển:</span> <strong id="modalAmount" style="color:#2ed573; font-size:1.15rem;">0đ</strong></span>
+                        <button type="button" class="btn-copy-chip" onclick="copyToClipboard(document.getElementById('modalAmount').getAttribute('data-raw') || document.getElementById('modalAmount').textContent.replace(/[^\d]/g, ''), 'Đã sao chép số tiền!')"><i class="far fa-copy"></i> <span data-i18n="btn_copy">Sao chép</span></button>
                     </div>
                     <div class="s-bank-line s-between">
-                        <span>Nội dung CK: <strong id="modalTransferContent" style="color:#ff6b81; font-weight:800;">KC ord_...</strong></span>
-                        <button type="button" class="btn-copy-chip" onclick="copyToClipboard(document.getElementById('modalTransferContent').textContent, 'Đã sao chép nội dung chuyển khoản!')"><i class="far fa-copy"></i> Sao chép</button>
+                        <span><span data-i18n="lbl_transfer_content">Nội dung CK:</span> <strong id="modalTransferContent" style="color:#ff6b81; font-weight:800;">KC ord_...</strong></span>
+                        <button type="button" class="btn-copy-chip" onclick="copyToClipboard(document.getElementById('modalTransferContent').textContent, 'Đã sao chép nội dung chuyển khoản!')"><i class="far fa-copy"></i> <span data-i18n="btn_copy">Sao chép</span></button>
                     </div>
                 </div>
 
@@ -357,15 +413,54 @@
                     <img src="tai-nguyen/qr-vpbank.png" id="successQrImg" alt="Mã VietQR Kitten Cake" style="max-width:230px; width:100%; border-radius:14px; box-shadow:0 6px 20px rgba(0,0,0,0.12); border:1px solid #ffd8e0;">
                 </div>
                 <div class="success-guide-banner">
-                    <i class="fas fa-check-circle" style="color:#ff4757;"></i> Vui lòng quét mã trên app ngân hàng để chuyển khoản chính xác nhất.
+                    <i class="fas fa-check-circle" style="color:#ff4757;"></i> <span data-i18n="vietqr_guide">Vui lòng quét mã trên app ngân hàng để chuyển khoản chính xác nhất.</span>
                 </div>
             </div>
 
-            <div class="success-actions">
-                <a href="index.html" class="btn btn-primary"><i class="fas fa-home"></i> Quay lại trang chủ</a>
-                <a href="https://www.facebook.com/profile.php?id=61594490844705" target="_blank" class="btn btn-outline">
-                    <i class="fa-brands fa-facebook-messenger"></i> Chat Fanpage xác nhận
+            <!-- PayPal Modal Box if paypal -->
+            <div class="success-paypal-box" id="successPaypalBox" style="display:none;">
+                <div class="s-paypal-header">
+                    <i class="fab fa-paypal" style="color:#0079C1;"></i> <span data-i18n="paypal_box_title">Cổng Thanh Toán Quốc Tế PayPal.Me</span>
+                </div>
+                <div class="paypal-info-card">
+                    <div class="paypal-detail-line">
+                        <span class="lbl" data-i18n="lbl_paypal_acc">Tài khoản PayPal:</span>
+                        <strong class="val">emmeoVN</strong>
+                    </div>
+                    <div class="paypal-detail-line">
+                        <span class="lbl" data-i18n="lbl_paypal_vnd">Số tiền VNĐ:</span>
+                        <strong class="val" id="modalPaypalAmountVnd">0đ</strong>
+                    </div>
+                    <div class="paypal-detail-line">
+                        <span class="lbl" data-i18n="lbl_paypal_usd">Số tiền USD ước tính:</span>
+                        <strong class="val val-usd" id="modalPaypalAmountUsd">$0.00 USD</strong>
+                    </div>
+                    <div class="paypal-detail-line">
+                        <span class="lbl" data-i18n="lbl_paypal_note">Ghi chú khi chuyển PayPal:</span>
+                        <strong class="val" id="modalPaypalContent" style="color:#ff4757; font-weight:800;">KC ord_...</strong>
+                    </div>
+                </div>
+                <div class="paypal-action-buttons" style="margin-top:14px;">
+                    <a href="https://www.paypal.com/paypalme/emmeoVN" target="_blank" class="btn-open-paypal-now" id="btnModalPaypalOpen">
+                        <i class="fab fa-paypal"></i> <span data-i18n="btn_open_paypal">Mở PayPal Thanh Toán Ngay</span>
+                    </a>
+                    <button type="button" class="btn-copy-paypal-link" onclick="copyToClipboard('https://www.paypal.com/paypalme/emmeoVN', 'Đã sao chép link PayPal!')">
+                        <i class="far fa-copy"></i> <span data-i18n="btn_copy_paypal">Sao chép link</span>
+                    </button>
+                </div>
+                <div class="paypal-guide-note" style="margin-top:12px;">
+                    <p><i class="fas fa-info-circle" style="color:#0079C1;"></i> <span data-i18n="paypal_guide_2">Vui lòng nhập số tiền tương ứng và điền <b>Số điện thoại</b> hoặc <b>Tên của bạn</b> vào phần ghi chú trên PayPal để tiệm xác nhận đơn.</span></p>
+                </div>
+            </div>
+
+            <div class="success-actions" style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
+                <a id="btnSuccessTrackOrder" href="order-tracking.html" class="btn btn-primary" style="background:linear-gradient(135deg, #ff4757, #ff6b81); justify-content:center; padding:12px; font-size:1rem;">
+                    <i class="fas fa-search-location"></i> <span data-i18n="tracking_btn_search">Tra Cứu Tiến Độ Đơn Hàng Ngay</span>
                 </a>
+                <div style="display:flex; gap:10px;">
+                    <a href="index.html" class="btn btn-outline" style="flex:1; justify-content:center;"><i class="fas fa-home"></i> <span data-i18n="nav_home">Trang chủ</span></a>
+                    <a href="products.html" class="btn btn-outline" style="flex:1; justify-content:center;"><i class="fas fa-cookie"></i> <span data-i18n="nav_add_more">Chọn thêm bánh</span></a>
+                </div>
             </div>
         </div>
     </div>
@@ -378,26 +473,26 @@
                     <img src="tai-nguyen/logo.jpg" alt="Kitten Cake Logo">
                     <span class="text-white">Kitten Cake</span>
                 </div>
-                <p>Tiệm bánh ngọt nhỏ xinh tại Quận 7 - Nơi gửi gắm yêu thương qua từng vị ngọt.</p>
+                <p data-i18n="footer_tagline">Tiệm bánh ngọt nhỏ xinh tại Quận 7 - Nơi gửi gắm yêu thương qua từng vị ngọt.</p>
             </div>
             <div class="footer-links">
-                <h3>Liên hệ đặt bánh</h3>
+                <h3 data-i18n="footer_heading_contact">Liên hệ đặt bánh</h3>
                 <ul>
-                    <li><i class="fas fa-map-marker-alt"></i> Quận 7, TP. Hồ Chí Minh</li>
+                    <li><i class="fas fa-map-marker-alt"></i> <span data-i18n="footer_address_val">Quận 7, TP. Hồ Chí Minh</span></li>
                     <li><i class="fas fa-phone-alt"></i> Hotline: <a href="tel:0898575717" style="color:inherit; text-decoration:none;">0898575717</a></li>
                     <li><i class="fas fa-envelope"></i> Email: <a href="mailto:kittencake7dis@gmail.com" style="color:inherit; text-decoration:none;">kittencake7dis@gmail.com</a></li>
                 </ul>
             </div>
             <div class="footer-links">
-                <h3>Giờ mở cửa</h3>
+                <h3 data-i18n="footer_heading_hours">Giờ mở cửa</h3>
                 <ul>
-                    <li>Thứ 2 - Thứ 6: 08:00 - 22:00</li>
-                    <li>Thứ 7 - CN: 07:30 - 22:30</li>
+                    <li data-i18n="footer_weekdays">Thứ 2 - Thứ 6: 08:00 - 22:00</li>
+                    <li data-i18n="footer_weekends">Thứ 7 - CN: 07:30 - 22:30</li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 Kitten Cake Bakery. Thiết kế bởi chuyên gia Web.</p>
+            <p data-i18n="footer_copy">&copy; 2026 Kitten Cake Bakery. Thiết kế bởi chuyên gia Web.</p>
         </div>
     </footer>
 
@@ -486,6 +581,14 @@
             window.addEventListener('cart:updated', () => {
                 renderCartTable();
             });
+
+            window.addEventListener('languageChanged', () => {
+                renderCartTable();
+                calculateAndRenderTotals();
+                if (window.KittenI18n && window.KittenI18n.applyTranslations) {
+                    window.KittenI18n.applyTranslations();
+                }
+            });
         }
 
         function renderCartTable() {
@@ -511,14 +614,19 @@
 
             // Check combo Mua 5 tặng 1 (Chỉ áp dụng với Donut)
             const promo = window.KittenCart.getPromoBuy5Get1();
+            const isEn = window.KittenI18n?.getLang() === 'en';
             if (comboAlert) {
                 if (promo.eligible) {
                     const freeNames = promo.freeItems.map(f => `${f.name}${f.flavor ? ` (${f.flavor})` : ''}`).join(', ');
-                    comboAlert.innerHTML = `🎉 <b>CHÚC MỪNG:</b> Bạn có <b>${promo.totalDonuts} bánh Donut</b> trong giỏ hàng! Đã áp dụng ưu đãi <b>MUA 5 TẶNG 1 DONUT</b>: <b>TẶNG MIỄN PHÍ ${promo.freeCount} DONUT</b> có giá thấp nhất (<span style="text-decoration:underline;">${freeNames}</span> - Giảm ngay <b>${window.formatVNCurrency(promo.discountAmount)}</b>)!`;
+                    comboAlert.innerHTML = isEn
+                        ? `🎉 <b>CONGRATULATIONS:</b> You have <b>${promo.totalDonuts} Donuts</b> in your cart! Applied <b>BUY 5 GET 1 FREE</b>: <b>${promo.freeCount} FREE DONUT(S)</b> (<span style="text-decoration:underline;">${freeNames}</span> - Saved <b>${window.formatVNCurrency(promo.discountAmount)}</b>)!`
+                        : `🎉 <b>CHÚC MỪNG:</b> Bạn có <b>${promo.totalDonuts} bánh Donut</b> trong giỏ hàng! Đã áp dụng ưu đãi <b>MUA 5 TẶNG 1 DONUT</b>: <b>TẶNG MIỄN PHÍ ${promo.freeCount} DONUT</b> có giá thấp nhất (<span style="text-decoration:underline;">${freeNames}</span> - Giảm ngay <b>${window.formatVNCurrency(promo.discountAmount)}</b>)!`;
                     comboAlert.className = 'cart-promo-banner success';
                     comboAlert.style.display = 'block';
                 } else if (promo.totalDonuts > 0) {
-                    comboAlert.innerHTML = `🍩 Giỏ hàng có <b>${promo.totalDonuts} Donut</b>. Chọn thêm <b>${promo.neededForNext} bánh Donut nữa</b> (đủ 6 Donut) để nhận ngay <b>1 BÁNH DONUT MIỄN PHÍ</b> (tặng chiếc có giá thấp nhất)!`;
+                    comboAlert.innerHTML = isEn
+                        ? `🍩 Your cart has <b>${promo.totalDonuts} Donut(s)</b>. Add <b>${promo.neededForNext} more Donut(s)</b> to get <b>1 FREE DONUT</b> (lowest-priced cake)!`
+                        : `🍩 Giỏ hàng có <b>${promo.totalDonuts} Donut</b>. Chọn thêm <b>${promo.neededForNext} bánh Donut nữa</b> (đủ 6 Donut) để nhận ngay <b>1 BÁNH DONUT MIỄN PHÍ</b> (tặng chiếc có giá thấp nhất)!`;
                     comboAlert.className = 'cart-promo-banner info';
                     comboAlert.style.display = 'block';
                 } else {
@@ -538,22 +646,26 @@
                 const tr = document.createElement('tr');
                 const lineTotal = Number(item.price) * Number(item.quantity);
 
-                const toppingsHtml = (item.toppings && item.toppings.length > 0)
-                    ? `<div class="prod-toppings" style="font-size:0.8rem; color:#747d8c; margin-top:3px;"><i class="fas fa-sparkles" style="color:#ffa502;"></i> Topping: <strong style="color:#2f3542;">${item.toppings.join(', ')}</strong> <span style="color:#ff6b81; font-weight:700;">(+${window.formatVNCurrency(item.toppings.length * 3000)})</span></div>`
+                const prodName = isEn && window.KittenI18n ? window.KittenI18n.getTranslatedProductName(item.name) : item.name;
+                const flavorName = isEn && window.KittenI18n ? window.KittenI18n.getTranslatedFlavor(item.flavor) : item.flavor;
+                const toppingsList = (item.toppings || []).map(t => isEn && window.KittenI18n ? window.KittenI18n.getTranslatedTopping(t) : t);
+
+                const toppingsHtml = (toppingsList && toppingsList.length > 0)
+                    ? `<div class="prod-toppings" style="font-size:0.8rem; color:#747d8c; margin-top:3px;"><i class="fas fa-sparkles" style="color:#ffa502;"></i> Topping: <strong style="color:#2f3542;">${toppingsList.join(', ')}</strong> <span style="color:#ff6b81; font-weight:700;">(+${window.formatVNCurrency(toppingsList.length * 3000)})</span></div>`
                     : '';
 
                 const freeInRow = freeCountsPerIndex[index] || 0;
                 const freeBadgeHtml = freeInRow > 0
-                    ? `<div class="prod-free-tag" style="display:inline-flex; align-items:center; gap:5px; font-size:0.75rem; font-weight:700; color:#2ed573; background:#e8f8f0; padding:2px 8px; border-radius:8px; margin-top:4px;"><i class="fas fa-gift"></i> Tặng Free ${freeInRow} chiếc (0đ)</div>`
+                    ? `<div class="prod-free-tag" style="display:inline-flex; align-items:center; gap:5px; font-size:0.75rem; font-weight:700; color:#2ed573; background:#e8f8f0; padding:2px 8px; border-radius:8px; margin-top:4px;"><i class="fas fa-gift"></i> ${isEn ? `Free Gift: ${freeInRow} cake(s) (0 VND)` : `Tặng Free ${freeInRow} chiếc (0đ)`}</div>`
                     : '';
 
                 tr.innerHTML = `
                     <td>
                         <div class="cart-table-prod">
-                            <img src="${item.image}" alt="${item.name}">
+                            <img src="${item.image}" alt="${prodName}">
                             <div>
-                                <h4 class="prod-name">${item.name}</h4>
-                                <span class="prod-flavor"><i class="fas fa-cookie"></i> ${item.flavor}</span>
+                                <h4 class="prod-name">${prodName}</h4>
+                                <span class="prod-flavor"><i class="fas fa-cookie"></i> ${flavorName}</span>
                                 ${toppingsHtml}
                                 ${freeBadgeHtml}
                             </div>
@@ -569,7 +681,7 @@
                     </td>
                     <td class="prod-line-total" style="text-align:right;">${window.formatVNCurrency(lineTotal)}</td>
                     <td style="text-align:center;">
-                        <button type="button" class="btn-tb-remove" data-index="${index}" title="Xóa món">&times;</button>
+                        <button type="button" class="btn-tb-remove" data-index="${index}" title="${isEn ? 'Remove' : 'Xóa món'}">&times;</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -598,10 +710,11 @@
             let shippingFee = selectedOpt ? parseInt(selectedOpt.getAttribute('data-fee'), 10) : 15000;
 
             // Miễn phí ship nếu đơn >= 120.000đ
+            const isEn = window.KittenI18n?.getLang() === 'en';
             const freeShipMin = siteSettings?.shippingConfig?.freeShippingMin || 120000;
             if (subtotal >= freeShipMin && shippingFee > 0) {
                 shippingFee = 0;
-                if (shippingEl) shippingEl.innerHTML = `<span style="color:#2ed573;"><i class="fas fa-gift"></i> Miễn phí (Đơn > 120k)</span>`;
+                if (shippingEl) shippingEl.innerHTML = `<span style="color:#2ed573;"><i class="fas fa-gift"></i> ${isEn ? 'Free (Orders > 120k)' : 'Miễn phí (Đơn > 120k)'}</span>`;
             } else {
                 if (shippingEl) shippingEl.textContent = window.formatVNCurrency(shippingFee);
             }
@@ -616,7 +729,9 @@
                 if (comboDetail) {
                     comboDetail.style.display = 'block';
                     const freeNames = promo.freeItems.map(f => `${f.name}${f.flavor ? ` (${f.flavor})` : ''}`).join(', ');
-                    comboDetail.innerHTML = `(Miễn phí ${promo.freeCount} Donut: <b>${freeNames}</b>)`;
+                    comboDetail.innerHTML = isEn 
+                        ? `(Complimentary ${promo.freeCount} Donut(s): <b>${freeNames}</b>)`
+                        : `(Miễn phí ${promo.freeCount} Donut: <b>${freeNames}</b>)`;
                 }
             } else {
                 if (comboRow) comboRow.style.display = 'none';
@@ -642,6 +757,15 @@
             if (totalEl) totalEl.textContent = window.formatVNCurrency(total);
             const cardTransferTotalEl = document.getElementById('cardTransferTotal');
             if (cardTransferTotalEl) cardTransferTotalEl.textContent = window.formatVNCurrency(total);
+
+            // Cập nhật số tiền VNĐ và quy đổi USD cho PayPal
+            const paypalVndEl = document.getElementById('paypalTransferVnd');
+            const paypalUsdEl = document.getElementById('paypalTransferUsd');
+            if (paypalVndEl) paypalVndEl.textContent = window.formatVNCurrency(total);
+            if (paypalUsdEl) {
+                const usd = (total / 25000).toFixed(2);
+                paypalUsdEl.textContent = `$${usd} USD`;
+            }
         }
 
         function setupCheckoutEvents() {
@@ -706,6 +830,7 @@
             // Radio phương thức thanh toán
             const paymentRadios = document.querySelectorAll('input[name="paymentMethod"]');
             const bankQrBox = document.getElementById('checkoutBankQrBox');
+            const paypalBox = document.getElementById('checkoutPaypalBox');
             paymentRadios.forEach(radio => {
                 radio.addEventListener('change', () => {
                     document.querySelectorAll('.payment-option-label').forEach(l => l.classList.remove('active'));
@@ -713,8 +838,13 @@
 
                     if (radio.value === 'banking') {
                         if (bankQrBox) bankQrBox.style.display = 'block';
+                        if (paypalBox) paypalBox.style.display = 'none';
+                    } else if (radio.value === 'paypal') {
+                        if (bankQrBox) bankQrBox.style.display = 'none';
+                        if (paypalBox) paypalBox.style.display = 'block';
                     } else {
                         if (bankQrBox) bankQrBox.style.display = 'none';
+                        if (paypalBox) paypalBox.style.display = 'none';
                     }
                 });
             });
@@ -941,10 +1071,27 @@
             document.getElementById('successCustPhone').textContent = order.phone || '';
             document.getElementById('successCustAddress').textContent = order.address || 'Quận 7';
             document.getElementById('successTotal').textContent = window.formatVNCurrency(order.total || 0);
-            document.getElementById('successPaymentMethod').textContent = order.paymentMethod === 'banking' ? 'Chuyển khoản VietQR' : 'Tiền mặt khi nhận bánh (COD)';
+
+            const methodEl = document.getElementById('successPaymentMethod');
+            const isEn = window.KittenI18n && window.KittenI18n.getLang() === 'en';
+            if (order.paymentMethod === 'paypal') {
+                if (methodEl) methodEl.textContent = 'PayPal (emmeoVN)';
+            } else if (order.paymentMethod === 'banking') {
+                if (methodEl) methodEl.textContent = isEn ? 'VietQR Bank Transfer' : 'Chuyển khoản VietQR';
+            } else {
+                if (methodEl) methodEl.textContent = isEn ? 'Cash on Delivery (COD)' : 'Tiền mặt khi nhận bánh (COD)';
+            }
+
+            const trackBtn = document.getElementById('btnSuccessTrackOrder');
+            if (trackBtn && order.id) {
+                trackBtn.href = `order-tracking.html?query=${encodeURIComponent(order.id)}`;
+            }
 
             const qrBox = document.getElementById('successQrBox');
+            const paypalSuccessBox = document.getElementById('successPaypalBox');
+
             if (order.paymentMethod === 'banking') {
+                if (paypalSuccessBox) paypalSuccessBox.style.display = 'none';
                 const bankConfig = siteSettings?.paymentConfig || {
                     bankId: 'VPB',
                     bankName: 'VPBank (Ngân hàng TMCP Việt Nam Thịnh Vượng)',
@@ -967,17 +1114,39 @@
                 }
 
                 const bContent = document.getElementById('modalTransferContent');
-                if (bContent) bContent.textContent = `KC ${order.id}`;
+                if (bContent) bContent.textContent = `${order.id}`;
 
-                // Ưu tiên hiển thị mã QR thật của khách hàng, kèm fallback linh hoạt
+                // Tạo VietQR động kèm chính xác số tiền và mã đơn hàng
                 const successQr = document.getElementById('successQrImg');
                 if (successQr) {
-                    successQr.src = bankConfig.qrImage || 'tai-nguyen/qr-vpbank.png';
+                    const dynamicQr = `https://img.vietqr.io/image/${bankConfig.bankId || 'VPB'}-${bankConfig.accountNumber || '1821004654'}-compact2.png?amount=${order.total || 0}&addInfo=${encodeURIComponent(order.id || '')}&accountName=${encodeURIComponent(bankConfig.accountName || 'NGUYEN NGOC CAM VAN')}`;
+                    successQr.src = dynamicQr;
+                    successQr.onerror = () => {
+                        successQr.src = bankConfig.qrImage || 'tai-nguyen/qr-vpbank.png';
+                    };
                 }
 
                 if (qrBox) qrBox.style.display = 'block';
+            } else if (order.paymentMethod === 'paypal') {
+                if (qrBox) qrBox.style.display = 'none';
+                if (paypalSuccessBox) {
+                    paypalSuccessBox.style.display = 'block';
+                    const totalVal = order.total || 0;
+                    const usdVal = (totalVal / 25000).toFixed(2);
+                    const pVnd = document.getElementById('modalPaypalAmountVnd');
+                    const pUsd = document.getElementById('modalPaypalAmountUsd');
+                    const pContent = document.getElementById('modalPaypalContent');
+                    if (pVnd) pVnd.textContent = window.formatVNCurrency(totalVal);
+                    if (pUsd) pUsd.textContent = `$${usdVal} USD`;
+                    if (pContent) pContent.textContent = `KC ${order.id || ''}`;
+                }
             } else {
                 if (qrBox) qrBox.style.display = 'none';
+                if (paypalSuccessBox) paypalSuccessBox.style.display = 'none';
+            }
+
+            if (window.KittenI18n && window.KittenI18n.applyTranslations) {
+                window.KittenI18n.applyTranslations();
             }
 
             modal.style.display = 'flex';

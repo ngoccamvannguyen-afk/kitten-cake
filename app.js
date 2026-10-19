@@ -47,10 +47,12 @@ async function initSite() {
 }
 
 function applyContentToDOM(data) {
+    const isEn = window.KittenI18n && window.KittenI18n.getLang() === 'en';
+
     // 1. General & Header
     if (data.general) {
         const g = data.general;
-        if (g.siteTitle) document.title = g.siteTitle;
+        if (g.siteTitle) document.title = isEn ? 'Kitten Cake - Lovely Sweet Bakery in District 7' : g.siteTitle;
 
         // Logo & Brand Name
         document.querySelectorAll('.logo img').forEach(img => {
@@ -65,13 +67,18 @@ function applyContentToDOM(data) {
         // Header Order Button
         const headerBtn = document.querySelector('.header-btn a');
         if (headerBtn) {
-            if (g.orderButtonText) headerBtn.innerHTML = `<i class="fa-brands fa-facebook"></i> ${g.orderButtonText}`;
+            const btnText = isEn ? 'Cart' : (g.orderButtonText || 'Giỏ hàng');
+            headerBtn.innerHTML = `<i class="fas fa-shopping-cart"></i> <span>${btnText}</span>`;
             if (g.orderButtonLink) headerBtn.href = g.orderButtonLink;
         }
 
         // Footer Tagline & Contact
         const footerTagline = document.querySelector('.footer-brand p');
-        if (footerTagline && g.brandTagline) footerTagline.textContent = g.brandTagline;
+        if (footerTagline) {
+            footerTagline.textContent = isEn 
+                ? 'A lovely sweet bakery in District 7 - Sending love through every gentle bite.' 
+                : (g.brandTagline || 'Tiệm bánh ngọt nhỏ xinh tại Quận 7 - Nơi gửi gắm yêu thương qua từng vị ngọt.');
+        }
 
         // Social Links
         if (g.socialLinks) {
@@ -87,22 +94,25 @@ function applyContentToDOM(data) {
         const contactList = document.querySelectorAll('.footer-links')[0];
         if (contactList) {
             const items = contactList.querySelectorAll('li');
-            if (items[0] && g.address) items[0].innerHTML = `<i class="fas fa-map-marker-alt"></i> ${g.address}`;
+            const addrVal = isEn ? 'District 7, Ho Chi Minh City, Vietnam' : (g.address || 'Quận 7, TP. Hồ Chí Minh');
+            if (items[0]) items[0].innerHTML = `<i class="fas fa-map-marker-alt"></i> ${addrVal}`;
             if (items[1] && g.hotline) items[1].innerHTML = `<i class="fas fa-phone-alt"></i> Hotline: <a href="tel:${g.hotline}" style="color:inherit; text-decoration:none;">${g.hotline}</a>`;
             if (items[2] && g.email) items[2].innerHTML = `<i class="fas fa-envelope"></i> Email: <a href="mailto:${g.email}" style="color:inherit; text-decoration:none;">${g.email}</a>`;
         }
 
         // Opening Hours
         const hoursList = document.querySelectorAll('.footer-links')[1];
-        if (hoursList && g.openingHours) {
+        if (hoursList) {
             const items = hoursList.querySelectorAll('li');
-            if (items[0] && g.openingHours.weekdays) items[0].textContent = g.openingHours.weekdays;
-            if (items[1] && g.openingHours.weekends) items[1].textContent = g.openingHours.weekends;
+            if (items[0]) items[0].textContent = isEn ? 'Mon - Fri: 08:00 AM - 10:00 PM' : (g.openingHours?.weekdays || 'Thứ 2 - Thứ 6: 08:00 - 22:00');
+            if (items[1]) items[1].textContent = isEn ? 'Sat - Sun: 07:30 AM - 10:30 PM' : (g.openingHours?.weekends || 'Thứ 7 - CN: 07:30 - 22:30');
         }
 
         // Copyright
         const copyrightP = document.querySelector('.footer-bottom p');
-        if (copyrightP && g.copyright) copyrightP.textContent = g.copyright;
+        if (copyrightP) {
+            copyrightP.innerHTML = `${isEn ? '&copy; 2026 Kitten Cake Bakery. Crafted by Web Specialists.' : (g.copyright || '&copy; 2026 Kitten Cake Bakery.')} • <a href="/admin" target="_blank" style="color:inherit; opacity:0.75; text-decoration:none;"><i class="fas fa-lock"></i> <span>${isEn ? 'CMS Admin' : 'Quản trị CMS'}</span></a>`;
+        }
     }
 
     // 2. Hero Section
@@ -110,15 +120,25 @@ function applyContentToDOM(data) {
         const h = data.hero;
         const heroTitle = document.querySelector('.hero-text h1');
         if (heroTitle) {
-            heroTitle.innerHTML = `${h.titlePart1 || 'Thiên Đường Donut'} <br><span class="highlight">${h.titleHighlight || 'Đồng Giá Chỉ 10K'}</span>`;
+            if (isEn) {
+                heroTitle.innerHTML = `Donut Paradise <br><span class="highlight">Flat 10K VND (~$0.40)</span>`;
+            } else {
+                heroTitle.innerHTML = `${h.titlePart1 || 'Thiên Đường Donut'} <br><span class="highlight">${h.titleHighlight || 'Đồng Giá Chỉ 10K'}</span>`;
+            }
         }
 
         const heroDesc = document.querySelector('.hero-text p');
-        if (heroDesc && h.description) heroDesc.innerHTML = h.description;
+        if (heroDesc) {
+            if (isEn) {
+                heroDesc.innerHTML = `Discover the renowned Donuts at <strong>Kitten Cake</strong> in the heart of District 7. Freshly baked, soft and fluffy daily, loaded with sweet toppings at student-friendly prices of just <strong>10,000 VND (~$0.40)</strong> each!`;
+            } else {
+                heroDesc.innerHTML = h.description;
+            }
+        }
 
         const heroBadge = document.querySelector('.floating-badge');
-        if (heroBadge && h.badgeText) {
-            heroBadge.innerHTML = `<i class="fas fa-crown"></i> ${h.badgeText}`;
+        if (heroBadge) {
+            heroBadge.innerHTML = `<i class="fas fa-crown"></i> ${isEn ? 'Signature 10K Donut' : (h.badgeText || 'Donut Signature 10K')}`;
         }
 
         const heroImg = document.querySelector('.hero-image img');
@@ -126,13 +146,14 @@ function applyContentToDOM(data) {
 
         const btnPrimary = document.querySelector('.hero-buttons .btn-primary');
         if (btnPrimary) {
-            if (h.btnPrimaryText) btnPrimary.innerHTML = `<i class="fas fa-utensils"></i> ${h.btnPrimaryText}`;
+            const btnPText = isEn ? 'Explore Cake Menu' : (h.btnPrimaryText || 'Thử Ngay Donut 10K');
+            btnPrimary.innerHTML = `<i class="fas fa-utensils"></i> <span>${btnPText}</span>`;
             if (h.btnPrimaryLink) btnPrimary.href = h.btnPrimaryLink;
         }
 
         const btnOutline = document.querySelector('.hero-buttons .btn-outline');
         if (btnOutline) {
-            if (h.btnOutlineText) btnOutline.textContent = h.btnOutlineText;
+            btnOutline.textContent = isEn ? 'Get Directions' : (h.btnOutlineText || 'Chỉ đường tới tiệm');
             if (h.btnOutlineLink) btnOutline.href = h.btnOutlineLink;
         }
     }
@@ -156,19 +177,34 @@ function applyContentToDOM(data) {
         const m = data.menu;
         const menuTitle = document.querySelector('#menu .section-title h2');
         if (menuTitle) {
-            menuTitle.innerHTML = `${m.sectionTitlePart1 || 'Thực Đơn'} <span class="highlight">${m.sectionTitleHighlight || 'Signature'}</span>`;
+            if (isEn) {
+                menuTitle.innerHTML = `Signature <span class="highlight">Menu</span>`;
+            } else {
+                menuTitle.innerHTML = `${m.sectionTitlePart1 || 'Thực Đơn'} <span class="highlight">${m.sectionTitleHighlight || 'Signature'}</span>`;
+            }
         }
         const menuDesc = document.querySelector('#menu .section-title p');
-        if (menuDesc && m.sectionDescription) menuDesc.textContent = m.sectionDescription;
+        if (menuDesc) {
+            menuDesc.textContent = isEn
+                ? 'Our unbeatable 10K signature donuts alongside the most sought-after sweet desserts in District 7.'
+                : (m.sectionDescription || 'Món chính Donut 10K thơm ngon bất bại cùng các dòng bánh ngọt ngào được giới trẻ Quận 7 săn đón nhất.');
+        }
 
         const menuGrid = document.querySelector('.menu-grid');
         if (menuGrid && m.items && m.items.length > 0) {
             menuGrid.innerHTML = '';
-            m.items.forEach(item => {
-                if (item.status === 'inactive') return; // Skip inactive items
+            m.items.forEach(rawItem => {
+                if (rawItem.status === 'inactive') return;
 
+                const item = isEn && window.KittenI18n ? window.KittenI18n.getTranslatedProduct(rawItem) : rawItem;
                 const card = document.createElement('div');
                 card.className = `menu-item ${item.isFeatured ? 'featured' : ''}`;
+
+                const subtext = item.unitSubtext || (item.id === 'menu_1' 
+                    ? (isEn ? 'Flat 10K (~$0.40)' : 'Đồng giá 10K') 
+                    : (item.id === 'menu_3' || item.id === 'menu_4' 
+                        ? (isEn ? 'Chilled Cup' : 'Bánh hũ lạnh') 
+                        : (isEn ? 'Freshly Baked' : 'Bánh nướng nóng')));
 
                 card.innerHTML = `
                     ${item.badge ? `<span class="hot-badge"><i class="fas fa-fire"></i> ${item.badge}</span>` : ''}
@@ -178,20 +214,20 @@ function applyContentToDOM(data) {
                         </a>
                     </div>
                     <div class="menu-info">
-                        <span class="item-tag">${item.tag || '🍩 Món Bánh'}</span>
+                        <span class="item-tag">${item.tag || (isEn ? '🍩 Signature' : '🍩 Món Bánh')}</span>
                         <h3><a href="product.html?id=${item.id}" style="color:inherit; text-decoration:none;">${item.name}</a></h3>
                         <p>${item.description || ''}</p>
                         <div class="menu-card-bottom">
                             <div class="menu-price-row">
-                                <div class="menu-price">${formatCurrency(item.price)}</div>
-                                <span class="menu-price-subtext">${item.id === 'menu_1' ? 'Đồng giá 10K' : (item.id === 'menu_3' || item.id === 'menu_4' ? 'Bánh hũ lạnh' : 'Bánh nướng nóng')}</span>
+                                <div class="menu-price">${window.KittenI18n ? window.KittenI18n.formatMoney(item.price) : formatCurrency(item.price)}</div>
+                                <span class="menu-price-subtext">${subtext}</span>
                             </div>
                             <div class="menu-card-actions">
-                                <a href="product.html?id=${item.id}" class="menu-order-btn btn-view-detail" title="Xem chi tiết bánh">
-                                    <i class="fas fa-eye"></i> Chi tiết
+                                <a href="product.html?id=${item.id}" class="menu-order-btn btn-view-detail" title="${isEn ? 'View Cake Details' : 'Xem chi tiết'}">
+                                    <i class="fas fa-eye"></i> <span>${isEn ? 'Details' : 'Chi tiết'}</span>
                                 </a>
-                                <button type="button" class="menu-order-btn btn-quick-add-cart" data-item-id="${item.id}" title="Thêm vào giỏ hàng">
-                                    <i class="fas fa-cart-plus"></i> Thêm giỏ
+                                <button type="button" class="menu-order-btn btn-quick-add-cart" data-item-id="${item.id}" title="${isEn ? 'Add to Cart' : 'Thêm vào giỏ'}">
+                                    <i class="fas fa-cart-plus"></i> <span>${isEn ? 'Add to Cart' : 'Thêm giỏ'}</span>
                                 </button>
                             </div>
                         </div>
@@ -215,14 +251,21 @@ function applyContentToDOM(data) {
                 if (img && p.image) img.src = p.image;
 
                 const title = banner.querySelector('.donut-highlight-text h3');
-                if (title && p.title) title.textContent = p.title;
+                if (title) {
+                    title.textContent = isEn ? '🍩 Exclusive Student Offer' : p.title;
+                }
 
                 const desc = banner.querySelector('.donut-highlight-text p');
-                if (desc && p.description) desc.innerHTML = p.description;
+                if (desc) {
+                    desc.innerHTML = isEn 
+                        ? 'Buy <strong>Combo 5 Donuts and get 1 FREE</strong> (only 50,000 VND / ~$2.00 for 6 donuts) in our charming cat gift box to take home!' 
+                        : p.description;
+                }
 
                 const btn = banner.querySelector('.donut-highlight-action a');
                 if (btn) {
-                    if (p.btnText) btn.innerHTML = `<i class="fa-brands fa-facebook"></i> ${p.btnText}`;
+                    const btnText = isEn ? 'Order Combo Box' : (p.btnText || 'Đặt Hộp Combo Ngay');
+                    btn.innerHTML = `<i class="fa-brands fa-facebook"></i> <span>${btnText}</span>`;
                     if (p.btnLink) btn.href = p.btnLink;
                 }
             }
@@ -234,20 +277,34 @@ function applyContentToDOM(data) {
         const g = data.gallery;
         const galTitle = document.querySelector('#gallery .section-title h2');
         if (galTitle) {
-            galTitle.innerHTML = `${g.sectionTitlePart1 || 'Khoảnh Khắc'} <span class="highlight">${g.sectionTitleHighlight || 'Ngọt Ngào'}</span>`;
+            galTitle.innerHTML = isEn 
+                ? 'Sweet <span class="highlight">Moments</span>' 
+                : `${g.sectionTitlePart1 || 'Khoảnh Khắc'} <span class="highlight">${g.sectionTitleHighlight || 'Ngọt Ngào'}</span>`;
         }
         const galDesc = document.querySelector('#gallery .section-title p');
-        if (galDesc && g.sectionDescription) galDesc.textContent = g.sectionDescription;
+        if (galDesc) {
+            galDesc.textContent = isEn 
+                ? 'Fresh oven batches baked daily in the Kitten Cake kitchen, District 7.' 
+                : (g.sectionDescription || 'Những mẻ bánh mới ra lò mỗi ngày tại gian bếp Kitten Cake Quận 7.');
+        }
 
         const galleryGrid = document.querySelector('.gallery-grid');
         if (galleryGrid && g.items && g.items.length > 0) {
             galleryGrid.innerHTML = '';
             g.items.forEach(item => {
+                let overlayText = item.overlay || 'Bánh mới nướng mỗi ngày';
+                if (isEn) {
+                    if (overlayText.includes('Donut 6') || overlayText.includes('Hộp quà')) overlayText = 'Charming 6-Flavor Donut Box';
+                    else if (overlayText.includes('Tart trứng')) overlayText = 'Crispy Multi-Layer Hot Egg Tart';
+                    else if (overlayText.includes('Oreo Cheesecake')) overlayText = 'Convenient Oreo Cheesecake Cup';
+                    else if (overlayText.includes('Panna Cotta')) overlayText = 'Refreshing Berry Panna Cotta';
+                    else overlayText = 'Freshly Baked Daily Pastry';
+                }
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'gallery-item';
                 itemDiv.innerHTML = `
-                    <img src="${item.image}" alt="${item.overlay || 'Bánh ngọt Kitten Cake'}">
-                    <div class="gallery-overlay">${item.overlay || 'Bánh mới nướng mỗi ngày'}</div>
+                    <img src="${item.image}" alt="${overlayText}">
+                    <div class="gallery-overlay">${overlayText}</div>
                 `;
                 galleryGrid.appendChild(itemDiv);
             });
@@ -259,26 +316,83 @@ function applyContentToDOM(data) {
         const a = data.about;
         const aboutTitle = document.querySelector('.about-text h2');
         if (aboutTitle) {
-            aboutTitle.innerHTML = `${a.sectionTitlePart1 || 'Về'} <span class="highlight">${a.sectionTitleHighlight || 'Kitten Cake'}</span>`;
+            aboutTitle.innerHTML = isEn 
+                ? 'About <span class="highlight">Kitten Cake</span>' 
+                : `${a.sectionTitlePart1 || 'Về'} <span class="highlight">${a.sectionTitleHighlight || 'Kitten Cake'}</span>`;
         }
         const aboutPs = document.querySelectorAll('.about-text > p');
-        if (aboutPs[0] && a.paragraph1) aboutPs[0].innerHTML = a.paragraph1;
-        if (aboutPs[1] && a.paragraph2) aboutPs[1].innerHTML = a.paragraph2;
+        if (aboutPs[0]) {
+            aboutPs[0].innerHTML = isEn 
+                ? 'Tucked away in a tranquil corner of District 7, Kitten Cake provides the coziest sweet spot for youth and dessert lovers in Saigon.' 
+                : a.paragraph1;
+        }
+        if (aboutPs[1]) {
+            aboutPs[1].innerHTML = isEn 
+                ? 'We are renowned for our <strong>signature 10K donuts freshly baked daily</strong>, soft, fluffy, and packed with delightful flavors. With our cute lazy cat emblem, Kitten Cake brings joy and sweetness at wallet-friendly student prices.' 
+                : a.paragraph2;
+        }
 
         const aboutImg = document.querySelector('.about-image img');
         if (aboutImg && a.image) aboutImg.src = a.image;
 
         const featList = document.querySelector('.about-features');
-        if (featList && a.features && a.features.length > 0) {
+        if (featList) {
             featList.innerHTML = '';
-            a.features.forEach(feat => {
+            const feats = isEn ? [
+                'Freshly baked daily donuts, flat 10K VND (~$0.40)',
+                'Selected French & New Zealand ingredients, delicate sweetness',
+                'Fast delivery across District 7 and Ho Chi Minh City',
+                'Packaged in clean, adorable, and eco-friendly cat boxes'
+            ] : (a.features || [
+                'Donut nướng mới trong ngày, đồng giá chỉ 10K',
+                'Nguyên liệu chọn lọc chuẩn Pháp & New Zealand',
+                'Giao hàng nhanh tận tay toàn Quận 7 và TP.HCM',
+                'Đóng gói hộp mèo xinh xắn, sạch sẽ và thân thiện'
+            ]);
+
+            feats.forEach(feat => {
                 const li = document.createElement('li');
                 li.innerHTML = `<i class="fas fa-check-circle"></i> ${feat}`;
                 featList.appendChild(li);
             });
         }
     }
+
+    // 8. Latest Blog Articles on index.html
+    if (data.articles) {
+        const blogCards = document.querySelectorAll('.blog-grid .blog-card');
+        if (blogCards.length > 0) {
+            data.articles.slice(0, 3).forEach((art, idx) => {
+                const card = blogCards[idx];
+                if (!card) return;
+                const tArt = isEn && window.KittenI18n ? window.KittenI18n.getTranslatedArticle(art) : art;
+                const catBadge = card.querySelector('.blog-card-category');
+                if (catBadge) catBadge.textContent = tArt.categoryName || (isEn ? 'Baking Tips' : 'Mẹo Bánh');
+                const titleLink = card.querySelector('.blog-card-title a');
+                if (titleLink) titleLink.textContent = tArt.title;
+                const excerptP = card.querySelector('.blog-card-excerpt');
+                if (excerptP) excerptP.textContent = tArt.excerpt;
+                const readTimeSpan = card.querySelector('.blog-meta span:nth-child(2)');
+                if (readTimeSpan) readTimeSpan.innerHTML = `<i class="fas fa-clock"></i> ${tArt.readTime || (isEn ? '3 min read' : '3 phút đọc')}`;
+            });
+        }
+    }
+
+    // Áp dụng ngôn ngữ hiện tại lên DOM
+    if (window.KittenI18n && window.KittenI18n.applyTranslations) {
+        window.KittenI18n.applyTranslations();
+    }
 }
+
+// Lắng nghe sự kiện chuyển đổi ngôn ngữ để re-render dữ liệu ngay tức thì
+window.addEventListener('languageChanged', () => {
+    if (currentSiteContent) {
+        applyContentToDOM(currentSiteContent);
+    }
+    if (window.KittenI18n && window.KittenI18n.applyTranslations) {
+        window.KittenI18n.applyTranslations();
+    }
+});
 
 // Discreet Quick Admin Access Float Button
 function setupAdminShortcut() {

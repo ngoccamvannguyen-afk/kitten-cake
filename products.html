@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thực Đơn Bánh Ngọt & Danh Mục Sản Phẩm - Kitten Cake Quận 7</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="i18n.js"></script>
+</head>
+<body class="products-catalog-page">
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo" style="text-decoration:none;">
+                <img src="tai-nguyen/logo.jpg" alt="Kitten Cake Logo">
+                <span>Kitten Cake</span>
+            </a>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="index.html"><span data-i18n="nav_home">Trang chủ</span></a></li>
+                    <li><a href="products.html" class="active"><span data-i18n="nav_menu">Thực đơn</span></a></li>
+                    <li><a href="blog.html"><span data-i18n="nav_blog">Bài viết</span></a></li>
+                    <li><a href="order-tracking.html"><span data-i18n="nav_tracking">Tra cứu</span></a></li>
+                    <li><a href="index.html#about"><span data-i18n="nav_about">Về tiệm</span></a></li>
+                    <li><a href="index.html#contact"><span data-i18n="nav_contact">Liên hệ</span></a></li>
+                </ul>
+            </nav>
+            <div class="header-btn">
+                <div class="lang-switcher-wrap"></div>
+                <button class="cart-trigger-btn" id="openMiniCartBtn" title="Xem giỏ hàng bánh">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count-badge" id="cartCountBadge" style="display:none;">0</span>
+                </button>
+                <a href="cart.html" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> <span data-i18n="nav_cart">Giỏ hàng</span></a>
+            </div>
+            <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-bar">
+        <div class="container">
+            <ul class="breadcrumb-list">
+                <li><a href="index.html"><i class="fas fa-home"></i> <span data-i18n="bc_home">Trang chủ</span></a></li>
+                <li><i class="fas fa-chevron-right"></i></li>
+                <li class="active" data-i18n="bc_catalog">Thực đơn & Danh mục bánh</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="section" style="padding-top: 30px;">
+        <div class="container">
+            <!-- Header Title -->
+            <div class="section-title text-center" style="margin-bottom: 25px;">
+                <h2><span data-i18n="catalog_title">Thực Đơn Bánh</span> <span class="highlight">Kitten Cake</span></h2>
+                <p data-i18n="catalog_subtitle">Bánh tươi nướng mới mỗi sáng lúc 7:30 và 14:00 - Đồng giá Donut chỉ 10K, Tart trứng giòn rụm và bánh lạnh thanh mát!</p>
+            </div>
+
+            <!-- Category Chips Scroll -->
+            <div class="category-chips-scroll" id="categoryChips">
+                <button class="category-chip active" data-category="all">
+                    <i class="fas fa-th-large"></i> <span data-i18n="catalog_chip_all">Tất Cả Món Bánh</span>
+                    <span class="chip-count" id="chipCountAll">0</span>
+                </button>
+                <!-- Dynamic categories loaded by JS -->
+            </div>
+
+            <!-- Toolbar: Search, Filters & Sorting -->
+            <div class="catalog-toolbar">
+                <div class="toolbar-left">
+                    <input type="text" id="catalogSearch" class="catalog-search-input" data-i18n-ph="catalog_search_ph" placeholder="🔍 Tìm tên món bánh, vị dâu, matcha...">
+                    <select id="priceFilter" class="filter-select">
+                        <option value="all" data-i18n="filter_price_all">Mọi mức giá</option>
+                        <option value="under-20k" data-i18n="filter_price_u20">Dưới 20.000đ</option>
+                        <option value="20k-50k" data-i18n="filter_price_20_50">20.000đ - 50.000đ</option>
+                        <option value="over-50k" data-i18n="filter_price_o50">Trên 50.000đ</option>
+                    </select>
+                </div>
+                <div class="toolbar-right">
+                    <select id="sortSelect" class="filter-select">
+                        <option value="default" data-i18n="sort_default">Sắp xếp: Mặc định</option>
+                        <option value="price-asc" data-i18n="sort_price_asc">Giá: Thấp đến cao</option>
+                        <option value="price-desc" data-i18n="sort_price_desc">Giá: Cao đến thấp</option>
+                        <option value="rating-desc" data-i18n="sort_rating_desc">Đánh giá cao nhất</option>
+                        <option value="name-asc" data-i18n="sort_name_asc">Tên: A đến Z</option>
+                    </select>
+                    <span class="results-count-text" id="resultsCount" data-i18n="catalog_loading">Đang tải bánh ngon...</span>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="menu-grid" id="productsGrid">
+                <!-- Dynamic cards populated by products.js -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="noProductsFound" class="cart-empty-state" style="display:none; margin: 40px auto;">
+                <div class="empty-icon"><i class="fas fa-cookie-bite"></i></div>
+                <h3 data-i18n="catalog_empty_title">Không tìm thấy món bánh phù hợp!</h3>
+                <p data-i18n="catalog_empty_desc">Hãy thử thay đổi từ khóa tìm kiếm hoặc bấm chọn xem lại "Tất Cả Món Bánh" nhé.</p>
+                <button class="btn btn-primary" onclick="resetCatalogFilters()">
+                    <i class="fas fa-redo"></i> <span data-i18n="catalog_empty_btn">Xem tất cả món bánh</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Quick Add Flavor Selection Modal -->
+    <div class="modal-overlay" id="quickAddModal" style="display:none;">
+        <div class="modal-dialog" style="max-width: 480px;">
+            <div class="modal-header">
+                <h3 id="quickModalTitle" data-i18n="quick_modal_title">Chọn Hương Vị Bánh</h3>
+                <button class="modal-close-btn" id="closeQuickModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex; gap:16px; align-items:center; margin-bottom:16px;">
+                    <img id="quickModalImg" src="tai-nguyen/donut-signature.jpg" alt="Bánh" style="width:75px; height:75px; object-fit:cover; border-radius:12px;">
+                    <div>
+                        <h4 id="quickModalItemName" style="margin:0 0 4px 0; font-size:1.1rem;">Donut Xốp Mềm</h4>
+                        <div id="quickModalPrice" style="color:var(--accent-color); font-weight:800; font-size:1.1rem;">10.000đ</div>
+                    </div>
+                </div>
+
+                <div class="flavor-section" style="margin-bottom:16px;">
+                    <label style="display:block; font-weight:700; margin-bottom:8px; font-size:0.9rem;" data-i18n="quick_modal_flavor_lbl">Hương vị yêu thích:</label>
+                    <div class="flavor-chips-grid" id="quickModalFlavors" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                        <!-- Options -->
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; background:#fff5f7; padding:10px 14px; border-radius:12px;">
+                    <span style="font-weight:700; font-size:0.95rem;" data-i18n="quick_modal_qty_lbl">Số lượng:</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <button type="button" class="btn-qty" id="quickQtyMinus" style="width:32px; height:32px; border:1px solid #ffd1dc; background:#fff; border-radius:8px; font-weight:700; cursor:pointer;">-</button>
+                        <span id="quickQtyVal" style="font-weight:800; min-width:24px; text-align:center;">1</span>
+                        <button type="button" class="btn-qty" id="quickQtyPlus" style="width:32px; height:32px; border:1px solid #ffd1dc; background:#fff; border-radius:8px; font-weight:700; cursor:pointer;">+</button>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary" id="confirmQuickAddBtn" style="width:100%; justify-content:center; padding:12px; font-size:1rem;">
+                    <i class="fas fa-cart-plus"></i> <span data-i18n="quick_modal_add_btn">Cho Vào Giỏ Hàng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <div class="logo">
+                    <img src="tai-nguyen/logo.jpg" alt="Kitten Cake Logo">
+                    <span>Kitten Cake</span>
+                </div>
+                <p>Tiệm bánh ngọt nhỏ xinh tại Quận 7 - Nơi gửi gắm yêu thương qua từng vị ngọt thơm lừng nướng mới mỗi ngày.</p>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/profile.php?id=61594490844705" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h3>Liên Hệ Với Tiệm</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Quận 7, TP. Hồ Chí Minh</li>
+                    <li><i class="fas fa-phone-alt"></i> Hotline: 0898575717</li>
+                    <li><i class="fas fa-envelope"></i> Email: kittencake7dis@gmail.com</li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h3>Giờ Mở Cửa</h3>
+                <ul>
+                    <li>Thứ 2 - Thứ 6: 08:00 - 22:00</li>
+                    <li>Thứ 7 - CN: 07:30 - 22:30</li>
+                    <li><a href="order-tracking.html" style="color:#f6416c; font-weight:700;"><i class="fas fa-search-location"></i> Tra cứu đơn hàng của bạn</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 Kitten Cake Bakery. Nền tảng thương mại điện tử bánh ngọt hiện đại.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="products.js"></script>
+</body>
+</html>

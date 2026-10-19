@@ -12,8 +12,8 @@ echo.
 
 set PATH=C:\Program Files\nodejs;%PATH%
 
-start "" "http://localhost:3000"
-start "" "http://localhost:3000/admin"
+:: Đợi 2 giây cho server Node.js sẵn sàng lắng nghe cổng 3000 rồi mới mở trình duyệt
+start /b cmd /c "timeout /t 2 /nobreak > nul & start http://localhost:3000 & start http://localhost:3000/admin"
 
 node server.js
 

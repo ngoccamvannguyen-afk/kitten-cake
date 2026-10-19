@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tra Cứu Tiến Độ Đơn Hàng - Kitten Cake Quận 7</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="i18n.js"></script>
+</head>
+<body class="order-tracking-page">
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo" style="text-decoration:none;">
+                <img src="tai-nguyen/logo.jpg" alt="Kitten Cake Logo">
+                <span>Kitten Cake</span>
+            </a>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="index.html"><span data-i18n="nav_home">Trang chủ</span></a></li>
+                    <li><a href="products.html"><span data-i18n="nav_menu">Thực đơn</span></a></li>
+                    <li><a href="blog.html"><span data-i18n="nav_blog">Bài viết</span></a></li>
+                    <li><a href="order-tracking.html" class="active"><span data-i18n="nav_tracking">Tra cứu</span></a></li>
+                    <li><a href="index.html#about"><span data-i18n="nav_about">Về tiệm</span></a></li>
+                    <li><a href="index.html#contact"><span data-i18n="nav_contact">Liên hệ</span></a></li>
+                </ul>
+            </nav>
+            <div class="header-btn">
+                <div class="lang-switcher-wrap"></div>
+                <button class="cart-trigger-btn" id="openMiniCartBtn" title="Xem giỏ hàng">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count-badge" id="cartCountBadge" style="display:none;">0</span>
+                </button>
+                <a href="cart.html" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> <span data-i18n="nav_cart">Giỏ hàng</span></a>
+            </div>
+            <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-bar">
+        <div class="container">
+            <ul class="breadcrumb-list">
+                <li><a href="index.html"><i class="fas fa-home"></i> <span data-i18n="bc_home">Trang chủ</span></a></li>
+                <li><i class="fas fa-chevron-right"></i></li>
+                <li class="active" data-i18n="bc_tracking">Tra cứu tiến độ đơn hàng</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Tracking Hero -->
+    <section class="tracking-hero">
+        <div class="container">
+            <h1><span data-i18n="tracking_title">Theo Dõi Đơn Hàng</span> <span class="highlight">Trực Tuyến</span></h1>
+            <p data-i18n="tracking_subtitle">Kiểm tra thời gian thực: Tiệm đã nhận đơn, bánh đang nướng trong lò hay shipper đang giao đến bạn!</p>
+        </div>
+    </section>
+
+    <!-- Tracking Input Search -->
+    <div class="container">
+        <div class="tracking-input-card">
+            <form id="trackingForm" class="tracking-form-group">
+                <input type="text" id="trackingQueryInput" class="tracking-input" data-i18n-ph="tracking_input_ph" placeholder="Nhập Mã đơn hàng (VD: KC-83921) hoặc SĐT (VD: 0912345678)" required>
+                <button type="submit" class="btn btn-primary" style="white-space:nowrap; padding:12px 24px; font-size:1rem;">
+                    <i class="fas fa-search-location"></i> <span data-i18n="tracking_btn_search">Tra Cứu</span>
+                </button>
+            </form>
+
+            <div style="margin-top:14px; font-size:0.85rem; color:#777; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <span data-i18n="tracking_quick_hint">💡 Gợi ý tra cứu nhanh:</span>
+                <button type="button" class="btn-copy-chip" onclick="quickFillTracking('KC-83921')">KC-83921</button>
+                <button type="button" class="btn-copy-chip" onclick="quickFillTracking('0912345678')">0912345678</button>
+                <button type="button" class="btn-copy-chip" onclick="quickFillTracking('0987654321')">0987654321</button>
+            </div>
+        </div>
+
+        <!-- Tracking Results Area -->
+        <div id="trackingLoading" style="display:none; text-align:center; padding:40px 0;">
+            <i class="fas fa-spinner fa-spin" style="font-size:2.5rem; color:#f6416c; margin-bottom:12px;"></i>
+            <p style="font-weight:700; color:#555;" data-i18n="tracking_loading_txt">Đang kết nối lò bánh Kitten Cake để lấy thông tin...</p>
+        </div>
+
+        <div id="trackingEmpty" class="cart-empty-state" style="display:none; margin: 20px auto 50px auto;">
+            <div class="empty-icon"><i class="fas fa-search"></i></div>
+            <h3 data-i18n="tracking_empty_title">Không tìm thấy đơn bánh nào!</h3>
+            <p data-i18n="tracking_empty_desc">Vui lòng kiểm tra lại Mã đơn hàng hoặc Số điện thoại bạn đã dùng khi đặt hàng.</p>
+        </div>
+
+        <div id="trackingResultContainer" style="display:none; margin-bottom: 60px;">
+            <!-- Dynamically populated orders -->
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <div class="logo">
+                    <img src="tai-nguyen/logo.jpg" alt="Kitten Cake Logo">
+                    <span>Kitten Cake</span>
+                </div>
+                <p data-i18n="footer_tagline">Tiệm bánh ngọt nhỏ xinh tại Quận 7 - Nơi gửi gắm yêu thương qua từng vị ngọt thơm lừng nướng mới mỗi ngày.</p>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/profile.php?id=61594490844705" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h3 data-i18n="footer_heading_contact">Liên Hệ Với Tiệm</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> <span data-i18n="footer_address_val">Quận 7, TP. Hồ Chí Minh</span></li>
+                    <li><i class="fas fa-phone-alt"></i> Hotline: 0898575717</li>
+                    <li><i class="fas fa-envelope"></i> Email: kittencake7dis@gmail.com</li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h3 data-i18n="footer_heading_hours">Giờ Mở Cửa</h3>
+                <ul>
+                    <li data-i18n="footer_weekdays">Thứ 2 - Thứ 6: 08:00 - 22:00</li>
+                    <li data-i18n="footer_weekends">Thứ 7 - CN: 07:30 - 22:30</li>
+                    <li><a href="cart.html" style="color:#f6416c; font-weight:700;"><i class="fas fa-shopping-cart"></i> <span data-i18n="view_cart">Xem giỏ hàng của bạn</span></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p data-i18n="footer_copy">&copy; 2026 Kitten Cake Bakery. Nền tảng thương mại điện tử bánh ngọt hiện đại.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="order-tracking.js"></script>
+</body>
+</html>

@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="i18n.js"></script>
 </head>
 <body>
 
@@ -21,19 +22,21 @@
             </div>
             <nav class="nav">
                 <ul class="nav-list">
-                    <li><a href="#home">Trang chủ</a></li>
-                    <li><a href="#menu">Thực đơn</a></li>
-                    <li><a href="#gallery">Hình ảnh</a></li>
-                    <li><a href="#about">Về chúng tôi</a></li>
-                    <li><a href="#contact">Liên hệ</a></li>
+                    <li><a href="index.html" class="active"><span data-i18n="nav_home">Trang chủ</span></a></li>
+                    <li><a href="products.html"><span data-i18n="nav_menu">Thực đơn</span></a></li>
+                    <li><a href="blog.html"><span data-i18n="nav_blog">Bài viết</span></a></li>
+                    <li><a href="order-tracking.html"><span data-i18n="nav_tracking">Tra cứu</span></a></li>
+                    <li><a href="#about"><span data-i18n="nav_about">Về tiệm</span></a></li>
+                    <li><a href="#contact"><span data-i18n="nav_contact">Liên hệ</span></a></li>
                 </ul>
             </nav>
-            <div class="header-btn" style="display:flex; align-items:center; gap:12px;">
+            <div class="header-btn">
+                <div class="lang-switcher-wrap"></div>
                 <button class="cart-trigger-btn" id="openMiniCartBtn" title="Xem giỏ hàng bánh">
                     <i class="fas fa-shopping-bag"></i>
                     <span class="cart-count-badge" id="cartCountBadge" style="display:none;">0</span>
                 </button>
-                <a href="cart.html" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a>
+                <a href="cart.html" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> <span data-i18n="nav_cart">Giỏ hàng</span></a>
             </div>
             <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
         </div>
@@ -43,17 +46,17 @@
     <section id="home" class="hero">
         <div class="container hero-content">
             <div class="hero-text">
-                <h1>Thiên Đường Donut <br><span class="highlight">Đồng Giá Chỉ 10K</span></h1>
-                <p>Khám phá món bánh Donut trứ danh tại <strong>Kitten Cake</strong> giữa lòng Quận 7. Bánh tươi mềm xốp nướng mỗi ngày, ngập tràn topping ngọt ngào với mức giá siêu hạt dẻ chỉ <strong>10.000đ/chiếc</strong> dành riêng cho giới trẻ & học sinh sinh viên!</p>
+                <h1><span data-i18n="hero_title_1">Thiên Đường Donut</span> <br><span class="highlight" data-i18n="hero_title_highlight">Đồng Giá Chỉ 10K</span></h1>
+                <p data-i18n="hero_desc">Khám phá món bánh Donut trứ danh tại <strong>Kitten Cake</strong> giữa lòng Quận 7. Bánh tươi mềm xốp nướng mỗi ngày, ngập tràn topping ngọt ngào với mức giá siêu hạt dẻ chỉ <strong>10.000đ/chiếc</strong> dành riêng cho giới trẻ & học sinh sinh viên!</p>
                 <div class="hero-buttons">
-                    <a href="#menu" class="btn btn-primary"><i class="fas fa-utensils"></i> Thử Ngay Donut 10K</a>
-                    <a href="#contact" class="btn btn-outline">Chỉ đường tới tiệm</a>
+                    <a href="#menu" class="btn btn-primary"><i class="fas fa-utensils"></i> <span data-i18n="hero_btn_try">Thử Ngay Donut 10K</span></a>
+                    <a href="#contact" class="btn btn-outline" data-i18n="hero_btn_direction">Chỉ đường tới tiệm</a>
                 </div>
             </div>
             <div class="hero-image">
                 <img src="tai-nguyen/donut-collection.jpg" alt="Donut 10K Kitten Cake Quận 7">
                 <div class="floating-badge">
-                    <i class="fas fa-crown"></i> Donut Signature 10K
+                    <i class="fas fa-crown"></i> <span data-i18n="hero_badge">Donut Signature 10K</span>
                 </div>
             </div>
         </div>
@@ -72,8 +75,8 @@
     <section id="menu" class="menu section">
         <div class="container">
             <div class="section-title">
-                <h2>Thực Đơn <span class="highlight">Signature</span></h2>
-                <p>Món chính Donut 10K thơm ngon bất bại cùng các dòng bánh ngọt ngào được giới trẻ Quận 7 săn đón nhất.</p>
+                <h2><span data-i18n="menu_title_part1">Thực Đơn</span> <span class="highlight" data-i18n="menu_title_highlight">Signature</span></h2>
+                <p data-i18n="menu_subtitle">Món chính Donut 10K thơm ngon bất bại cùng các dòng bánh ngọt ngào được giới trẻ Quận 7 săn đón nhất.</p>
             </div>
             <div class="menu-grid">
                 <div class="menu-item featured">
@@ -183,17 +186,24 @@
                 </div>
             </div>
 
+            <!-- View Full Menu & Categories Button -->
+            <div style="text-align:center; margin: 30px 0 45px 0;">
+                <a href="products.html" class="btn btn-primary" style="padding: 14px 32px; font-size: 1.05rem; display:inline-flex; align-items:center; gap:10px;">
+                    <i class="fas fa-th-large"></i> <span data-i18n="home_view_all_menu">Xem Toàn Bộ Thực Đơn & Danh Mục Bánh</span> <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
             <!-- Donut Promo Banner with Real Box Image -->
             <div class="donut-highlight-banner">
                 <div class="donut-highlight-img">
                     <img src="tai-nguyen/donut-box.jpg" alt="Hộp quà Donut Kitten Cake">
                 </div>
                 <div class="donut-highlight-text">
-                    <h3>🍩 Ưu Đãi Độc Quyền Cho Học Sinh - Sinh Viên</h3>
-                    <p>Mua <strong>Combo 5 Donut tặng ngay 1 Donut</strong> (chỉ 50.000đ được 6 bánh) đóng hộp mèo Kitten Cake xinh xắn mang về!</p>
+                    <h3 data-i18n="promo_title">🍩 Ưu Đãi Độc Quyền Cho Học Sinh - Sinh Viên</h3>
+                    <p data-i18n="promo_desc">Mua <strong>Combo 5 Donut tặng ngay 1 Donut</strong> (chỉ 50.000đ được 6 bánh) đóng hộp mèo Kitten Cake xinh xắn mang về!</p>
                 </div>
                 <div class="donut-highlight-action">
-                    <a href="https://www.facebook.com/profile.php?id=61594490844705" target="_blank" class="btn btn-primary"><i class="fa-brands fa-facebook"></i> Inbox Nhận Ưu Đãi</a>
+                    <a href="https://www.facebook.com/profile.php?id=61594490844705" target="_blank" class="btn btn-primary"><i class="fa-brands fa-facebook"></i> <span data-i18n="promo_btn">Inbox Nhận Ưu Đãi</span></a>
                 </div>
             </div>
         </div>
@@ -203,26 +213,117 @@
     <section id="gallery" class="gallery section bg-light">
         <div class="container">
             <div class="section-title">
-                <h2>Khoảnh Khắc <span class="highlight">Ngọt Ngào</span></h2>
-                <p>Những mẻ bánh mới ra lò mỗi ngày tại gian bếp Kitten Cake Quận 7.</p>
+                <h2><span data-i18n="gallery_title_part1">Khoảnh Khắc</span> <span class="highlight" data-i18n="gallery_title_highlight">Ngọt Ngào</span></h2>
+                <p data-i18n="gallery_subtitle">Những mẻ bánh mới ra lò mỗi ngày tại gian bếp Kitten Cake Quận 7.</p>
             </div>
             <div class="gallery-grid">
                 <div class="gallery-item">
                     <img src="tai-nguyen/donut-varieties.jpg" alt="Khay bánh Donut trang trí tim xinh xắn">
-                    <div class="gallery-overlay">Khay Donut tình yêu đủ vị</div>
+                    <div class="gallery-overlay" data-i18n="gallery_cap_1">Khay Donut tình yêu đủ vị</div>
                 </div>
                 <div class="gallery-item">
                     <img src="tai-nguyen/donut-box.jpg" alt="Hộp bánh Donut quà tặng">
-                    <div class="gallery-overlay">Hộp quà tặng Donut 12 vị</div>
+                    <div class="gallery-overlay" data-i18n="gallery_cap_2">Hộp quà tặng Donut 12 vị</div>
                 </div>
                 <div class="gallery-item">
                     <img src="tai-nguyen/tart-trung.jpg" alt="Tart trứng nóng giòn">
-                    <div class="gallery-overlay">Tart trứng ngàn lớp nóng giòn</div>
+                    <div class="gallery-overlay" data-i18n="gallery_cap_3">Tart trứng ngàn lớp nóng giòn</div>
                 </div>
                 <div class="gallery-item">
                     <img src="tai-nguyen/oreo-cheesecake.jpg" alt="Hũ Oreo Cheesecake tiện lợi">
-                    <div class="gallery-overlay">Oreo Cheesecake hũ tiện lợi</div>
+                    <div class="gallery-overlay" data-i18n="gallery_cap_4">Oreo Cheesecake hũ tiện lợi</div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Blog & Baking Tips Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title text-center">
+                <h2><span data-i18n="home_blog_title_part1">Góc Bếp &</span> <span class="highlight" data-i18n="home_blog_title_highlight">Mẹo Bánh Ngọt</span></h2>
+                <p data-i18n="home_blog_subtitle">Khám phá công thức giữ bánh nướng mềm xốp, cách bảo quản bánh lạnh và ưu đãi sinh viên hấp dẫn.</p>
+            </div>
+            <div class="blog-grid" style="margin-top:20px;">
+                <div class="blog-card">
+                    <div class="blog-card-img">
+                        <a href="post.html?id=art_1">
+                            <img src="tai-nguyen/donut-collection-1791974653397.jpg" alt="Mẹo ăn Donut ngon" loading="lazy">
+                        </a>
+                        <span class="blog-card-category">Mẹo Bánh & Thưởng Thức</span>
+                    </div>
+                    <div class="blog-card-body">
+                        <div class="blog-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 2026-10-18</span>
+                            <span><i class="fas fa-clock"></i> 3 <span data-i18n="blog_reading_time">phút đọc</span></span>
+                        </div>
+                        <h3 class="blog-card-title">
+                            <a href="post.html?id=art_1">Bí Quyết Thưởng Thức Donut 10K Giòn Xốp Chuẩn Vị Giới Trẻ Quận 7</a>
+                        </h3>
+                        <p class="blog-card-excerpt">
+                            Làm thế nào để chiếc bánh Donut giữ trọn độ mềm xốp, thơm lừng lớp sốt chocolate Bỉ khi mang về nhà?
+                        </p>
+                        <div class="blog-card-footer">
+                            <span style="font-size:0.8rem; color:#888;"><i class="fas fa-eye"></i> 342 <span data-i18n="blog_views">lượt xem</span></span>
+                            <a href="post.html?id=art_1" class="btn-read-more"><span data-i18n="blog_read_more">Đọc chi tiết</span> <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="blog-card">
+                    <div class="blog-card-img">
+                        <a href="post.html?id=art_2">
+                            <img src="tai-nguyen/tart-trung.jpg" alt="Tart trứng ngàn lớp" loading="lazy">
+                        </a>
+                        <span class="blog-card-category">Chuyện Bếp Kitten Cake</span>
+                    </div>
+                    <div class="blog-card-body">
+                        <div class="blog-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 2026-10-16</span>
+                            <span><i class="fas fa-clock"></i> 4 <span data-i18n="blog_reading_time">phút đọc</span></span>
+                        </div>
+                        <h3 class="blog-card-title">
+                            <a href="post.html?id=art_2">Tart Trứng Ngàn Lớp: Vì Sao Ai Đến Kitten Cake Cũng Phải Gọi Thử?</a>
+                        </h3>
+                        <p class="blog-card-excerpt">
+                            Câu chuyện đằng sau chiếc Tart trứng thơm lừng béo ngậy với hơn 64 lớp bột mỏng tang giòn rụm.
+                        </p>
+                        <div class="blog-card-footer">
+                            <span style="font-size:0.8rem; color:#888;"><i class="fas fa-eye"></i> 289 <span data-i18n="blog_views">lượt xem</span></span>
+                            <a href="post.html?id=art_2" class="btn-read-more"><span data-i18n="blog_read_more">Đọc chi tiết</span> <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="blog-card">
+                    <div class="blog-card-img">
+                        <a href="post.html?id=art_4">
+                            <img src="tai-nguyen/donut-box.jpg" alt="Ưu đãi sinh viên" loading="lazy">
+                        </a>
+                        <span class="blog-card-category">Khuyến Mãi & Ưu Đãi</span>
+                    </div>
+                    <div class="blog-card-body">
+                        <div class="blog-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 2026-10-12</span>
+                            <span><i class="fas fa-clock"></i> 2 <span data-i18n="blog_reading_time">phút đọc</span></span>
+                        </div>
+                        <h3 class="blog-card-title">
+                            <a href="post.html?id=art_4">Ưu Đãi Đặc Biệt Cho Học Sinh - Sinh Viên: Mua Combo 5 Donut Tặng Ngay 1</a>
+                        </h3>
+                        <p class="blog-card-excerpt">
+                            Chỉ 50.000đ sở hữu ngay hộp quà 6 chiếc Donut ngọt ngào bọc trong bao bì mèo Kitten Cake xinh xắn.
+                        </p>
+                        <div class="blog-card-footer">
+                            <span style="font-size:0.8rem; color:#888;"><i class="fas fa-eye"></i> 480 <span data-i18n="blog_views">lượt xem</span></span>
+                            <a href="post.html?id=art_4" class="btn-read-more"><span data-i18n="blog_read_more">Đọc chi tiết</span> <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:center; margin-top:30px;">
+                <a href="blog.html" class="btn btn-outline" style="padding:12px 28px; font-size:1rem;">
+                    <i class="fas fa-newspaper"></i> <span data-i18n="home_blog_btn_all">Xem Tất Cả Bài Viết & Mẹo Hay</span> <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
         </div>
     </section>
@@ -234,14 +335,14 @@
                 <img src="tai-nguyen/about-poster.jpg" alt="Poster Kitten Cake - Sweet treats, Happy days">
             </div>
             <div class="about-text">
-                <h2>Về <span class="highlight">Kitten Cake</span></h2>
-                <p>Nằm ẩn mình trong một góc nhỏ yên bình của Quận 7, Kitten Cake mang đến một không gian "chill" đúng điệu cho giới trẻ Sài Thành.</p>
-                <p>Chúng mình đặc biệt nổi tiếng với <strong>dòng bánh Donut 10K nướng mới mỗi ngày</strong>, mềm xốp và đa dạng hương vị. Với biểu tượng chú mèo lười đáng yêu, Kitten Cake hy vọng mỗi chiếc bánh trao tay đều mang lại niềm vui ngọt ngào, vừa túi tiền cho các bạn học sinh - sinh viên.</p>
+                <h2><span data-i18n="about_title_part1">Về</span> <span class="highlight" data-i18n="about_title_highlight">Kitten Cake</span></h2>
+                <p data-i18n="about_p1">Nằm ẩn mình trong một góc nhỏ yên bình của Quận 7, Kitten Cake mang đến một không gian "chill" đúng điệu cho giới trẻ Sài Thành.</p>
+                <p data-i18n="about_p2">Chúng mình đặc biệt nổi tiếng với <strong>dòng bánh Donut 10K nướng mới mỗi ngày</strong>, mềm xốp và đa dạng hương vị. Với biểu tượng chú mèo lười đáng yêu, Kitten Cake hy vọng mỗi chiếc bánh trao tay đều mang lại niềm vui ngọt ngào, vừa túi tiền cho các bạn học sinh - sinh viên.</p>
                 <ul class="about-features">
-                    <li><i class="fas fa-check-circle"></i> Donut nướng mới trong ngày, đồng giá 10K</li>
-                    <li><i class="fas fa-check-circle"></i> Nguyên liệu cao cấp, vị ngọt thanh nhẹ</li>
-                    <li><i class="fas fa-check-circle"></i> Đặt bánh giao ngay</li>
-                    <li><i class="fas fa-check-circle"></i> Phục vụ chu đáo, thân thiện và nhiệt tình</li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="about_feat_1">Donut nướng mới trong ngày, đồng giá 10K</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="about_feat_2">Nguyên liệu cao cấp, vị ngọt thanh nhẹ</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="about_feat_3">Đặt bánh giao ngay</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="about_feat_4">Phục vụ chu đáo, thân thiện và nhiệt tình</span></li>
                 </ul>
             </div>
         </div>
@@ -255,7 +356,7 @@
                     <img src="tai-nguyen/logo.jpg" alt="Kitten Cake Logo">
                     <span class="text-white">Kitten Cake</span>
                 </div>
-                <p>Tiệm bánh ngọt nhỏ xinh tại Quận 7 - Nơi gửi gắm yêu thương qua từng vị ngọt.</p>
+                <p data-i18n="footer_tagline">Tiệm bánh ngọt nhỏ xinh tại Quận 7 - Nơi gửi gắm yêu thương qua từng vị ngọt.</p>
                 <div class="social-links">
                     <a href="https://www.facebook.com/profile.php?id=61594490844705" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
                     <a href="#"><i class="fa-brands fa-instagram"></i></a>
@@ -263,23 +364,23 @@
                 </div>
             </div>
             <div class="footer-links">
-                <h3>Liên hệ đặt bánh</h3>
+                <h3 data-i18n="footer_heading_contact">Liên hệ đặt bánh</h3>
                 <ul>
-                    <li><i class="fas fa-map-marker-alt"></i> Quận 7, TP. Hồ Chí Minh</li>
+                    <li><i class="fas fa-map-marker-alt"></i> <span data-i18n="footer_address_val">Quận 7, TP. Hồ Chí Minh</span></li>
                     <li><i class="fas fa-phone-alt"></i> Hotline: <a href="tel:0898575717" style="color:inherit; text-decoration:none;">0898575717</a></li>
                     <li><i class="fas fa-envelope"></i> Email: <a href="mailto:kittencake7dis@gmail.com" style="color:inherit; text-decoration:none;">kittencake7dis@gmail.com</a></li>
                 </ul>
             </div>
             <div class="footer-links">
-                <h3>Giờ mở cửa</h3>
+                <h3 data-i18n="footer_heading_hours">Giờ mở cửa</h3>
                 <ul>
-                    <li>Thứ 2 - Thứ 6: 08:00 - 22:00</li>
-                    <li>Thứ 7 - CN: 07:30 - 22:30</li>
+                    <li data-i18n="footer_weekdays">Thứ 2 - Thứ 6: 08:00 - 22:00</li>
+                    <li data-i18n="footer_weekends">Thứ 7 - CN: 07:30 - 22:30</li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 Kitten Cake Bakery. Thiết kế bởi chuyên gia Web.</p>
+            <p><span data-i18n="footer_copy">&copy; 2026 Kitten Cake Bakery. Thiết kế bởi chuyên gia Web.</span> • <a href="/admin" target="_blank" style="color:inherit; opacity:0.75; text-decoration:none;"><i class="fas fa-lock"></i> <span data-i18n="footer_admin_link">Quản trị CMS</span></a></p>
         </div>
     </footer>
 
@@ -290,8 +391,8 @@
                 <div class="order-modal-title">
                     <img src="tai-nguyen/logo.jpg" alt="Logo" class="order-modal-logo">
                     <div>
-                        <h3>Đặt Bánh Nhanh</h3>
-                        <span>Kitten Cake Quận 7 gọi lại xác nhận ngay</span>
+                        <h3 data-i18n="quick_order_title">Đặt Bánh Nhanh</h3>
+                        <span data-i18n="quick_order_sub">Kitten Cake Quận 7 gọi lại xác nhận ngay</span>
                     </div>
                 </div>
                 <button class="order-modal-close" id="btnCloseOrderModal">&times;</button>
@@ -307,58 +408,58 @@
                 </div>
 
                 <div class="order-form-group">
-                    <label><i class="fas fa-cookie-bite"></i> Chọn hương vị bánh:</label>
+                    <label><i class="fas fa-cookie-bite"></i> <span data-i18n="quick_order_flavor_lbl">Chọn hương vị bánh:</span></label>
                     <div class="quick-order-flavors" id="quickOrderFlavors">
                         <label class="flavor-radio-pill active">
                             <input type="radio" name="quickFlavor" value="Chocolate Trắng" checked>
-                            <span><i class="fas fa-ice-cream"></i> Chocolate Trắng</span>
+                            <span><i class="fas fa-ice-cream"></i> <span data-i18n="flavor_white_choco">Chocolate Trắng</span></span>
                         </label>
                         <label class="flavor-radio-pill">
                             <input type="radio" name="quickFlavor" value="Matcha">
-                            <span><i class="fas fa-leaf"></i> Matcha</span>
+                            <span><i class="fas fa-leaf"></i> <span data-i18n="flavor_matcha">Matcha</span></span>
                         </label>
                         <label class="flavor-radio-pill">
                             <input type="radio" name="quickFlavor" value="Dâu">
-                            <span><i class="fas fa-heart"></i> Dâu</span>
+                            <span><i class="fas fa-heart"></i> <span data-i18n="flavor_strawberry">Dâu</span></span>
                         </label>
                         <label class="flavor-radio-pill">
                             <input type="radio" name="quickFlavor" value="Chocolate">
-                            <span><i class="fas fa-cookie"></i> Chocolate</span>
+                            <span><i class="fas fa-cookie"></i> <span data-i18n="flavor_choco">Chocolate</span></span>
                         </label>
                     </div>
                 </div>
 
                 <div class="order-form-group">
-                    <label for="orderCustomerName"><i class="fas fa-user"></i> Họ và tên của bạn <span class="required">*</span></label>
-                    <input type="text" id="orderCustomerName" placeholder="Ví dụ: Bạn Ngọc, Anh Hưng..." required>
+                    <label for="orderCustomerName"><i class="fas fa-user"></i> <span data-i18n="quick_order_name_lbl">Họ và tên của bạn</span> <span class="required">*</span></label>
+                    <input type="text" id="orderCustomerName" data-i18n-ph="ph_cust_name" placeholder="Ví dụ: Bạn Ngọc, Anh Hưng..." required>
                 </div>
 
                 <div class="order-form-row">
                     <div class="order-form-group" style="flex:2;">
-                        <label for="orderPhone"><i class="fas fa-phone-alt"></i> Số điện thoại <span class="required">*</span></label>
-                        <input type="tel" id="orderPhone" placeholder="09xx xxx xxx" required>
+                        <label for="orderPhone"><i class="fas fa-phone-alt"></i> <span data-i18n="quick_order_phone_lbl">Số điện thoại</span> <span class="required">*</span></label>
+                        <input type="tel" id="orderPhone" data-i18n-ph="ph_cust_phone" placeholder="09xx xxx xxx" required>
                     </div>
                     <div class="order-form-group" style="flex:1;">
-                        <label for="orderQty"><i class="fas fa-sort-numeric-up"></i> Số lượng</label>
+                        <label for="orderQty"><i class="fas fa-sort-numeric-up"></i> <span data-i18n="quick_order_qty_lbl">Số lượng</span></label>
                         <input type="number" id="orderQty" value="1" min="1" max="99">
                     </div>
                 </div>
 
                 <div class="order-form-group">
-                    <label for="orderNote"><i class="fas fa-comment-dots"></i> Ghi chú / Địa chỉ giao hàng</label>
-                    <textarea id="orderNote" rows="2" placeholder="Ví dụ: Lấy vị socola + dâu, giao tại toà nhà Sunrise City..."></textarea>
+                    <label for="orderNote"><i class="fas fa-comment-dots"></i> <span data-i18n="quick_order_note_lbl">Ghi chú / Địa chỉ giao hàng</span></label>
+                    <textarea id="orderNote" rows="2" data-i18n-ph="ph_note" placeholder="Ví dụ: Lấy vị socola + dâu, giao tại toà nhà Sunrise City..."></textarea>
                 </div>
 
                 <div class="order-form-group">
-                    <label><i class="fas fa-credit-card"></i> Phương thức thanh toán:</label>
+                    <label><i class="fas fa-credit-card"></i> <span data-i18n="payment_heading">Phương thức thanh toán</span>:</label>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;">
                         <label class="quick-pay-opt active" style="display:flex; align-items:center; gap:8px; padding:10px 12px; background:#fff5f7; border:1.5px solid #ffccd5; border-radius:10px; cursor:pointer; font-size:0.85rem; font-weight:700; color:#2f3542;">
                             <input type="radio" name="quickPayment" value="cod" checked style="accent-color:#ff4757;">
-                            <span><i class="fas fa-money-bill-wave" style="color:#2ed573;"></i> Tiền mặt COD</span>
+                            <span><i class="fas fa-money-bill-wave" style="color:#2ed573;"></i> <span data-i18n="method_cod">Tiền mặt COD</span></span>
                         </label>
                         <label class="quick-pay-opt" style="display:flex; align-items:center; gap:8px; padding:10px 12px; background:#fff; border:1.5px solid #eee; border-radius:10px; cursor:pointer; font-size:0.85rem; font-weight:700; color:#2f3542;">
                             <input type="radio" name="quickPayment" value="banking" style="accent-color:#ff4757;">
-                            <span><i class="fas fa-qrcode" style="color:#ff4757;"></i> VietQR VPBank</span>
+                            <span><i class="fas fa-qrcode" style="color:#ff4757;"></i> <span data-i18n="method_banking">VietQR VPBank</span></span>
                         </label>
                     </div>
                 </div>
@@ -366,27 +467,27 @@
                 <!-- VietQR Info Box in Quick Modal -->
                 <div class="quick-vietqr-box" id="quickVietqrBox" style="display:none; background:#fff8f9; border:1.5px dashed #ff9a9e; border-radius:12px; padding:12px 14px; margin-bottom:16px;">
                     <div style="font-size:0.95rem; font-weight:800; color:#ff4757; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
-                        <i class="fas fa-qrcode"></i> Mã VietQR Kitten Cake
+                        <i class="fas fa-qrcode"></i> <span data-i18n="vietqr_box_title">Mã VietQR Kitten Cake</span>
                     </div>
                     <div style="font-size:0.85rem; color:#2f3542; line-height:1.7;">
-                        <div>Ngân hàng: <strong>VPBank (Ngân hàng TMCP Việt Nam Thịnh Vượng)</strong></div>
+                        <div><span data-i18n="lbl_bank">Ngân hàng</span>: <strong>VPBank (Ngân hàng TMCP Việt Nam Thịnh Vượng)</strong></div>
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span>Số TK: <strong style="color:#ff4757; font-size:1rem;">1821004654</strong></span>
-                            <button type="button" class="btn-copy-chip" onclick="navigator.clipboard.writeText('1821004654'); alert('Đã sao chép số tài khoản VPBank!');" style="font-size:0.75rem; padding:2px 8px;"><i class="far fa-copy"></i> Chép</button>
+                            <span><span data-i18n="lbl_acc_num">Số TK</span>: <strong style="color:#ff4757; font-size:1rem;">1821004654</strong></span>
+                            <button type="button" class="btn-copy-chip" onclick="navigator.clipboard.writeText('1821004654'); alert('Đã sao chép số tài khoản VPBank!');" style="font-size:0.75rem; padding:2px 8px;"><i class="far fa-copy"></i> <span data-i18n="btn_copy">Chép</span></button>
                         </div>
-                        <div>Chủ TK: <strong>NGUYEN NGOC CAM VAN</strong></div>
+                        <div><span data-i18n="lbl_acc_name">Chủ TK</span>: <strong>NGUYEN NGOC CAM VAN</strong></div>
                     </div>
                     <div style="text-align:center; margin:10px 0 6px;">
                         <img src="tai-nguyen/qr-vpbank.png" alt="Mã VietQR Kitten Cake" style="max-width:180px; width:100%; border-radius:10px; border:1px solid #ffd8e0; box-shadow:0 3px 10px rgba(0,0,0,0.08);">
                     </div>
                     <div style="font-size:0.78rem; color:#ff4757; font-weight:700; text-align:center; background:#fff; padding:4px 8px; border-radius:6px;">
-                        <i class="fas fa-info-circle"></i> Vui lòng quét mã trên app ngân hàng để chuyển khoản chính xác nhất.
+                        <i class="fas fa-info-circle"></i> <span data-i18n="vietqr_guide">Vui lòng quét mã trên app ngân hàng để chuyển khoản chính xác nhất.</span>
                     </div>
                 </div>
 
                 <div class="order-modal-actions">
                     <button type="submit" class="btn btn-primary btn-submit-order" id="btnSubmitOrder">
-                        <i class="fas fa-paper-plane"></i> Gửi đơn đặt bánh
+                        <i class="fas fa-paper-plane"></i> <span data-i18n="quick_order_submit">Gửi đơn đặt bánh</span>
                     </button>
                     <a href="https://www.facebook.com/profile.php?id=61594490844705" target="_blank" class="btn btn-outline btn-fb-chat" id="btnOrderFbLink">
                         <i class="fa-brands fa-facebook-messenger"></i> Chat Fanpage
@@ -403,7 +504,7 @@
         <div class="mini-cart-header">
             <div class="mini-cart-title">
                 <i class="fas fa-shopping-bag"></i>
-                <span>Giỏ Hàng Của Bạn</span>
+                <span data-i18n="mini_cart_title">Giỏ Hàng Của Bạn</span>
             </div>
             <button class="mini-cart-close" id="closeMiniCartBtn">&times;</button>
         </div>
@@ -412,9 +513,9 @@
             <!-- Empty state -->
             <div class="mini-cart-empty" id="miniCartEmpty" style="display:none;">
                 <div class="empty-icon"><i class="fas fa-cookie"></i></div>
-                <h4>Giỏ hàng đang trống!</h4>
-                <p>Hãy chọn những chiếc bánh Donut 10K thơm ngon để thêm vào giỏ nhé.</p>
-                <a href="#menu" class="btn btn-primary btn-sm btn-continue-shopping">Khám phá thực đơn</a>
+                <h4 data-i18n="mini_cart_empty_title">Giỏ hàng đang trống!</h4>
+                <p data-i18n="mini_cart_empty_desc">Hãy chọn những chiếc bánh Donut 10K thơm ngon để thêm vào giỏ nhé.</p>
+                <a href="#menu" class="btn btn-primary btn-sm btn-continue-shopping" data-i18n="mini_cart_btn_continue">Khám phá thực đơn</a>
             </div>
 
             <!-- Content wrap -->
@@ -428,12 +529,12 @@
 
         <div class="mini-cart-footer">
             <div class="mini-cart-subtotal-row">
-                <span>Tạm tính giỏ hàng:</span>
+                <span data-i18n="mini_cart_subtotal_lbl">Tạm tính giỏ hàng:</span>
                 <strong id="miniCartSubtotal">0đ</strong>
             </div>
             <div class="mini-cart-actions">
                 <a href="cart.html" class="btn btn-primary btn-block">
-                    <i class="fas fa-arrow-right"></i> Xem giỏ hàng & Thanh toán
+                    <i class="fas fa-arrow-right"></i> <span data-i18n="mini_cart_btn_checkout">Xem giỏ hàng & Thanh toán</span>
                 </a>
             </div>
         </div>

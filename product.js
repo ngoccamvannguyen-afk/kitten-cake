@@ -72,15 +72,18 @@ async function syncFooterContact() {
     } catch (e) {}
 }
 
-function renderProductDetails(product) {
+function renderProductDetails(rawProduct) {
+    const isEn = window.KittenI18n && window.KittenI18n.getLang() === 'en';
+    const product = isEn && window.KittenI18n ? window.KittenI18n.getTranslatedProduct(rawProduct) : rawProduct;
+
     // 1. Meta & Title
-    document.title = `${product.name} - Kitten Cake Quận 7`;
+    document.title = `${product.name} - Kitten Cake ${isEn ? 'District 7' : 'Quận 7'}`;
     const breadcrumbItem = document.getElementById('breadcrumbCurrentItem');
     if (breadcrumbItem) breadcrumbItem.textContent = product.name;
 
     // 2. Info
     const tagEl = document.getElementById('pdpTag');
-    if (tagEl) tagEl.textContent = product.tag || '🍩 Món Bánh';
+    if (tagEl) tagEl.textContent = product.tag || (isEn ? '🍩 Signature Item' : '🍩 Món Bánh');
 
     const titleEl = document.getElementById('pdpTitle');
     if (titleEl) titleEl.textContent = product.name;
@@ -106,18 +109,23 @@ function renderProductDetails(product) {
     if (product.inStock === false) {
         if (stockEl) {
             stockEl.className = 'pdp-stock-status out-of-stock';
-            stockEl.innerHTML = '<i class="fas fa-times-circle"></i> Đã hết hàng hôm nay';
+            stockEl.innerHTML = `<i class="fas fa-times-circle"></i> ${isEn ? 'Sold out today' : 'Đã hết hàng hôm nay'}`;
         }
         if (btnAdd) {
             btnAdd.disabled = true;
-            btnAdd.innerHTML = '<i class="fas fa-ban"></i> Tạm hết bánh';
+            btnAdd.innerHTML = `<i class="fas fa-ban"></i> ${isEn ? 'Out of Stock' : 'Tạm hết bánh'}`;
         }
         if (btnBuy) btnBuy.disabled = true;
     } else {
         if (stockEl) {
             stockEl.className = 'pdp-stock-status in-stock';
-            stockEl.innerHTML = '<i class="fas fa-check-circle"></i> Đang nướng sẵn tại tiệm';
+            stockEl.innerHTML = `<i class="fas fa-check-circle"></i> ${isEn ? 'Freshly baked in store' : 'Đang nướng sẵn tại tiệm'}`;
         }
+        if (btnAdd) {
+            btnAdd.disabled = false;
+            btnAdd.innerHTML = `<i class="fas fa-cart-plus"></i> <span data-i18n="pdp_btn_add_cart">${isEn ? 'Add to Cart' : 'Thêm vào giỏ hàng'}</span>`;
+        }
+        if (btnBuy) btnBuy.disabled = false;
     }
 
     // 4. Image Gallery
@@ -180,9 +188,31 @@ function renderProductDetails(product) {
         return f;
     });
 
+    function getFlavorDisplayName(name) {
+        if (window.KittenI18n && window.KittenI18n.getLang() === 'en') {
+            if (name.includes('Choco')) return 'Choco Flavor';
+            if (name.includes('Vani') || name.includes('White')) return 'Vanilla Flavor';
+            if (name.includes('Matcha')) return 'Matcha Flavor';
+            if (name.includes('Dâu')) return 'Strawberry Flavor';
+        }
+        return name;
+    }
+
+    function getToppingDisplayName(name) {
+        if (window.KittenI18n && window.KittenI18n.getLang() === 'en') {
+            if (name.includes('Oreo')) return 'Oreo Crumbs';
+            if (name.includes('điều')) return 'Cashew Nuts';
+            if (name.includes('Marshmallow')) return 'Marshmallow';
+            if (name.includes('chocolate') || name.includes('Socola')) return 'Chocolate Chips';
+            if (name.includes('dâu') || name.includes('Dâu')) return 'Dried Strawberry';
+            if (name.includes('cốm') || name.includes('Cốm')) return 'Rainbow Sprinkles';
+        }
+        return name;
+    }
+
     selectedFlavor = flavors[0].name;
     selectedFlavorImage = flavors[0].image || gallery[0];
-    if (flavorDisplay) flavorDisplay.textContent = selectedFlavor;
+    if (flavorDisplay) flavorDisplay.textContent = getFlavorDisplayName(selectedFlavor);
     selectMainImage(selectedFlavorImage);
 
     if (flavorContainer) {
@@ -192,9 +222,11 @@ function renderProductDetails(product) {
             pill.type = 'button';
             pill.className = `flavor-pill visual-pill ${index === 0 ? 'active' : ''}`;
 
+            const displayName = getFlavorDisplayName(flavorObj.name);
+
             pill.innerHTML = `
-                <img src="${flavorObj.image}" alt="${flavorObj.name}" class="flavor-mini-thumb">
-                <span>${flavorObj.name}</span>
+                <img src="${flavorObj.image}" alt="${displayName}" class="flavor-mini-thumb">
+                <span>${displayName}</span>
                 <i class="fas fa-check checkmark"></i>
             `;
 
@@ -203,7 +235,7 @@ function renderProductDetails(product) {
                 pill.classList.add('active');
                 selectedFlavor = flavorObj.name;
                 selectedFlavorImage = flavorObj.image;
-                if (flavorDisplay) flavorDisplay.textContent = flavorObj.name;
+                if (flavorDisplay) flavorDisplay.textContent = getFlavorDisplayName(flavorObj.name);
 
                 // Tự động chuyển đổi hình ảnh minh họa tương ứng với vị đã chọn
                 selectMainImage(flavorObj.image);
@@ -243,10 +275,13 @@ function renderProductDetails(product) {
                 const pill = document.createElement('button');
                 pill.type = 'button';
                 pill.className = 'topping-pill';
+                const dispTopName = getToppingDisplayName(top.name);
+                const dispTopPrice = isEn ? '+$0.12' : '+3k';
+
                 pill.innerHTML = `
                     <span class="topping-check"><i class="fas fa-check"></i></span>
-                    <span class="topping-name">${top.name}</span>
-                    <span class="topping-price">+3k</span>
+                    <span class="topping-name">${dispTopName}</span>
+                    <span class="topping-price">${dispTopPrice}</span>
                 `;
 
                 pill.addEventListener('click', () => {
@@ -260,7 +295,7 @@ function renderProductDetails(product) {
                     }
 
                     if (toppingCountEl) {
-                        toppingCountEl.textContent = `Đã chọn: ${selectedToppings.length}`;
+                        toppingCountEl.textContent = `${isEn ? 'Selected:' : 'Đã chọn:'} ${selectedToppings.length}`;
                     }
 
                     updateSubtotalPreview();
@@ -275,15 +310,23 @@ function renderProductDetails(product) {
     const details = product.details || {};
     const ingEl = document.getElementById('pdpDetailIngredients');
     if (ingEl) {
-        ingEl.textContent = details.ingredients || 'Bột mì Nhật cao cấp, Bơ lạt New Zealand, Men tự nhiên, Trứng gà tươi, Socola Bỉ nguyên chất và sốt trái cây tươi.';
+        ingEl.textContent = details.ingredients || (isEn 
+            ? 'Premium Japanese flour, New Zealand butter, natural yeast, fresh eggs, pure Belgian chocolate.'
+            : 'Bột mì Nhật cao cấp, Bơ lạt New Zealand, Men tự nhiên, Trứng gà tươi, Socola Bỉ nguyên chất.');
     }
 
     const shelfEl = document.getElementById('pdpDetailShelfLife');
     if (shelfEl) {
-        shelfEl.textContent = details.shelfLife || 'Ngon nhất trong ngày, bảo quản mát 2-3 ngày trong ngăn mát tủ lạnh.';
+        shelfEl.textContent = details.shelfLife || (isEn
+            ? 'Best enjoyed on the same day, or keep chilled for 2-3 days in refrigerator.'
+            : 'Ngon nhất trong ngày, bảo quản mát 2-3 ngày trong ngăn mát tủ lạnh.');
     }
 
     updateSubtotalPreview();
+
+    if (window.KittenI18n && window.KittenI18n.applyTranslations) {
+        window.KittenI18n.applyTranslations();
+    }
 }
 
 function updateSubtotalPreview() {
@@ -297,21 +340,37 @@ function updateSubtotalPreview() {
     const toppingsExtra = selectedToppings.length * 3000;
     const unitPrice = basePrice + toppingsExtra;
 
+    const isEn = window.KittenI18n && window.KittenI18n.getLang() === 'en';
+    const priceFormatter = isEn ? (val) => window.KittenI18n.formatMoney(val) : formatCurrency;
+
     const priceEl = document.getElementById('pdpPrice');
     if (priceEl) {
         if (toppingsExtra > 0) {
-            priceEl.innerHTML = `${formatCurrency(unitPrice)} <small style="font-size:0.9rem; color:#747d8c; font-weight:600;">(${formatCurrency(basePrice)} + ${formatCurrency(toppingsExtra)} topping)</small>`;
+            priceEl.innerHTML = `${priceFormatter(unitPrice)} <small style="font-size:0.9rem; color:#747d8c; font-weight:600;">(${formatCurrency(basePrice)} + ${formatCurrency(toppingsExtra)} topping)</small>`;
         } else {
-            priceEl.textContent = formatCurrency(unitPrice);
+            priceEl.textContent = priceFormatter(unitPrice);
         }
     }
 
     const subtotal = unitPrice * currentQuantity;
     const subtotalDisplay = document.getElementById('pdpSubtotalDisplay');
     if (subtotalDisplay) {
-        subtotalDisplay.textContent = formatCurrency(subtotal);
+        subtotalDisplay.textContent = priceFormatter(subtotal);
     }
 }
+
+window.addEventListener('languageChanged', () => {
+    if (currentProduct) {
+        renderProductDetails(currentProduct);
+    }
+    if (window._currentRelatedProducts) {
+        renderRelatedProducts(window._currentRelatedProducts);
+    }
+    updateSubtotalPreview();
+    if (window.KittenI18n && window.KittenI18n.applyTranslations) {
+        window.KittenI18n.applyTranslations();
+    }
+});
 
 function setupEvents() {
     // Quantity Minus
@@ -419,6 +478,7 @@ function setupTabs() {
 }
 
 function renderRelatedProducts(products) {
+    window._currentRelatedProducts = products;
     const grid = document.getElementById('relatedProductsGrid');
     if (!grid) return;
 
@@ -428,31 +488,41 @@ function renderRelatedProducts(products) {
         return;
     }
 
-    products.forEach(item => {
+    const isEn = window.KittenI18n && window.KittenI18n.getLang() === 'en';
+    const priceFormatter = isEn ? (v) => window.KittenI18n.formatMoney(v) : formatCurrency;
+
+    products.forEach(rawItem => {
+        const item = isEn && window.KittenI18n ? window.KittenI18n.getTranslatedProduct(rawItem) : rawItem;
         const card = document.createElement('div');
         card.className = `menu-item ${item.isFeatured ? 'featured' : ''}`;
+        const subtext = item.unitSubtext || (item.id === 'menu_1' 
+            ? (isEn ? 'Flat 10K (~$0.40)' : 'Đồng giá 10K') 
+            : ((item.id === 'menu_3' || item.id === 'menu_4') 
+                ? (isEn ? 'Chilled Cake' : 'Bánh hũ lạnh') 
+                : (isEn ? 'Freshly Baked' : 'Bánh nướng nóng')));
+
         card.innerHTML = `
             ${item.badge ? `<span class="hot-badge"><i class="fas fa-fire"></i> ${item.badge}</span>` : ''}
             <div class="menu-img">
-                <a href="product.html?id=${item.id}">
+                <a href="product.html?id=${rawItem.id}">
                     <img src="${item.image}" alt="${item.name}">
                 </a>
             </div>
             <div class="menu-info">
-                <span class="item-tag">${item.tag || '🍩 Món Bánh'}</span>
-                <h3><a href="product.html?id=${item.id}" style="color:inherit; text-decoration:none;">${item.name}</a></h3>
+                <span class="item-tag">${item.tag || (isEn ? '🍩 Cake' : '🍩 Món Bánh')}</span>
+                <h3><a href="product.html?id=${rawItem.id}" style="color:inherit; text-decoration:none;">${item.name}</a></h3>
                 <p>${item.description || ''}</p>
                 <div class="menu-card-bottom">
                     <div class="menu-price-row">
-                        <div class="menu-price">${formatCurrency(item.price)}</div>
-                        <span class="menu-price-subtext">${item.id === 'menu_1' ? 'Đồng giá 10K' : (item.id === 'menu_3' || item.id === 'menu_4' ? 'Bánh hũ lạnh' : 'Bánh nướng nóng')}</span>
+                        <div class="menu-price">${priceFormatter(item.price)}</div>
+                        <span class="menu-price-subtext">${subtext}</span>
                     </div>
                     <div class="menu-card-actions">
-                        <a href="product.html?id=${item.id}" class="menu-order-btn btn-view-detail" title="Xem chi tiết bánh">
-                            <i class="fas fa-eye"></i> Chi tiết
+                        <a href="product.html?id=${rawItem.id}" class="menu-order-btn btn-view-detail" title="${isEn ? 'View Cake Details' : 'Xem chi tiết bánh'}">
+                            <i class="fas fa-eye"></i> ${isEn ? 'Details' : 'Chi tiết'}
                         </a>
-                        <button type="button" class="menu-order-btn btn-quick-add-cart" data-item-id="${item.id}" title="Thêm vào giỏ hàng">
-                            <i class="fas fa-cart-plus"></i> Thêm giỏ
+                        <button type="button" class="menu-order-btn btn-quick-add-cart" data-item-id="${rawItem.id}" title="${isEn ? 'Add to Cart' : 'Thêm vào giỏ hàng'}">
+                            <i class="fas fa-cart-plus"></i> ${isEn ? 'Add to Cart' : 'Thêm giỏ'}
                         </button>
                     </div>
                 </div>
@@ -460,6 +530,10 @@ function renderRelatedProducts(products) {
         `;
         grid.appendChild(card);
     });
+
+    if (window.KittenI18n && typeof window.KittenI18n.scanAndTranslateDynamic === 'function') {
+        window.KittenI18n.scanAndTranslateDynamic(grid);
+    }
 
     // Lắng nghe nút Thêm giỏ từ sản phẩm gợi ý
     grid.addEventListener('click', (e) => {
@@ -469,7 +543,7 @@ function renderRelatedProducts(products) {
             const itemId = quickAddBtn.getAttribute('data-item-id');
             const targetItem = products.find(p => p.id === itemId);
             if (targetItem && window.KittenCart) {
-                let flavorName = 'Vị Chuẩn Signature';
+                let flavorName = isEn ? 'Signature Flavor' : 'Vị Chuẩn Signature';
                 let itemImage = targetItem.image || 'tai-nguyen/donut-choco.jpg';
                 if (targetItem.flavors && targetItem.flavors.length > 0) {
                     const f0 = targetItem.flavors[0];
@@ -496,6 +570,9 @@ function renderRelatedProducts(products) {
 
 function formatCurrency(val) {
     if (isNaN(val)) return '0đ';
+    if (window.KittenI18n && typeof window.KittenI18n.formatMoney === 'function') {
+        return window.KittenI18n.formatMoney(val);
+    }
     return Number(val).toLocaleString('vi-VN') + 'đ';
 }
 

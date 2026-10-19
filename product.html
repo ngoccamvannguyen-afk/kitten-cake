@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="i18n.js"></script>
 </head>
 <body class="pdp-page">
 
@@ -21,20 +22,21 @@
             </a>
             <nav class="nav">
                 <ul class="nav-list">
-                    <li><a href="index.html#home">Trang chủ</a></li>
-                    <li><a href="index.html#menu" class="active">Thực đơn</a></li>
-                    <li><a href="index.html#gallery">Hình ảnh</a></li>
-                    <li><a href="index.html#about">Về tiệm</a></li>
-                    <li><a href="cart.html">Giỏ hàng</a></li>
+                    <li><a href="index.html"><span data-i18n="nav_home">Trang chủ</span></a></li>
+                    <li><a href="products.html" class="active"><span data-i18n="nav_menu">Thực đơn</span></a></li>
+                    <li><a href="blog.html"><span data-i18n="nav_blog">Bài viết</span></a></li>
+                    <li><a href="order-tracking.html"><span data-i18n="nav_tracking">Tra cứu</span></a></li>
+                    <li><a href="cart.html"><span data-i18n="nav_cart">Giỏ hàng</span></a></li>
                 </ul>
             </nav>
             <div class="header-right-actions">
+                <div class="lang-switcher-wrap"></div>
                 <button class="cart-trigger-btn" id="openMiniCartBtn" title="Xem giỏ hàng">
                     <i class="fas fa-shopping-bag"></i>
                     <span class="cart-count-badge" id="cartCountBadge" style="display:none;">0</span>
                 </button>
                 <a href="cart.html" class="btn btn-primary header-cart-link">
-                    <i class="fas fa-credit-card"></i> Thanh toán
+                    <i class="fas fa-credit-card"></i> <span data-i18n="nav_checkout">Thanh toán</span>
                 </a>
             </div>
             <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
@@ -45,11 +47,11 @@
     <div class="breadcrumb-bar">
         <div class="container">
             <ul class="breadcrumb-list">
-                <li><a href="index.html"><i class="fas fa-home"></i> Trang chủ</a></li>
+                <li><a href="index.html"><i class="fas fa-home"></i> <span data-i18n="bc_home">Trang chủ</span></a></li>
                 <li><i class="fas fa-chevron-right"></i></li>
-                <li><a href="index.html#menu">Thực đơn bánh</a></li>
+                <li><a href="products.html" data-i18n="bc_menu">Thực đơn bánh</a></li>
                 <li><i class="fas fa-chevron-right"></i></li>
-                <li id="breadcrumbCurrentItem" class="active">Chi tiết món bánh</li>
+                <li id="breadcrumbCurrentItem" class="active" data-i18n="bc_pdp">Chi tiết món bánh</li>
             </ul>
         </div>
     </div>
@@ -73,22 +75,22 @@
                         <div class="trust-item">
                             <i class="fas fa-fire-alt"></i>
                             <div>
-                                <strong>Nướng mới mỗi sáng</strong>
-                                <span>Ra lò lúc 7:30 và 14:00</span>
+                                <strong data-i18n="trust_baked_title">Nướng mới mỗi sáng</strong>
+                                <span data-i18n="trust_baked_sub">Ra lò lúc 7:30 và 14:00</span>
                             </div>
                         </div>
                         <div class="trust-item">
                             <i class="fas fa-shipping-fast"></i>
                             <div>
-                                <strong>Giao nhanh Quận 7</strong>
-                                <span>Nhận bánh nóng 30-45 phút</span>
+                                <strong data-i18n="trust_ship_title">Giao nhanh Quận 7</strong>
+                                <span data-i18n="trust_ship_sub">Nhận bánh nóng 30-45 phút</span>
                             </div>
                         </div>
                         <div class="trust-item">
                             <i class="fas fa-heart"></i>
                             <div>
-                                <strong>Nguyên liệu chuẩn Nhật</strong>
-                                <span>Vị ngọt thanh dịu, không ngấy</span>
+                                <strong data-i18n="trust_ingr_title">Nguyên liệu chuẩn Nhật</strong>
+                                <span data-i18n="trust_ingr_sub">Vị ngọt thanh dịu, không ngấy</span>
                             </div>
                         </div>
                     </div>
@@ -107,14 +109,14 @@
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                         </div>
-                        <span class="rating-text">5.0 / 5</span>
-                        <span class="rating-count">(Hơn 180 bạn trẻ Quận 7 yêu thích)</span>
+                        <span class="rating-text" data-i18n="pdp_rating_text">5.0 / 5</span>
+                        <span class="rating-count" data-i18n="pdp_rating_count">(Hơn 180 bạn trẻ Quận 7 yêu thích)</span>
                     </div>
 
                     <div class="pdp-price-wrap">
                         <div class="pdp-price" id="pdpPrice">10.000đ</div>
                         <div class="pdp-stock-status in-stock" id="pdpStockStatus">
-                            <i class="fas fa-check-circle"></i> Đang nướng sẵn tại tiệm
+                            <i class="fas fa-check-circle"></i> <span data-i18n="pdp_in_stock">Đang nướng sẵn tại tiệm</span>
                         </div>
                     </div>
 
@@ -124,14 +126,14 @@
 
                     <!-- Combo Promo Highlight -->
                     <div class="pdp-promo-card">
-                        <div class="promo-badge"><i class="fas fa-gift"></i> ƯU ĐÃI COMBO</div>
-                        <p>Mua <strong>5 chiếc tặng 1 chiếc</strong>: Bỏ đủ <strong>6 chiếc bánh vào giỏ hàng</strong>, hệ thống sẽ tự động <strong>MIỄN PHÍ 1 chiếc có giá thấp nhất</strong>!</p>
+                        <div class="promo-badge"><i class="fas fa-gift"></i> <span data-i18n="pdp_combo_badge">ƯU ĐÃI COMBO</span></div>
+                        <p data-i18n="pdp_combo_text">Mua <strong>5 chiếc tặng 1 chiếc</strong>: Bỏ đủ <strong>6 chiếc bánh vào giỏ hàng</strong>, hệ thống sẽ tự động <strong>MIỄN PHÍ 1 chiếc có giá thấp nhất</strong>!</p>
                     </div>
 
                     <!-- Flavor Selection -->
                     <div class="pdp-option-group">
                         <label class="option-label">
-                            <i class="fas fa-cookie-bite"></i> Chọn vị bánh:
+                            <i class="fas fa-cookie-bite"></i> <span data-i18n="pdp_lbl_flavor">Chọn vị bánh:</span>
                             <span class="selected-flavor-name" id="selectedFlavorName">Vị Choco</span>
                         </label>
                         <div class="flavor-selector" id="flavorSelector">
@@ -143,10 +145,10 @@
                     <div class="pdp-option-group" id="pdpToppingsGroup">
                         <div class="option-label-wrap" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                             <label class="option-label" style="margin-bottom:0;">
-                                <i class="fas fa-sparkles"></i> Thêm Topping thơm giòn:
-                                <span class="topping-badge-tag">+3.000đ / loại</span>
+                                <i class="fas fa-sparkles"></i> <span data-i18n="pdp_lbl_topping">Thêm Topping thơm giòn:</span>
+                                <span class="topping-badge-tag" data-i18n="pdp_topping_price">+3.000đ / loại</span>
                             </label>
-                            <span class="selected-toppings-count" id="selectedToppingsCount" style="font-size:0.85rem; color:#ff6b81; font-weight:700;">Đã chọn: 0</span>
+                            <span class="selected-toppings-count" id="selectedToppingsCount" style="font-size:0.85rem; color:#ff6b81; font-weight:700;"><span data-i18n="pdp_topping_selected">Đã chọn:</span> 0</span>
                         </div>
                         <div class="topping-selector" id="toppingSelector">
                             <!-- Dynamic Toppings Checkbox Pills -->
@@ -155,7 +157,7 @@
 
                     <!-- Quantity & Subtotal -->
                     <div class="pdp-option-group">
-                        <label class="option-label"><i class="fas fa-sort-numeric-up-alt"></i> Số lượng:</label>
+                        <label class="option-label"><i class="fas fa-sort-numeric-up-alt"></i> <span data-i18n="pdp_lbl_qty">Số lượng:</span></label>
                         <div class="pdp-qty-row">
                             <div class="pdp-qty-ctrl">
                                 <button type="button" id="btnPdpQtyMinus" class="btn-qty-pdp"><i class="fas fa-minus"></i></button>
@@ -163,7 +165,7 @@
                                 <button type="button" id="btnPdpQtyPlus" class="btn-qty-pdp"><i class="fas fa-plus"></i></button>
                             </div>
                             <div class="pdp-subtotal-preview">
-                                <span>Tạm tính:</span>
+                                <span data-i18n="pdp_subtotal">Tạm tính:</span>
                                 <strong id="pdpSubtotalDisplay">10.000đ</strong>
                             </div>
                         </div>
@@ -172,18 +174,18 @@
                     <!-- Action Buttons -->
                     <div class="pdp-actions">
                         <button type="button" class="btn btn-primary btn-add-to-cart" id="btnAddToCart">
-                            <i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng
+                            <i class="fas fa-cart-plus"></i> <span data-i18n="pdp_btn_add_cart">Thêm vào giỏ hàng</span>
                         </button>
                         <button type="button" class="btn btn-accent btn-buy-now" id="btnBuyNow">
-                            <i class="fas fa-bolt"></i> Mua ngay
+                            <i class="fas fa-bolt"></i> <span data-i18n="pdp_btn_buy_now">Mua ngay</span>
                         </button>
                     </div>
 
                     <!-- Quick Contact Link -->
                     <div class="pdp-quick-contact">
-                        <span>Cần đặt hộp quà tặng số lượng lớn?</span>
+                        <span data-i18n="pdp_large_order">Cần đặt hộp quà tặng số lượng lớn?</span>
                         <a href="https://www.facebook.com/profile.php?id=61594490844705" target="_blank">
-                            <i class="fa-brands fa-facebook-messenger"></i> Nhắn tin Fanpage Kitten Cake
+                            <i class="fa-brands fa-facebook-messenger"></i> <span data-i18n="pdp_chat_link">Nhắn tin Fanpage Kitten Cake</span>
                         </a>
                     </div>
                 </div>
@@ -194,62 +196,62 @@
             <div class="pdp-tabs-container">
                 <div class="pdp-tabs-nav">
                     <button class="pdp-tab-btn active" data-tab="tab-ingredients">
-                        <i class="fas fa-utensils"></i> Thành phần & Hương vị
+                        <i class="fas fa-utensils"></i> <span data-i18n="tab_ingredients">Thành phần & Hương vị</span>
                     </button>
                     <button class="pdp-tab-btn" data-tab="tab-preservation">
-                        <i class="fas fa-shield-alt"></i> Hướng dẫn bảo quản
+                        <i class="fas fa-shield-alt"></i> <span data-i18n="tab_preservation">Hướng dẫn bảo quản</span>
                     </button>
                     <button class="pdp-tab-btn" data-tab="tab-shipping">
-                        <i class="fas fa-motorcycle"></i> Giao hàng & Đóng gói
+                        <i class="fas fa-motorcycle"></i> <span data-i18n="tab_shipping">Giao hàng & Đóng gói</span>
                     </button>
                 </div>
 
                 <div class="pdp-tab-content active" id="tab-ingredients">
                     <div class="tab-card">
-                        <h3>Nguyên liệu làm bánh chất lượng</h3>
+                        <h3 data-i18n="pdp_tab1_title">Nguyên liệu làm bánh chất lượng</h3>
                         <p id="pdpDetailIngredients">Bột mì Nhật cao cấp, Bơ lạt New Zealand, Men tự nhiên, Trứng gà tươi, Socola Bỉ nguyên chất.</p>
                         <ul class="tab-list">
-                            <li><i class="fas fa-check"></i> Không chất bảo quản nhân tạo hay phẩm màu độc hại.</li>
-                            <li><i class="fas fa-check"></i> Vị ngọt được gia giảm theo chuẩn Healthy, thích hợp cho các bạn trẻ ăn vặt mỗi ngày.</li>
-                            <li><i class="fas fa-check"></i> Bánh nướng trực tiếp trong ngày tại lò bánh Quận 7.</li>
+                            <li data-i18n="pdp_tab1_li1"><i class="fas fa-check"></i> Không chất bảo quản nhân tạo hay phẩm màu độc hại.</li>
+                            <li data-i18n="pdp_tab1_li2"><i class="fas fa-check"></i> Vị ngọt được gia giảm theo chuẩn Healthy, thích hợp cho các bạn trẻ ăn vặt mỗi ngày.</li>
+                            <li data-i18n="pdp_tab1_li3"><i class="fas fa-check"></i> Bánh nướng trực tiếp trong ngày tại lò bánh Quận 7.</li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="pdp-tab-content" id="tab-preservation">
                     <div class="tab-card">
-                        <h3>Thời gian sử dụng & Bảo quản tốt nhất</h3>
+                        <h3 data-i18n="pdp_tab2_title">Thời gian sử dụng & Bảo quản tốt nhất</h3>
                         <p id="pdpDetailShelfLife">Ngon nhất trong ngày, bảo quản mát 2-3 ngày trong ngăn mát tủ lạnh.</p>
                         <div class="tips-box">
-                            <strong><i class="fas fa-lightbulb"></i> Mẹo nhỏ khi thưởng thức:</strong>
-                            <p>Nếu để ngăn mát tủ lạnh, bạn có thể quay lò vi sóng từ 10 - 15 giây hoặc nồi chiên không dầu 120°C trong 2 phút để lớp vỏ bánh mềm nóng xốp như vừa mới ra lò!</p>
+                            <strong data-i18n="pdp_tab2_tips_head"><i class="fas fa-lightbulb"></i> Mẹo nhỏ khi thưởng thức:</strong>
+                            <p data-i18n="pdp_tab2_tips_desc">Nếu để ngăn mát tủ lạnh, bạn có thể quay lò vi sóng từ 10 - 15 giây hoặc nồi chiên không dầu 120°C trong 2 phút để lớp vỏ bánh mềm nóng xốp như vừa mới ra lò!</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="pdp-tab-content" id="tab-shipping">
                     <div class="tab-card">
-                        <h3>Chính sách giao hàng Kitten Cake</h3>
+                        <h3 data-i18n="pdp_tab3_title">Chính sách giao hàng Kitten Cake</h3>
                         <div class="shipping-info-grid">
                             <div class="shipping-item">
                                 <i class="fas fa-map-marker-alt"></i>
                                 <div>
-                                    <strong>Nội thành Quận 7:</strong>
-                                    <p>Đồng giá 15.000đ • Giao nhanh trong 30-45 phút.</p>
+                                    <strong data-i18n="pdp_tab3_d7_title">Nội thành Quận 7:</strong>
+                                    <p data-i18n="pdp_tab3_d7_desc">Đồng giá 15.000đ • Giao nhanh trong 30-45 phút.</p>
                                 </div>
                             </div>
                             <div class="shipping-item">
                                 <i class="fas fa-city"></i>
                                 <div>
-                                    <strong>Quận lân cận (Q1, Q4, Q8, Nhà Bè):</strong>
-                                    <p>Đồng giá 25.000đ • Giao trong 45-60 phút.</p>
+                                    <strong data-i18n="pdp_tab3_other_title">Quận lân cận (Q1, Q4, Q8, Nhà Bè):</strong>
+                                    <p data-i18n="pdp_tab3_other_desc">Đồng giá 25.000đ • Giao trong 45-60 phút.</p>
                                 </div>
                             </div>
                             <div class="shipping-item">
                                 <i class="fas fa-gift"></i>
                                 <div>
-                                    <strong>Miễn phí giao hàng:</strong>
-                                    <p>Đơn hàng từ 120.000đ trở lên được miễn phí ship toàn bộ!</p>
+                                    <strong data-i18n="pdp_tab3_free_title">Miễn phí giao hàng:</strong>
+                                    <p data-i18n="pdp_tab3_free_desc">Đơn hàng từ 120.000đ trở lên được miễn phí ship toàn bộ!</p>
                                 </div>
                             </div>
                         </div>
@@ -260,8 +262,8 @@
             <!-- Related Products Section -->
             <div class="related-section">
                 <div class="section-title">
-                    <h2>Món Ngon <span class="highlight">Thường Mua Kèm</span></h2>
-                    <p>Khám phá thêm các món bánh thơm ngon khác được các tín đồ đồ ngọt yêu thích.</p>
+                    <h2 data-i18n="pdp_related_title">Món Ngon <span class="highlight">Thường Mua Kèm</span></h2>
+                    <p data-i18n="pdp_related_subtitle">Khám phá thêm các món bánh thơm ngon khác được các tín đồ đồ ngọt yêu thích.</p>
                 </div>
                 <div class="menu-grid" id="relatedProductsGrid">
                     <!-- Dynamic related cards -->
@@ -279,7 +281,7 @@
                     <img src="tai-nguyen/logo.jpg" alt="Kitten Cake Logo">
                     <span class="text-white">Kitten Cake</span>
                 </div>
-                <p>Tiệm bánh ngọt nhỏ xinh tại Quận 7 - Nơi gửi gắm yêu thương qua từng vị ngọt.</p>
+                <p data-i18n="footer_tagline">Tiệm bánh ngọt nhỏ xinh tại Quận 7 - Nơi gửi gắm yêu thương qua từng vị ngọt.</p>
                 <div class="social-links">
                     <a href="https://www.facebook.com/profile.php?id=61594490844705" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
                     <a href="#"><i class="fa-brands fa-instagram"></i></a>
@@ -287,23 +289,23 @@
                 </div>
             </div>
             <div class="footer-links">
-                <h3>Liên hệ đặt bánh</h3>
+                <h3 data-i18n="footer_heading_contact">Liên hệ đặt bánh</h3>
                 <ul>
-                    <li><i class="fas fa-map-marker-alt"></i> Quận 7, TP. Hồ Chí Minh</li>
+                    <li><i class="fas fa-map-marker-alt"></i> <span data-i18n="footer_address_val">Quận 7, TP. Hồ Chí Minh</span></li>
                     <li><i class="fas fa-phone-alt"></i> Hotline: <a href="tel:0898575717" style="color:inherit; text-decoration:none;">0898575717</a></li>
                     <li><i class="fas fa-envelope"></i> Email: <a href="mailto:kittencake7dis@gmail.com" style="color:inherit; text-decoration:none;">kittencake7dis@gmail.com</a></li>
                 </ul>
             </div>
             <div class="footer-links">
-                <h3>Giờ mở cửa</h3>
+                <h3 data-i18n="footer_heading_hours">Giờ mở cửa</h3>
                 <ul>
-                    <li>Thứ 2 - Thứ 6: 08:00 - 22:00</li>
-                    <li>Thứ 7 - CN: 07:30 - 22:30</li>
+                    <li data-i18n="footer_weekdays">Thứ 2 - Thứ 6: 08:00 - 22:00</li>
+                    <li data-i18n="footer_weekends">Thứ 7 - CN: 07:30 - 22:30</li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 Kitten Cake Bakery. Thiết kế bởi chuyên gia Web.</p>
+            <p data-i18n="footer_copy">&copy; 2026 Kitten Cake Bakery. Thiết kế bởi chuyên gia Web.</p>
         </div>
     </footer>
 
@@ -313,7 +315,7 @@
         <div class="mini-cart-header">
             <div class="mini-cart-title">
                 <i class="fas fa-shopping-bag"></i>
-                <span>Giỏ Hàng Của Bạn</span>
+                <span data-i18n="mini_cart_title">Giỏ Hàng Của Bạn</span>
             </div>
             <button class="mini-cart-close" id="closeMiniCartBtn">&times;</button>
         </div>
@@ -322,9 +324,9 @@
             <!-- Empty state -->
             <div class="mini-cart-empty" id="miniCartEmpty" style="display:none;">
                 <div class="empty-icon"><i class="fas fa-cookie"></i></div>
-                <h4>Giỏ hàng đang trống!</h4>
-                <p>Hãy chọn những chiếc bánh Donut 10K thơm ngon để thêm vào giỏ nhé.</p>
-                <a href="index.html#menu" class="btn btn-primary btn-sm btn-continue-shopping">Khám phá thực đơn</a>
+                <h4 data-i18n="mini_cart_empty_title">Giỏ hàng đang trống!</h4>
+                <p data-i18n="mini_cart_empty_desc">Hãy chọn những chiếc bánh Donut 10K thơm ngon để thêm vào giỏ nhé.</p>
+                <a href="index.html#menu" class="btn btn-primary btn-sm btn-continue-shopping" data-i18n="mini_cart_btn_continue">Khám phá thực đơn</a>
             </div>
 
             <!-- Content wrap -->
@@ -338,11 +340,11 @@
 
         <div class="mini-cart-footer">
             <div class="mini-cart-subtotal-row">
-                <span>Tạm tính giỏ hàng:</span>
+                <span data-i18n="mini_cart_subtotal_lbl">Tạm tính giỏ hàng:</span>
                 <strong id="miniCartSubtotal">0đ</strong>
             </div>
             <div class="mini-cart-actions">
-                <a href="cart.html" class="btn btn-primary btn-block">
+                <a href="cart.html" class="btn btn-primary btn-block" data-i18n="mini_cart_btn_checkout">
                     <i class="fas fa-arrow-right"></i> Xem giỏ hàng & Thanh toán
                 </a>
             </div>

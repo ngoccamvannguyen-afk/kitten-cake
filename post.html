@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Viết & Mẹo Bánh - Kitten Cake Quận 7</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="i18n.js"></script>
+</head>
+<body class="post-detail-page">
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo" style="text-decoration:none;">
+                <img src="tai-nguyen/logo.jpg" alt="Kitten Cake Logo">
+                <span>Kitten Cake</span>
+            </a>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="index.html"><span data-i18n="nav_home">Trang chủ</span></a></li>
+                    <li><a href="products.html"><span data-i18n="nav_menu">Thực đơn</span></a></li>
+                    <li><a href="blog.html" class="active"><span data-i18n="nav_blog">Bài viết</span></a></li>
+                    <li><a href="order-tracking.html"><span data-i18n="nav_tracking">Tra cứu</span></a></li>
+                    <li><a href="index.html#about"><span data-i18n="nav_about">Về tiệm</span></a></li>
+                    <li><a href="index.html#contact"><span data-i18n="nav_contact">Liên hệ</span></a></li>
+                </ul>
+            </nav>
+            <div class="header-btn">
+                <div class="lang-switcher-wrap"></div>
+                <button class="cart-trigger-btn" id="openMiniCartBtn" title="Xem giỏ hàng">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count-badge" id="cartCountBadge" style="display:none;">0</span>
+                </button>
+                <a href="cart.html" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> <span data-i18n="nav_cart">Giỏ hàng</span></a>
+            </div>
+            <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-bar">
+        <div class="container">
+            <ul class="breadcrumb-list">
+                <li><a href="index.html"><i class="fas fa-home"></i> <span data-i18n="bc_home">Trang chủ</span></a></li>
+                <li><i class="fas fa-chevron-right"></i></li>
+                <li><a href="blog.html" data-i18n="bc_blog">Bài viết & Mẹo bánh</a></li>
+                <li><i class="fas fa-chevron-right"></i></li>
+                <li id="postBreadcrumbTitle" class="active">Đang tải...</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="post-layout">
+            
+            <!-- Left: Article Content -->
+            <article class="post-main-content">
+                <span class="post-header-badge" id="postCategoryBadge">Chuyện Tiệm Bánh</span>
+                <h1 class="post-main-title" id="postTitle">Tiêu đề bài viết</h1>
+
+                <div class="post-meta-details">
+                    <span><i class="fas fa-calendar-alt" style="color:#ff9a9e;"></i> <span id="postPublishDate">2026-10-18</span></span>
+                    <span><i class="fas fa-user-edit" style="color:#ff9a9e;"></i> <span id="postAuthor">Kitten Cake</span></span>
+                    <span><i class="fas fa-clock" style="color:#ff9a9e;"></i> <span id="postReadTime">3 phút đọc</span></span>
+                    <span><i class="fas fa-eye" style="color:#ff9a9e;"></i> <span id="postViews">300</span> <span data-i18n="blog_views">lượt xem</span></span>
+                </div>
+
+                <div class="post-cover-wrap">
+                    <img id="postCoverImg" src="tai-nguyen/donut-collection.jpg" alt="Ảnh bài viết">
+                </div>
+
+                <!-- Shoppable Product Widget (CRO Feature) -->
+                <div class="post-shoppable-box" id="postShoppableBox" style="display:none;">
+                    <div class="post-shoppable-img">
+                        <img id="shoppableImg" src="tai-nguyen/donut-signature.jpg" alt="Bánh">
+                    </div>
+                    <div class="post-shoppable-info">
+                        <span style="font-size:0.75rem; font-weight:800; color:#f6416c; text-transform:uppercase;" data-i18n="post_shoppable_tag">✨ Món Bánh Trong Bài Viết</span>
+                        <h4 id="shoppableName">Donut Xốp Mềm Signature</h4>
+                        <div class="post-shoppable-price" id="shoppablePrice">10.000đ</div>
+                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                            <a id="shoppableDetailLink" href="product.html?id=menu_1" class="btn btn-outline" style="padding:6px 14px; font-size:0.85rem;" data-i18n="post_shoppable_view">
+                                Xem chi tiết bánh
+                            </a>
+                            <button type="button" id="shoppableAddCartBtn" class="btn btn-primary" style="padding:6px 14px; font-size:0.85rem;">
+                                <i class="fas fa-cart-plus"></i> <span data-i18n="post_shoppable_order">Đặt giao ngay</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article Body HTML -->
+                <div class="post-body-text" id="postContentBody">
+                    <!-- Dynamic Content -->
+                </div>
+
+                <!-- Tags & Share -->
+                <div style="margin-top:35px; padding-top:20px; border-top:1px solid #f5e4e8; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
+                    <div id="postTagsList" style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <!-- Tags -->
+                    </div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="font-weight:700; font-size:0.9rem; color:#666;" data-i18n="post_share_lbl">Chia sẻ:</span>
+                        <a href="https://www.facebook.com/sharer/sharer.php" target="_blank" class="btn btn-outline" style="padding:6px 12px; border-radius:50%; width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center;">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                        <button type="button" class="btn btn-outline" id="btnCopyPostLink" title="Sao chép liên kết" style="padding:6px 12px; border-radius:50%; width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer;">
+                            <i class="fas fa-link"></i>
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Right: Sidebar -->
+            <aside class="post-sidebar">
+                <!-- Promo Box -->
+                <div style="background:linear-gradient(135deg, #fff0f3, #ffe5ec); border:1.5px solid #ffd1dc; border-radius:18px; padding:22px; margin-bottom:28px; text-align:center;">
+                    <img src="tai-nguyen/donut-box.jpg" alt="Donut Box" style="width:100%; height:160px; object-fit:cover; border-radius:12px; margin-bottom:14px;">
+                    <h3 style="font-size:1.15rem; color:#222; margin-bottom:6px;">🍩 <span data-i18n="post_sidebar_promo_title">Ưu Đãi Mua 5 Tặng 1</span></h3>
+                    <p style="font-size:0.88rem; color:#666; margin-bottom:14px;" data-i18n="post_sidebar_promo_desc">Chỉ 50K sở hữu ngay 6 bánh Donut trong hộp mèo xinh xắn!</p>
+                    <a href="products.html?category=cat_combo" class="btn btn-primary" style="width:100%; justify-content:center;" data-i18n="post_sidebar_promo_btn">
+                        Đặt Combo Ngay
+                    </a>
+                </div>
+
+                <!-- Related Articles -->
+                <div style="background:#ffffff; border:1px solid #ffe8ed; border-radius:18px; padding:22px; box-shadow:0 4px 16px rgba(0,0,0,0.03);">
+                    <h3 style="font-size:1.15rem; margin-bottom:16px; padding-bottom:10px; border-bottom:1px solid #fce3e8;">
+                        <i class="fas fa-newspaper" style="color:#f6416c;"></i> <span data-i18n="post_sidebar_related_title">Bài Viết Cùng Chủ Đề</span>
+                    </h3>
+                    <div id="relatedArticlesList" style="display:flex; flex-direction:column; gap:16px;">
+                        <!-- Dynamic items -->
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <div class="logo">
+                    <img src="tai-nguyen/logo.jpg" alt="Kitten Cake Logo">
+                    <span>Kitten Cake</span>
+                </div>
+                <p data-i18n="footer_tagline">Tiệm bánh ngọt nhỏ xinh tại Quận 7 - Nơi gửi gắm yêu thương qua từng vị ngọt thơm lừng nướng mới mỗi ngày.</p>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/profile.php?id=61594490844705" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h3 data-i18n="footer_heading_contact">Liên Hệ Với Tiệm</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> <span data-i18n="footer_address_val">Quận 7, TP. Hồ Chí Minh</span></li>
+                    <li><i class="fas fa-phone-alt"></i> Hotline: 0898575717</li>
+                    <li><i class="fas fa-envelope"></i> Email: kittencake7dis@gmail.com</li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h3 data-i18n="footer_heading_hours">Giờ Mở Cửa</h3>
+                <ul>
+                    <li data-i18n="footer_weekdays">Thứ 2 - Thứ 6: 08:00 - 22:00</li>
+                    <li data-i18n="footer_weekends">Thứ 7 - CN: 07:30 - 22:30</li>
+                    <li><a href="order-tracking.html" style="color:#f6416c; font-weight:700;"><i class="fas fa-search-location"></i> <span data-i18n="nav_tracking">Tra cứu đơn hàng của bạn</span></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p data-i18n="footer_copy">&copy; 2026 Kitten Cake Bakery. Nền tảng thương mại điện tử bánh ngọt hiện đại.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="post.js"></script>
+</body>
+</html>
