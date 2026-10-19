@@ -197,6 +197,9 @@ function applyContentToDOM(data) {
                 if (rawItem.status === 'inactive') return;
 
                 const item = isEn && window.KittenI18n ? window.KittenI18n.getTranslatedProduct(rawItem) : rawItem;
+                const isPreOrder = rawItem.stockStatus === 'pre_order' || rawItem.inStock === 'pre_order' || rawItem.isPreOrder === true || item.stockStatus === 'pre_order' || item.isPreOrder === true;
+                const isOutOfStock = rawItem.inStock === false || rawItem.stockStatus === 'out_of_stock' || item.inStock === false;
+
                 const card = document.createElement('div');
                 card.className = `menu-item ${item.isFeatured ? 'featured' : ''}`;
 
@@ -214,7 +217,14 @@ function applyContentToDOM(data) {
                         </a>
                     </div>
                     <div class="menu-info">
-                        <span class="item-tag">${item.tag || (isEn ? '🍩 Signature' : '🍩 Món Bánh')}</span>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                            <span class="item-tag">${item.tag || (isEn ? '🍩 Signature' : '🍩 Món Bánh')}</span>
+                            ${isPreOrder ? `
+                                <span class="stock-pill pre-order"><i class="fas fa-calendar-alt"></i> <span>${isEn ? 'Pre-order' : 'Đặt trước'}</span></span>
+                            ` : (isOutOfStock ? `
+                                <span class="stock-pill out-of-stock"><i class="fas fa-times-circle"></i> <span>${isEn ? 'Sold Out' : 'Tạm hết'}</span></span>
+                            ` : '')}
+                        </div>
                         <h3><a href="product.html?id=${item.id}" style="color:inherit; text-decoration:none;">${item.name}</a></h3>
                         <p>${item.description || ''}</p>
                         <div class="menu-card-bottom">
@@ -226,9 +236,19 @@ function applyContentToDOM(data) {
                                 <a href="product.html?id=${item.id}" class="menu-order-btn btn-view-detail" title="${isEn ? 'View Cake Details' : 'Xem chi tiết'}">
                                     <i class="fas fa-eye"></i> <span>${isEn ? 'Details' : 'Chi tiết'}</span>
                                 </a>
-                                <button type="button" class="menu-order-btn btn-quick-add-cart" data-item-id="${item.id}" title="${isEn ? 'Add to Cart' : 'Thêm vào giỏ'}">
-                                    <i class="fas fa-cart-plus"></i> <span>${isEn ? 'Add to Cart' : 'Thêm giỏ'}</span>
-                                </button>
+                                ${isOutOfStock ? `
+                                    <button type="button" class="menu-order-btn btn-quick-add-cart disabled" disabled style="opacity:0.6; cursor:not-allowed;" title="${isEn ? 'Out of Stock' : 'Tạm hết bánh'}">
+                                        <i class="fas fa-ban"></i> <span>${isEn ? 'Sold Out' : 'Tạm hết'}</span>
+                                    </button>
+                                ` : (isPreOrder ? `
+                                    <button type="button" class="menu-order-btn btn-quick-add-cart" data-item-id="${item.id}" title="${isEn ? 'Pre-order Cake' : 'Đặt trước bánh'}">
+                                        <i class="fas fa-calendar-plus"></i> <span>${isEn ? 'Pre-order' : 'Đặt trước'}</span>
+                                    </button>
+                                ` : `
+                                    <button type="button" class="menu-order-btn btn-quick-add-cart" data-item-id="${item.id}" title="${isEn ? 'Add to Cart' : 'Thêm vào giỏ'}">
+                                        <i class="fas fa-cart-plus"></i> <span>${isEn ? 'Add to Cart' : 'Thêm giỏ'}</span>
+                                    </button>
+                                `)}
                             </div>
                         </div>
                     </div>

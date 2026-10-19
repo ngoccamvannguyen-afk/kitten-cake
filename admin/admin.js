@@ -386,7 +386,11 @@ function renderMenuItemsTable() {
                     <div class="item-title-text">
                         <h4>${item.name}</h4>
                         <span>${item.description ? item.description.slice(0, 45) + '...' : ''}</span>
-                        ${item.inStock === false ? '<span style="display:inline-block; margin-top:3px; background:#ffebee; color:#ff4757; font-size:11px; padding:2px 6px; border-radius:4px; font-weight:700;"><i class="fas fa-ban"></i> Hết hàng hôm nay</span>' : ''}
+                        ${(item.stockStatus === 'pre_order' || item.inStock === 'pre_order' || item.isPreOrder) 
+                            ? `<span style="display:inline-block; margin-top:3px; background:#fff3e0; color:#e67e22; border:1px solid #ffd8a8; font-size:11px; padding:2px 8px; border-radius:4px; font-weight:700; cursor:pointer;" onclick="quickCycleStockStatus('${item.id}')" title="Bấm để đổi nhanh tình trạng: Còn bánh ➔ Đặt trước ➔ Hết hàng"><i class="fas fa-calendar-alt"></i> Đặt trước (Pre-order)</span>` 
+                            : (item.inStock === false 
+                                ? `<span style="display:inline-block; margin-top:3px; background:#ffebee; color:#ff4757; font-size:11px; padding:2px 6px; border-radius:4px; font-weight:700; cursor:pointer;" onclick="quickCycleStockStatus('${item.id}')" title="Bấm để đổi nhanh tình trạng: Còn bánh ➔ Đặt trước ➔ Hết hàng"><i class="fas fa-ban"></i> Hết hàng hôm nay</span>` 
+                                : `<span style="display:inline-block; margin-top:3px; background:#e8f8f0; color:#2ed573; font-size:11px; padding:2px 6px; border-radius:4px; font-weight:700; cursor:pointer;" onclick="quickCycleStockStatus('${item.id}')" title="Bấm để đổi nhanh tình trạng: Còn bánh ➔ Đặt trước ➔ Hết hàng"><i class="fas fa-check-circle"></i> Sẵn bánh</span>`)}
                         ${flavorsHtml}
                     </div>
                 </div>
@@ -429,6 +433,35 @@ window.toggleMenuItemStatus = async function(id, isChecked) {
         item.status = isChecked ? 'active' : 'inactive';
         await saveAllChanges(`Đã ${isChecked ? 'bật bán' : 'tạm dừng bán'} món "${item.name}" và đồng bộ ra trang chủ!`);
     }
+};
+
+window.quickCycleStockStatus = async function(id) {
+    const item = siteData.menu.items.find(i => i.id === id);
+    if (!item) return;
+
+    const current = (item.stockStatus === 'pre_order' || item.inStock === 'pre_order' || item.isPreOrder)
+        ? 'pre_order'
+        : (item.inStock === false || item.stockStatus === 'out_of_stock' ? 'out_of_stock' : 'in_stock');
+
+    let next = 'in_stock';
+    let msg = '';
+    if (current === 'in_stock') {
+        next = 'pre_order';
+        msg = `Đã chuyển món "${item.name}" sang: Đặt trước (Pre-order)`;
+    } else if (current === 'pre_order') {
+        next = 'out_of_stock';
+        msg = `Đã chuyển món "${item.name}" sang: Hết bánh hôm nay (Sold Out)`;
+    } else {
+        next = 'in_stock';
+        msg = `Đã chuyển món "${item.name}" sang: Còn bánh (Bán bình thường)`;
+    }
+
+    item.stockStatus = next;
+    item.inStock = (next !== 'out_of_stock');
+    item.isPreOrder = (next === 'pre_order');
+
+    renderMenuItemsTable();
+    await saveAllChanges(msg);
 };
 
 window.moveMenuItem = async function(index, direction) {
@@ -609,7 +642,7 @@ document.getElementById('btnOpenAddMenuModal').addEventListener('click', () => {
     updateModalPricePreview();
     document.getElementById('modalMenuBadge').value = '';
     document.getElementById('modalMenuFeatured').value = 'false';
-    document.getElementById('modalMenuInStock').value = 'true';
+    document.getElementById('modalMenuInStock').value = 'in_stock';
     document.getElementById('modalMenuShelfLife').value = 'Dùng ngon nhất trong ngày, ngăn mát 2-3 ngày';
     document.getElementById('modalMenuIngredients').value = 'Bột mì Nhật cao cấp, Bơ Anchor, Trứng tươi, Socola Bỉ';
     document.getElementById('modalMenuDesc').value = '';
@@ -642,9 +675,13 @@ window.openEditMenuModal = function(id) {
     document.getElementById('modalMenuPrice').value = item.price;
     updateModalPricePreview();
     document.getElementById('modalMenuBadge').value = item.badge || '';
-    document.getElementById('modalMenuFeatured').value = item.isFeatured ? 'true' : 'false';
-
-    document.getElementById('modalMenuInStock').value = item.inStock !== false ? 'true' : 'false';
+    if (item.stockStatus === 'pre_order' || item.inStock === 'pre_order' || item.isPreOrder) {
+        document.getElementById('modalMenuInStock').value = 'pre_order';
+    } else if (item.inStock === false || item.stockStatus === 'out_of_stock') {
+        document.getElementById('modalMenuInStock').value = 'out_of_stock';
+    } else {
+        document.getElementById('modalMenuInStock').value = 'in_stock';
+    }
     document.getElementById('modalMenuShelfLife').value = item.details?.shelfLife || '';
     document.getElementById('modalMenuIngredients').value = item.details?.ingredients || '';
 
@@ -718,7 +755,10 @@ document.getElementById('btnSaveMenuItem').addEventListener('click', async () =>
     const isFeatured = document.getElementById('modalMenuFeatured').value === 'true';
     const description = document.getElementById('modalMenuDesc').value.trim();
     const orderLink = document.getElementById('modalMenuOrderLink').value.trim();
-    const inStock = document.getElementById('modalMenuInStock').value === 'true';
+    const stockStatusVal = document.getElementById('modalMenuInStock').value;
+    const inStock = stockStatusVal !== 'out_of_stock';
+    const stockStatus = stockStatusVal;
+    const isPreOrder = stockStatusVal === 'pre_order';
     const shelfLife = document.getElementById('modalMenuShelfLife').value.trim();
     const ingredients = document.getElementById('modalMenuIngredients').value.trim();
 
@@ -776,6 +816,8 @@ document.getElementById('btnSaveMenuItem').addEventListener('click', async () =>
             item.orderLink = orderLink;
             item.image = imageSrc;
             item.inStock = inStock;
+            item.stockStatus = stockStatus;
+            item.isPreOrder = isPreOrder;
             item.flavors = flavors;
             if (!item.details) item.details = {};
             item.details.shelfLife = shelfLife;
@@ -798,6 +840,8 @@ document.getElementById('btnSaveMenuItem').addEventListener('click', async () =>
             orderLink: orderLink || (siteData.general?.socialLinks?.facebook || '#'),
             status: 'active',
             inStock,
+            stockStatus,
+            isPreOrder,
             flavors,
             details: {
                 shelfLife,

@@ -105,8 +105,9 @@ function renderProductDetails(rawProduct) {
     const stockEl = document.getElementById('pdpStockStatus');
     const btnAdd = document.getElementById('btnAddToCart');
     const btnBuy = document.getElementById('btnBuyNow');
+    const isPreOrder = product.stockStatus === 'pre_order' || product.inStock === 'pre_order' || product.isPreOrder === true;
 
-    if (product.inStock === false) {
+    if (product.inStock === false || product.stockStatus === 'out_of_stock') {
         if (stockEl) {
             stockEl.className = 'pdp-stock-status out-of-stock';
             stockEl.innerHTML = `<i class="fas fa-times-circle"></i> ${isEn ? 'Sold out today' : 'Đã hết hàng hôm nay'}`;
@@ -116,6 +117,19 @@ function renderProductDetails(rawProduct) {
             btnAdd.innerHTML = `<i class="fas fa-ban"></i> ${isEn ? 'Out of Stock' : 'Tạm hết bánh'}`;
         }
         if (btnBuy) btnBuy.disabled = true;
+    } else if (isPreOrder) {
+        if (stockEl) {
+            stockEl.className = 'pdp-stock-status pre-order';
+            stockEl.innerHTML = `<i class="fas fa-calendar-check"></i> ${isEn ? 'Pre-order Available' : 'Nhận đặt trước (Pre-order)'}`;
+        }
+        if (btnAdd) {
+            btnAdd.disabled = false;
+            btnAdd.innerHTML = `<i class="fas fa-calendar-plus"></i> <span data-i18n="pdp_btn_preorder">${isEn ? 'Pre-order Cake' : 'Đặt trước bánh'}</span>`;
+        }
+        if (btnBuy) {
+            btnBuy.disabled = false;
+            btnBuy.innerHTML = `<i class="fas fa-bolt"></i> <span data-i18n="pdp_btn_preorder_now">${isEn ? 'Pre-order Now' : 'Đặt trước ngay'}</span>`;
+        }
     } else {
         if (stockEl) {
             stockEl.className = 'pdp-stock-status in-stock';
@@ -125,7 +139,10 @@ function renderProductDetails(rawProduct) {
             btnAdd.disabled = false;
             btnAdd.innerHTML = `<i class="fas fa-cart-plus"></i> <span data-i18n="pdp_btn_add_cart">${isEn ? 'Add to Cart' : 'Thêm vào giỏ hàng'}</span>`;
         }
-        if (btnBuy) btnBuy.disabled = false;
+        if (btnBuy) {
+            btnBuy.disabled = false;
+            btnBuy.innerHTML = `<i class="fas fa-bolt"></i> <span data-i18n="pdp_btn_buy_now">${isEn ? 'Buy Now' : 'Mua ngay'}</span>`;
+        }
     }
 
     // 4. Image Gallery
@@ -406,11 +423,12 @@ function setupEvents() {
     const btnAdd = document.getElementById('btnAddToCart');
     if (btnAdd) {
         btnAdd.addEventListener('click', () => {
-            if (!currentProduct || currentProduct.inStock === false) return;
+            if (!currentProduct || currentProduct.inStock === false || currentProduct.stockStatus === 'out_of_stock') return;
 
             const basePrice = Number(currentProduct.price) || 10000;
             const toppingsExtra = selectedToppings.length * 3000;
             const finalUnitPrice = basePrice + toppingsExtra;
+            const isPreOrder = !!(currentProduct.isPreOrder || currentProduct.stockStatus === 'pre_order' || currentProduct.inStock === 'pre_order');
 
             window.KittenCart.addItem({
                 id: currentProduct.id,
@@ -420,7 +438,8 @@ function setupEvents() {
                 flavor: selectedFlavor,
                 toppings: [...selectedToppings],
                 image: selectedFlavorImage || currentProduct.image || 'tai-nguyen/donut-choco.jpg',
-                quantity: currentQuantity
+                quantity: currentQuantity,
+                isPreOrder: isPreOrder
             }, true);
         });
     }
@@ -429,11 +448,12 @@ function setupEvents() {
     const btnBuy = document.getElementById('btnBuyNow');
     if (btnBuy) {
         btnBuy.addEventListener('click', () => {
-            if (!currentProduct || currentProduct.inStock === false) return;
+            if (!currentProduct || currentProduct.inStock === false || currentProduct.stockStatus === 'out_of_stock') return;
 
             const basePrice = Number(currentProduct.price) || 10000;
             const toppingsExtra = selectedToppings.length * 3000;
             const finalUnitPrice = basePrice + toppingsExtra;
+            const isPreOrder = !!(currentProduct.isPreOrder || currentProduct.stockStatus === 'pre_order' || currentProduct.inStock === 'pre_order');
 
             window.KittenCart.addItem({
                 id: currentProduct.id,
@@ -443,7 +463,8 @@ function setupEvents() {
                 flavor: selectedFlavor,
                 toppings: [...selectedToppings],
                 image: selectedFlavorImage || currentProduct.image || 'tai-nguyen/donut-choco.jpg',
-                quantity: currentQuantity
+                quantity: currentQuantity,
+                isPreOrder: isPreOrder
             }, false);
 
             window.location.href = 'cart.html';
@@ -521,9 +542,15 @@ function renderRelatedProducts(products) {
                         <a href="product.html?id=${rawItem.id}" class="menu-order-btn btn-view-detail" title="${isEn ? 'View Cake Details' : 'Xem chi tiết bánh'}">
                             <i class="fas fa-eye"></i> ${isEn ? 'Details' : 'Chi tiết'}
                         </a>
-                        <button type="button" class="menu-order-btn btn-quick-add-cart" data-item-id="${rawItem.id}" title="${isEn ? 'Add to Cart' : 'Thêm vào giỏ hàng'}">
-                            <i class="fas fa-cart-plus"></i> ${isEn ? 'Add to Cart' : 'Thêm giỏ'}
-                        </button>
+                        ${(rawItem.stockStatus === 'pre_order' || rawItem.isPreOrder) ? `
+                            <button type="button" class="menu-order-btn btn-quick-add-cart" data-item-id="${rawItem.id}" title="${isEn ? 'Pre-order Cake' : 'Đặt trước bánh'}">
+                                <i class="fas fa-calendar-plus"></i> ${isEn ? 'Pre-order' : 'Đặt trước'}
+                            </button>
+                        ` : `
+                            <button type="button" class="menu-order-btn btn-quick-add-cart" data-item-id="${rawItem.id}" title="${isEn ? 'Add to Cart' : 'Thêm vào giỏ hàng'}">
+                                <i class="fas fa-cart-plus"></i> ${isEn ? 'Add to Cart' : 'Thêm giỏ'}
+                            </button>
+                        `}
                     </div>
                 </div>
             </div>
@@ -554,6 +581,7 @@ function renderRelatedProducts(products) {
                         if (f0.image) itemImage = f0.image;
                     }
                 }
+                const isItemPreOrder = !!(targetItem.isPreOrder || targetItem.stockStatus === 'pre_order' || targetItem.inStock === 'pre_order');
                 window.KittenCart.addItem({
                     id: targetItem.id,
                     name: targetItem.name,
@@ -561,7 +589,8 @@ function renderRelatedProducts(products) {
                     flavor: flavorName,
                     toppings: [],
                     image: itemImage,
-                    quantity: 1
+                    quantity: 1,
+                    isPreOrder: isItemPreOrder
                 }, true);
             }
         }

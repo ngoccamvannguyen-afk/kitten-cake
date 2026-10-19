@@ -237,6 +237,23 @@ function renderProductsGrid(items) {
         const ratingVal = item.rating || 5;
         const reviewsCount = item.reviewsCount || 100;
 
+        const isPreOrder = item.stockStatus === 'pre_order' || item.inStock === 'pre_order' || item.isPreOrder === true || rawItem.stockStatus === 'pre_order' || rawItem.isPreOrder === true;
+        const isOutOfStock = item.inStock === false || item.stockStatus === 'out_of_stock' || rawItem.inStock === false || rawItem.stockStatus === 'out_of_stock';
+
+        let stockPillClass = '';
+        let stockPillIcon = 'fa-check-circle';
+        let stockPillText = isEn ? 'In Stock' : 'Còn bánh';
+
+        if (isOutOfStock) {
+            stockPillClass = 'out-of-stock';
+            stockPillIcon = 'fa-times-circle';
+            stockPillText = isEn ? 'Sold Out' : 'Tạm hết';
+        } else if (isPreOrder) {
+            stockPillClass = 'pre-order';
+            stockPillIcon = 'fa-calendar-alt';
+            stockPillText = isEn ? 'Pre-order' : 'Đặt trước';
+        }
+
         card.innerHTML = `
             ${item.badge ? `<span class="hot-badge"><i class="fas fa-fire"></i> ${item.badge}</span>` : ''}
             <div class="menu-img">
@@ -247,8 +264,8 @@ function renderProductsGrid(items) {
             <div class="menu-info">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
                     <span class="item-tag">${item.tag || (isEn ? '🍩 Cake' : '🍩 Món Bánh')}</span>
-                    <span class="stock-pill ${item.inStock ? '' : 'out-of-stock'}">
-                        <i class="fas ${item.inStock ? 'fa-check-circle' : 'fa-times-circle'}"></i> <span>${item.inStock ? (isEn ? 'In Stock' : 'Còn bánh') : (isEn ? 'Sold Out' : 'Tạm hết')}</span>
+                    <span class="stock-pill ${stockPillClass}">
+                        <i class="fas ${stockPillIcon}"></i> <span>${stockPillText}</span>
                     </span>
                 </div>
                 <h3><a href="product.html?id=${rawItem.id}" style="color:inherit; text-decoration:none;">${item.name}</a></h3>
@@ -275,13 +292,22 @@ function renderProductsGrid(items) {
                         <a href="product.html?id=${rawItem.id}" class="menu-order-btn btn-view-detail" title="${isEn ? 'View Cake Details' : 'Xem chi tiết'}">
                             <i class="fas fa-eye"></i> <span data-i18n="menu_btn_details">${isEn ? 'Details' : 'Chi tiết'}</span>
                         </a>
-                        <button type="button" class="menu-order-btn btn-quick-add-cart" data-id="${rawItem.id}" title="${isEn ? 'Add to Cart' : 'Thêm vào giỏ'}">
-                            <i class="fas fa-cart-plus"></i> <span data-i18n="menu_btn_add_cart">${isEn ? 'Add to Cart' : 'Thêm giỏ'}</span>
-                        </button>
+                        ${isOutOfStock ? `
+                            <button type="button" class="menu-order-btn btn-quick-add-cart disabled" disabled style="opacity:0.6; cursor:not-allowed;" title="${isEn ? 'Out of Stock' : 'Tạm hết bánh'}">
+                                <i class="fas fa-ban"></i> <span>${isEn ? 'Sold Out' : 'Tạm hết'}</span>
+                            </button>
+                        ` : (isPreOrder ? `
+                            <button type="button" class="menu-order-btn btn-quick-add-cart" data-id="${rawItem.id}" title="${isEn ? 'Pre-order Cake' : 'Đặt trước bánh'}">
+                                <i class="fas fa-calendar-plus"></i> <span data-i18n="menu_btn_preorder">${isEn ? 'Pre-order' : 'Đặt trước'}</span>
+                            </button>
+                        ` : `
+                            <button type="button" class="menu-order-btn btn-quick-add-cart" data-id="${rawItem.id}" title="${isEn ? 'Add to Cart' : 'Thêm vào giỏ'}">
+                                <i class="fas fa-cart-plus"></i> <span data-i18n="menu_btn_add_cart">${isEn ? 'Add to Cart' : 'Thêm giỏ'}</span>
+                            </button>
+                        `)}
                     </div>
                 </div>
-            </div>
-        `;
+            </div>`;
 
         // Bind quick add
         const addBtn = card.querySelector('.btn-quick-add-cart');
@@ -361,6 +387,7 @@ function closeQuickAddModal() {
 }
 
 function addToCart(item, flavor, quantity) {
+    const isPreOrder = !!(item.isPreOrder || item.stockStatus === 'pre_order' || item.inStock === 'pre_order');
     if (window.KittenCart && typeof window.KittenCart.addItem === 'function') {
         window.KittenCart.addItem({
             id: item.id,
@@ -368,7 +395,8 @@ function addToCart(item, flavor, quantity) {
             flavor: flavor || 'Vị Tiêu Chuẩn',
             price: Number(item.price),
             quantity: Number(quantity),
-            image: item.image
+            image: item.image,
+            isPreOrder: isPreOrder
         }, false);
         return;
     }

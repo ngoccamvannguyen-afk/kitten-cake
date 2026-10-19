@@ -293,10 +293,15 @@
                 const flavorName = isEn && window.KittenI18n ? window.KittenI18n.getTranslatedFlavor(item.flavor) : item.flavor;
                 const toppingsList = (item.toppings || []).map(t => isEn && window.KittenI18n ? window.KittenI18n.getTranslatedTopping(t) : t);
 
+                const isPreOrder = !!(item.isPreOrder || item.stockStatus === 'pre_order' || item.inStock === 'pre_order');
+                const preOrderBadge = isPreOrder 
+                    ? `<span style="display:inline-block; font-size:0.72rem; background:#fff3e0; color:#e67e22; border:1px solid #ffd8a8; padding:1px 6px; border-radius:4px; font-weight:700; margin-left:4px;"><i class="fas fa-calendar-alt"></i> ${isEn ? 'Pre-order' : 'Đặt trước'}</span>`
+                    : '';
+
                 itemDiv.innerHTML = `
                     <img src="${item.image}" alt="${prodName}" class="mini-cart-item-img">
                     <div class="mini-cart-item-detail">
-                        <div class="mini-cart-item-title">${prodName}</div>
+                        <div class="mini-cart-item-title">${prodName} ${preOrderBadge}</div>
                         <div class="mini-cart-item-flavor"><i class="fas fa-cookie"></i> ${flavorName}</div>
                         ${(toppingsList && toppingsList.length > 0) ? `<div class="mini-cart-item-toppings" style="font-size:0.75rem; color:#747d8c; margin-bottom:4px;"><i class="fas fa-sparkles" style="color:#ffa502;"></i> + ${toppingsList.join(', ')}</div>` : ''}
                         ${freeTag}
