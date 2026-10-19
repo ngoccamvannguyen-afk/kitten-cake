@@ -51,39 +51,96 @@ async function initPostDetail() {
     const params = new URLSearchParams(window.location.search);
     const postParam = params.get('id') || params.get('slug') || 'art_1';
 
-    let data = null;
+    let localData = null;
+    let localTime = 0;
+    const savedLocal = localStorage.getItem('kitten_site_data');
+    if (savedLocal) {
+        try {
+            localData = JSON.parse(savedLocal);
+            localTime = parseInt(localStorage.getItem('kitten_site_data_time') || '0', 10);
+        } catch(e) {}
+    }
 
+    let loadedFromApi = false;
     try {
         const res = await fetch(`/api/articles/${postParam}?_t=` + Date.now(), { cache: 'no-store' });
         if (res.ok) {
             const json = await res.json();
-            currentArticle = json.data;
-            currentFeaturedProduct = json.featuredProduct;
-            window._currentRelatedArticles = json.related;
-            renderArticle(currentArticle, json.related);
-            return;
+            if (!localData || localTime <= (json.updatedAt || 0)) {
+                currentArticle = json.data;
+                currentFeaturedProduct = json.featuredProduct;
+                window._currentRelatedArticles = json.related;
+                renderArticle(currentArticle, json.related);
+                loadedFromApi = true;
+            }
         }
     } catch (e) {
         console.warn('API error, fallback to local content.json');
     }
 
-    // Local fallback
-    try {
-        const resLocal = await fetch('data/content.json?_t=' + Date.now(), { cache: 'no-store' });
-        if (resLocal.ok) data = await resLocal.json();
-    } catch (e) {
-        console.error('Cannot load local data');
+    if (!loadedFromApi) {
+        let data = localData;
+        if (!data) {
+            try {
+                const resLocal = await fetch('data/content.json?_t=' + Date.now(), { cache: 'no-store' });
+                if (resLocal.ok) data = await resLocal.json();
+            } catch (e) {
+                console.error('Cannot load local data');
+            }
+        }
+
+        if (data && data.articles) {
+            currentArticle = data.articles.find(a => a.id === postParam || a.slug === postParam) || data.articles[0];
+            if (currentArticle && currentArticle.featuredProductId && data.menu?.items) {
+                currentFeaturedProduct = data.menu.items.find(p => p.id === currentArticle.featuredProductId);
+            }
+            const related = data.articles.filter(a => a.id !== currentArticle?.id).slice(0, 3);
+            window._currentRelatedArticles = related;
+            renderArticle(currentArticle, related);
+        }
     }
 
-    if (data && data.articles) {
-        currentArticle = data.articles.find(a => a.id === postParam || a.slug === postParam) || data.articles[0];
-        if (currentArticle.featuredProductId && data.menu?.items) {
-            currentFeaturedProduct = data.menu.items.find(p => p.id === currentArticle.featuredProductId);
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'kitten_site_data' || e.key === 'kitten_site_data_event') {
+            const raw = localStorage.getItem('kitten_site_data');
+            if (raw) {
+                try {
+                    const fresh = JSON.parse(raw);
+                    if (fresh && fresh.articles) {
+                        const updatedArt = fresh.articles.find(a => a.id === postParam || a.slug === postParam);
+                        if (updatedArt) {
+                            currentArticle = updatedArt;
+                            if (currentArticle.featuredProductId && fresh.menu?.items) {
+                                currentFeaturedProduct = fresh.menu.items.find(p => p.id === currentArticle.featuredProductId);
+                            }
+                            const related = fresh.articles.filter(a => a.id !== currentArticle.id).slice(0, 3);
+                            renderArticle(currentArticle, related);
+                        }
+                    }
+                } catch(err) {}
+            }
         }
-        const related = data.articles.filter(a => a.id !== currentArticle.id).slice(0, 3);
-        window._currentRelatedArticles = related;
-        renderArticle(currentArticle, related);
-    }
+    });
+
+    window.addEventListener('siteContentUpdated', () => {
+        const raw = localStorage.getItem('kitten_site_data');
+        if (raw) {
+            try {
+                const fresh = JSON.parse(raw);
+                if (fresh && fresh.articles) {
+                    const updatedArt = fresh.articles.find(a => a.id === postParam || a.slug === postParam);
+                    if (updatedArt) {
+                        currentArticle = updatedArt;
+                        if (currentArticle.featuredProductId && fresh.menu?.items) {
+                            currentFeaturedProduct = fresh.menu.items.find(p => p.id === currentArticle.featuredProductId);
+                        }
+                        const related = fresh.articles.filter(a => a.id !== currentArticle.id).slice(0, 3);
+                        renderArticle(currentArticle, related);
+                    }
+                }
+            } catch(err) {}
+        }
+    });
 }
 
 function renderArticle(rawArt, related) {

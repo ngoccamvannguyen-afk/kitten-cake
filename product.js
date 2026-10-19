@@ -15,18 +15,37 @@ async function initProductPage() {
 
     let productData = null;
     let relatedProducts = [];
+    let localData = null;
+    let localTime = 0;
+
+    try {
+        const raw = localStorage.getItem('kitten_site_data');
+        if (raw) {
+            localData = JSON.parse(raw);
+            localTime = Number(localStorage.getItem('kitten_site_data_time')) || Number(localData?.updatedAt) || 0;
+            const items = localData?.menu?.items || [];
+            const found = items.find(i => i.id === productId);
+            if (found) {
+                productData = found;
+                relatedProducts = items.filter(i => i.id !== productId).slice(0, 3);
+            }
+        }
+    } catch (e) {}
 
     try {
         const res = await fetch(`/api/products/${productId}?_t=${Date.now()}`);
         if (res.ok) {
             const json = await res.json();
-            if (json.success) {
-                productData = json.data;
-                relatedProducts = json.related || [];
+            if (json.success && json.data) {
+                const apiTime = Number(json.data.updatedAt) || 0;
+                if (!localData || apiTime >= localTime) {
+                    productData = json.data;
+                    relatedProducts = json.related || [];
+                }
             }
         }
     } catch (e) {
-        console.warn('API /api/products/:id không phản hồi, thử tải từ content.json...');
+        console.warn('API /api/products/:id không phản hồi, thử tải từ content.json/localStorage...');
     }
 
     if (!productData) {
@@ -51,6 +70,22 @@ async function initProductPage() {
         setupEvents();
         syncFooterContact();
     }
+
+    // Lắng nghe cập nhật từ tab admin
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'kitten_site_data' && e.newValue) {
+            try {
+                const updated = JSON.parse(e.newValue);
+                const items = updated?.menu?.items || [];
+                const found = items.find(i => i.id === productId);
+                if (found) {
+                    currentProduct = found;
+                    renderProductDetails(found);
+                    renderRelatedProducts(items.filter(i => i.id !== productId).slice(0, 3));
+                }
+            } catch (err) {}
+        }
+    });
 }
 
 async function syncFooterContact() {

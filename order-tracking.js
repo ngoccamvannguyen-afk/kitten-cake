@@ -90,6 +90,24 @@ async function executeTracking(query) {
     }
 
     if (orders.length === 0) {
+        const rawLocal = localStorage.getItem('kitten_site_data');
+        if (rawLocal) {
+            try {
+                const data = JSON.parse(rawLocal);
+                const all = data.orders || [];
+                const cleanQ = query.trim().toUpperCase();
+                const cleanPhone = query.trim().replace(/[^0-9]/g, '');
+
+                orders = all.filter(o => {
+                    const oId = (o.id || '').toUpperCase();
+                    const oPhone = (o.phone || '').replace(/[^0-9]/g, '');
+                    return oId === cleanQ || (cleanPhone.length >= 7 && oPhone.includes(cleanPhone));
+                });
+            } catch(e) {}
+        }
+    }
+
+    if (orders.length === 0) {
         try {
             const resLocal = await fetch('data/content.json?_t=' + Date.now(), { cache: 'no-store' });
             if (resLocal.ok) {

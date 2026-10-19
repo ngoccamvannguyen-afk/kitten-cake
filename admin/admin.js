@@ -175,27 +175,46 @@ function setupImageUpload(inputId, previewId, onUploaded) {
     });
 }
 
-// ---------------- LOAD DATA FROM SERVER ----------------
 async function loadSiteData() {
+    let localData = null;
+    let localTime = 0;
     try {
-        const res = await fetch('/api/content');
+        const raw = localStorage.getItem('kitten_site_data');
+        if (raw) {
+            localData = JSON.parse(raw);
+            localTime = Number(localStorage.getItem('kitten_site_data_time')) || Number(localData?.updatedAt) || 0;
+        }
+    } catch (e) {}
+
+    try {
+        const res = await fetch('/api/content?_t=' + Date.now(), { cache: 'no-store' });
         if (res.ok) {
             const json = await res.json();
-            siteData = json.data;
+            const apiData = json.data;
+            const apiTime = Number(apiData?.updatedAt || json.updatedAt) || 0;
+
+            if (localData && localTime > apiTime) {
+                siteData = localData;
+            } else {
+                siteData = apiData;
+            }
         } else {
             throw new Error('Không thể tải từ API');
         }
     } catch (err) {
-        console.warn('Fetch /api/content failed, attempting local data/content.json:', err);
-        try {
-            const localRes = await fetch('/data/content.json');
-            siteData = await localRes.json();
-        } catch (localErr) {
+        console.warn('Fetch /api/content failed, attempting local data/content.json or localStorage:', err);
+        siteData = localData;
+        if (!siteData) {
             try {
-                const relativeRes = await fetch('../data/content.json');
-                siteData = await relativeRes.json();
-            } catch (rErr) {
-                console.error('Fatal: Cannot load content data', rErr);
+                const localRes = await fetch('/data/content.json?_t=' + Date.now(), { cache: 'no-store' });
+                siteData = await localRes.json();
+            } catch (localErr) {
+                try {
+                    const relativeRes = await fetch('../data/content.json?_t=' + Date.now(), { cache: 'no-store' });
+                    siteData = await relativeRes.json();
+                } catch (rErr) {
+                    console.error('Fatal: Cannot load content data', rErr);
+                }
             }
         }
     }
@@ -1344,7 +1363,20 @@ async function saveAllChanges(customMessage = '') {
         const ap2 = getVal('aboutP2'); if (ap2 !== null) siteData.about.paragraph2 = ap2;
     }
 
-    // Send to Server
+    // Cập nhật timestamp sửa đổi
+    siteData.updatedAt = Date.now();
+
+    // 1. Luôn lưu vào localStorage ngay lập tức để đồng bộ tức thì sang trang chủ và các trang khác cùng trình duyệt
+    try {
+        localStorage.setItem('kitten_site_data', JSON.stringify(siteData));
+        localStorage.setItem('kitten_site_data_time', siteData.updatedAt.toString());
+        localStorage.setItem('kitten_site_data_event', Date.now().toString());
+        window.dispatchEvent(new CustomEvent('siteContentUpdated', { detail: siteData }));
+    } catch (e) {
+        console.warn('Lỗi lưu LocalStorage:', e);
+    }
+
+    // 2. Gửi đồng bộ lên máy chủ / Serverless API
     try {
         const res = await fetch('/api/content', {
             method: 'POST',
@@ -1353,14 +1385,13 @@ async function saveAllChanges(customMessage = '') {
         });
         const data = await res.json();
         if (res.ok && data.success) {
-            showToast(customMessage || '🎉 Đã lưu toàn bộ thay đổi thành công! Trang chủ đã được cập nhật.');
+            showToast(customMessage || '🎉 Đã lưu toàn bộ thay đổi thành công! Trang chủ và các trang đã được cập nhật.');
         } else {
             throw new Error(data.error || 'Lỗi ghi tệp dữ liệu');
         }
     } catch (err) {
-        console.warn('Save API failed, saving to localStorage as fallback:', err);
-        localStorage.setItem('kitten_site_data', JSON.stringify(siteData));
-        showToast('Đã lưu dữ liệu tạm vào bộ nhớ máy!');
+        console.warn('Gửi API server gặp lỗi, đã lưu vào bộ nhớ trình duyệt:', err);
+        showToast(customMessage || '🎉 Đã lưu thay đổi vào bộ nhớ máy! Trang chủ đã được cập nhật.');
     } finally {
         if (btn) {
             btn.disabled = false;

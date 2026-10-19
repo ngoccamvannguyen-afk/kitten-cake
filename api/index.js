@@ -74,37 +74,50 @@ const upload = multer({
   }
 });
 
+let inMemoryContent = null;
+
 // Helper: Read content safely
 function readContent() {
+  if (inMemoryContent) {
+    return JSON.parse(JSON.stringify(inMemoryContent));
+  }
   try {
     if (fs.existsSync(DATA_FILE)) {
       const raw = fs.readFileSync(DATA_FILE, 'utf8');
-      return JSON.parse(raw);
+      const parsed = JSON.parse(raw);
+      inMemoryContent = parsed;
+      return parsed;
     }
   } catch (err) {
     console.error('Error reading data file:', err);
     if (fs.existsSync(BACKUP_FILE)) {
       try {
         const raw = fs.readFileSync(BACKUP_FILE, 'utf8');
-        return JSON.parse(raw);
+        const parsed = JSON.parse(raw);
+        inMemoryContent = parsed;
+        return parsed;
       } catch (e) {}
     }
   }
-  return defaultContent ? JSON.parse(JSON.stringify(defaultContent)) : null;
+  if (defaultContent) {
+    inMemoryContent = JSON.parse(JSON.stringify(defaultContent));
+    return inMemoryContent;
+  }
+  return null;
 }
 
 // Helper: Save content safely with backup
 function saveContent(data) {
+  data.updatedAt = Date.now();
+  inMemoryContent = JSON.parse(JSON.stringify(data));
   try {
     if (fs.existsSync(DATA_FILE)) {
-      fs.copyFileSync(DATA_FILE, BACKUP_FILE);
+      try { fs.copyFileSync(DATA_FILE, BACKUP_FILE); } catch (e) {}
     }
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
-    defaultContent = data;
     return true;
   } catch (err) {
-    console.error('Error saving data to disk, persisting in memory:', err);
-    defaultContent = data;
+    console.warn('Filesystem read-only (serverless instance), cached in-memory:', err.message);
     return true;
   }
 }
@@ -126,7 +139,7 @@ app.get('/api/content', (req, res) => {
     return res.status(500).json({ error: 'Không thể đọc dữ liệu nội dung.' });
   }
   const { adminAuth, ...publicContent } = data;
-  res.json({ success: true, data: publicContent });
+  res.json({ success: true, data: publicContent, updatedAt: data.updatedAt || Date.now() });
 });
 
 // POST /api/content
@@ -147,9 +160,9 @@ app.post('/api/content', (req, res) => {
 
   const saved = saveContent(mergedData);
   if (saved) {
-    res.json({ success: true, message: 'Lưu thay đổi thành công!' });
+    res.json({ success: true, message: 'Lưu thay đổi thành công!', updatedAt: mergedData.updatedAt });
   } else {
-    res.status(500).json({ error: 'Lỗi ghi tệp dữ liệu lên máy chủ.' });
+    res.status(500).json({ error: 'Không thể lưu dữ liệu.' });
   }
 });
 

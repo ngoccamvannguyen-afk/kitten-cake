@@ -31,12 +31,23 @@ function updateCartBadge() {
 
 async function initBlog() {
     let data = null;
+    let localTime = 0;
+    const savedLocal = localStorage.getItem('kitten_site_data');
+    if (savedLocal) {
+        try {
+            data = JSON.parse(savedLocal);
+            localTime = parseInt(localStorage.getItem('kitten_site_data_time') || '0', 10);
+        } catch(e) {}
+    }
 
     try {
         const res = await fetch('/api/content?_t=' + Date.now(), { cache: 'no-store' });
         if (res.ok) {
             const json = await res.json();
-            data = json.data;
+            const apiTime = json.updatedAt || 0;
+            if (!data || apiTime >= localTime) {
+                data = json.data;
+            }
         }
     } catch (e) {
         console.warn('Cannot fetch from /api/content');
@@ -63,6 +74,39 @@ async function initBlog() {
         renderBlogCategories();
         applyBlogFilters();
     }
+
+    // Lắng nghe cập nhật từ trang quản trị
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'kitten_site_data' || e.key === 'kitten_site_data_event') {
+            const raw = localStorage.getItem('kitten_site_data');
+            if (raw) {
+                try {
+                    const fresh = JSON.parse(raw);
+                    if (fresh) {
+                        allBlogCategories = fresh.blogCategories || [];
+                        allArticles = fresh.articles || [];
+                        renderBlogCategories();
+                        applyBlogFilters();
+                    }
+                } catch(err) {}
+            }
+        }
+    });
+
+    window.addEventListener('siteContentUpdated', () => {
+        const raw = localStorage.getItem('kitten_site_data');
+        if (raw) {
+            try {
+                const fresh = JSON.parse(raw);
+                if (fresh) {
+                    allBlogCategories = fresh.blogCategories || [];
+                    allArticles = fresh.articles || [];
+                    renderBlogCategories();
+                    applyBlogFilters();
+                }
+            } catch(err) {}
+        }
+    });
 }
 
 function renderBlogCategories() {

@@ -72,15 +72,35 @@ function parseUrlParams() {
 async function initCatalog() {
     parseUrlParams();
     let data = null;
+    let localData = null;
+    let localTime = 0;
+
+    try {
+        const raw = localStorage.getItem('kitten_site_data');
+        if (raw) {
+            localData = JSON.parse(raw);
+            localTime = Number(localStorage.getItem('kitten_site_data_time')) || Number(localData?.updatedAt) || 0;
+        }
+    } catch (e) {}
 
     try {
         const res = await fetch('/api/content?_t=' + Date.now(), { cache: 'no-store' });
         if (res.ok) {
             const json = await res.json();
-            data = json.data;
+            const apiData = json.data;
+            const apiTime = Number(apiData?.updatedAt || json.updatedAt) || 0;
+            if (localData && localTime > apiTime) {
+                data = localData;
+            } else {
+                data = apiData;
+            }
         }
     } catch (e) {
-        console.warn('API /api/content error, fallback to data/content.json');
+        console.warn('API /api/content error, fallback to localStorage/data.json');
+    }
+
+    if (!data && localData) {
+        data = localData;
     }
 
     if (!data) {
@@ -98,6 +118,19 @@ async function initCatalog() {
         renderCategoryChips();
         applyFiltersAndRender();
     }
+
+    // Lắng nghe sự kiện đồng bộ khi tab admin cập nhật
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'kitten_site_data' && e.newValue) {
+            try {
+                const updated = JSON.parse(e.newValue);
+                allCategories = updated.categories || [];
+                allProducts = updated.menu?.items || [];
+                renderCategoryChips();
+                applyFiltersAndRender();
+            } catch (err) {}
+        }
+    });
 }
 
 function renderCategoryChips() {

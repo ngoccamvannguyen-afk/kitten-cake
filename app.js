@@ -13,15 +13,36 @@ function formatCurrency(amount) {
 
 async function initSite() {
     let content = null;
+    let localContent = null;
+    let localTime = 0;
+
+    try {
+        const raw = localStorage.getItem('kitten_site_data');
+        if (raw) {
+            localContent = JSON.parse(raw);
+            localTime = Number(localStorage.getItem('kitten_site_data_time')) || Number(localContent?.updatedAt) || 0;
+        }
+    } catch (e) {}
 
     try {
         const res = await fetch('/api/content?_t=' + Date.now(), { cache: 'no-store' });
         if (res.ok) {
             const json = await res.json();
-            content = json.data;
+            const apiData = json.data;
+            const apiTime = Number(apiData?.updatedAt || json.updatedAt) || 0;
+
+            if (localContent && localTime > apiTime) {
+                content = localContent;
+            } else {
+                content = apiData;
+            }
         }
     } catch (e) {
-        console.warn('API /api/content not reachable, trying local JSON file...');
+        console.warn('API /api/content not reachable, checking local storage...');
+    }
+
+    if (!content && localContent) {
+        content = localContent;
     }
 
     if (!content) {
@@ -40,6 +61,26 @@ async function initSite() {
         applyContentToDOM(content);
         setupQuickOrderModal(content);
     }
+
+    // Lắng nghe sự kiện đồng bộ trực tiếp khi admin bấm Lưu ở tab quản trị
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'kitten_site_data' && e.newValue) {
+            try {
+                const updated = JSON.parse(e.newValue);
+                currentSiteContent = updated;
+                applyContentToDOM(updated);
+                setupQuickOrderModal(updated);
+            } catch (err) {}
+        }
+    });
+
+    window.addEventListener('siteContentUpdated', (e) => {
+        if (e.detail) {
+            currentSiteContent = e.detail;
+            applyContentToDOM(e.detail);
+            setupQuickOrderModal(e.detail);
+        }
+    });
 
     // Show quick admin button if logged in
     setupAdminShortcut();
