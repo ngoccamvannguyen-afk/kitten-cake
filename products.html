@@ -397,6 +397,49 @@
         </div>
     </footer>
 
+    <!-- Mini-Cart Drawer & Backdrop -->
+    <div class="mini-cart-backdrop" id="miniCartBackdrop"></div>
+    <aside class="mini-cart-drawer" id="miniCartDrawer">
+        <div class="mini-cart-header">
+            <div class="mini-cart-title">
+                <i class="fas fa-shopping-bag"></i>
+                <span data-i18n="mini_cart_title">Giỏ Hàng Của Bạn</span>
+            </div>
+            <button class="mini-cart-close" id="closeMiniCartBtn">&times;</button>
+        </div>
+
+        <div class="mini-cart-body">
+            <!-- Empty state -->
+            <div class="mini-cart-empty" id="miniCartEmpty" style="display:none;">
+                <div class="empty-icon"><i class="fas fa-cookie"></i></div>
+                <h4 data-i18n="mini_cart_empty_title">Giỏ hàng đang trống!</h4>
+                <p data-i18n="mini_cart_empty_desc">Hãy chọn những chiếc bánh Donut 10K thơm ngon để thêm vào giỏ nhé.</p>
+                <a href="#menu" class="btn btn-primary btn-sm btn-continue-shopping" data-i18n="mini_cart_btn_continue">Khám phá thực đơn</a>
+            </div>
+
+            <!-- Content wrap -->
+            <div class="mini-cart-content-wrap" id="miniCartContentWrap">
+                <div class="mini-cart-promo" id="miniCartPromoNotice" style="display:none;"></div>
+                <div class="mini-cart-list" id="miniCartList">
+                    <!-- Dynamic cart items -->
+                </div>
+            </div>
+        </div>
+
+        <div class="mini-cart-footer">
+            <div class="mini-cart-subtotal-row">
+                <span data-i18n="mini_cart_subtotal_lbl">Tạm tính giỏ hàng:</span>
+                <strong id="miniCartSubtotal">0đ</strong>
+            </div>
+            <div class="mini-cart-actions">
+                <a href="cart.html" class="btn btn-primary btn-block">
+                    <i class="fas fa-arrow-right"></i> <span data-i18n="mini_cart_btn_checkout">Xem giỏ hàng & Thanh toán</span>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <script src="cart.js"></script>
     <script src="products.js"></script>
     <script src="chat-widget.js"></script>
 </body>

@@ -648,7 +648,25 @@ function setupQuickCartListener() {
             e.preventDefault();
             const itemId = quickAddBtn.getAttribute('data-item-id');
             const items = currentSiteContent?.menu?.items || [];
-            const item = items.find(i => i.id === itemId);
+            let item = items.find(i => i.id === itemId);
+
+            // Fallback lấy dữ liệu trực tiếp từ thẻ card trên giao diện nếu chưa kịp tải json
+            if (!item) {
+                const card = quickAddBtn.closest('.menu-item');
+                if (card) {
+                    const name = card.querySelector('h3')?.textContent?.trim() || 'Bánh Donut Signature';
+                    const priceText = card.querySelector('.menu-price')?.textContent || '10.000';
+                    const priceNum = parseInt(priceText.replace(/\D/g, ''), 10) || 10000;
+                    const img = card.querySelector('.menu-img img')?.getAttribute('src') || 'tai-nguyen/donut-signature.jpg';
+                    item = {
+                        id: itemId || 'menu_item',
+                        name: name,
+                        price: priceNum,
+                        image: img,
+                        flavors: ['Vị Chuẩn Signature']
+                    };
+                }
+            }
 
             if (item) {
                 let flavorName = 'Vị Chuẩn Signature';

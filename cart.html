@@ -563,6 +563,14 @@
         }
 
         async function initCartPage() {
+            // Render giao diện giỏ hàng và gán sự kiện ngay lập tức để không có độ trễ
+            try {
+                renderCartTable();
+                setupCheckoutEvents();
+            } catch (errRender) {
+                console.error('Lỗi khởi tạo giao diện giỏ hàng:', errRender);
+            }
+
             // Tải cấu hình ngân hàng & ship từ content (ưu tiên dữ liệu mới nhất từ localStorage hoặc API)
             let loadedData = null;
             let localTime = 0;
@@ -615,10 +623,8 @@
 
             if (loadedData) {
                 applySettings(loadedData);
+                calculateAndRenderTotals();
             }
-
-            renderCartTable();
-            setupCheckoutEvents();
 
             window.addEventListener('storage', (e) => {
                 if (e.key === 'kitten_site_data' || e.key === 'kitten_site_data_event') {
@@ -936,6 +942,17 @@
                 }
             });
 
+            // Lắng nghe thay đổi trực tiếp ô số lượng
+            document.addEventListener('change', (e) => {
+                const qtyInput = e.target.closest('.tb-qty-input');
+                if (qtyInput) {
+                    const idx = parseInt(qtyInput.getAttribute('data-index'), 10);
+                    const val = parseInt(qtyInput.value, 10);
+                    const safeVal = (isNaN(val) || val < 1) ? 1 : Math.min(val, 99);
+                    window.KittenCart.updateQuantity(idx, safeVal);
+                }
+            });
+
             // Xóa sạch giỏ
             const btnClear = document.getElementById('btnClearCart');
             if (btnClear) {
@@ -1103,7 +1120,6 @@
                     const selectedAreaVal = areaSelect ? areaSelect.value : 'q7';
                     let shippingFee = areaSelect ? parseInt(areaSelect.options[areaSelect.selectedIndex].getAttribute('data-fee'), 10) : 15000;
                     const isQ7 = selectedAreaVal === 'q7';
-                    const isPickup = selectedAreaVal === 'pickup';
                     const freeShipMinGeneral = siteSettings?.shippingConfig?.freeShippingMin || 399000;
                     const freeShipMinQ7 = siteSettings?.shippingConfig?.district7FreeShippingMin || 129000;
                     const targetFreeMin = isQ7 ? freeShipMinQ7 : freeShipMinGeneral;

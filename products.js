@@ -640,7 +640,7 @@ function addToCart(item, flavor, quantity) {
             quantity: Number(quantity),
             image: item.image,
             isPreOrder: isPreOrder
-        }, false);
+        }, true);
         return;
     }
 
