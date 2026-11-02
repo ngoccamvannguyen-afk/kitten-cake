@@ -23,7 +23,8 @@
   "shippingConfig": {
     "district7Fee": 15000,
     "otherDistrictFee": 25000,
-    "freeShippingMin": 120000
+    "freeShippingMin": 399000,
+    "district7FreeShippingMin": 129000
   },
   "paymentConfig": {
     "bankId": "VPB",

@@ -66,9 +66,24 @@
             <div class="category-chips-scroll" id="categoryChips">
                 <button class="category-chip active" data-category="all">
                     <i class="fas fa-th-large"></i> <span data-i18n="catalog_chip_all">Tất Cả Món Bánh</span>
-                    <span class="chip-count" id="chipCountAll">0</span>
+                    <span class="chip-count" id="chipCountAll">6</span>
                 </button>
-                <!-- Dynamic categories loaded by JS -->
+                <button class="category-chip" data-category="cat_donut">
+                    <i class="fas fa-cookie-bite"></i> <span>Donut Signature 10K</span>
+                    <span class="chip-count">1</span>
+                </button>
+                <button class="category-chip" data-category="cat_baked">
+                    <i class="fas fa-fire-alt"></i> <span>Bánh Nướng Nóng</span>
+                    <span class="chip-count">2</span>
+                </button>
+                <button class="category-chip" data-category="cat_cold">
+                    <i class="fas fa-ice-cream"></i> <span>Bánh Lạnh & Mousse Hũ</span>
+                    <span class="chip-count">2</span>
+                </button>
+                <button class="category-chip" data-category="cat_combo">
+                    <i class="fas fa-gift"></i> <span>Combo & Hộp Quà Tặng</span>
+                    <span class="chip-count">1</span>
+                </button>
             </div>
 
             <!-- Toolbar: Search, Filters & Sorting -->
@@ -90,13 +105,203 @@
                         <option value="rating-desc" data-i18n="sort_rating_desc">Đánh giá cao nhất</option>
                         <option value="name-asc" data-i18n="sort_name_asc">Tên: A đến Z</option>
                     </select>
-                    <span class="results-count-text" id="resultsCount" data-i18n="catalog_loading">Đang tải bánh ngon...</span>
+                    <span class="results-count-text" id="resultsCount">Hiển thị 6 món bánh</span>
                 </div>
             </div>
 
             <!-- Products Grid -->
             <div class="menu-grid" id="productsGrid">
-                <!-- Dynamic cards populated by products.js -->
+                <!-- 1. Donut Xốp Mềm Signature -->
+                <div class="menu-item featured">
+                    <span class="hot-badge"><i class="fas fa-fire"></i> Best Seller • Món Chính</span>
+                    <div class="menu-img">
+                        <a href="product.html?id=menu_1">
+                            <img src="tai-nguyen/donut-collection-1791974653397.jpg" alt="Donut Xốp Mềm Signature" loading="lazy">
+                        </a>
+                    </div>
+                    <div class="menu-info">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                            <span class="item-tag">🍩 Món Signature</span>
+                            <span class="stock-pill"><i class="fas fa-check-circle"></i> <span>Còn bánh</span></span>
+                        </div>
+                        <h3><a href="product.html?id=menu_1" style="color:inherit; text-decoration:none;">Donut Xốp Mềm Signature</a></h3>
+                        <div class="card-rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <span>5.0 (128)</span>
+                        </div>
+                        <p>Món bánh chủ đạo nướng tươi mỗi ngày, ruột mềm xốp phủ socola Bỉ, cốm cầu vồng, dâu tây hoặc matcha ngọt dịu.</p>
+                        <div class="menu-card-bottom">
+                            <div class="menu-price-row">
+                                <div class="menu-price">10.000đ</div>
+                                <span class="menu-price-original">15.000đ</span>
+                            </div>
+                            <div class="menu-card-actions">
+                                <a href="product.html?id=menu_1" class="menu-order-btn btn-view-detail" title="Xem chi tiết"><i class="fas fa-eye"></i> <span>Chi tiết</span></a>
+                                <button type="button" class="menu-order-btn btn-quick-add-cart" data-id="menu_1" title="Thêm vào giỏ"><i class="fas fa-cart-plus"></i> <span>Thêm giỏ</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Tart Trứng Nóng Giòn Rụm -->
+                <div class="menu-item featured">
+                    <span class="hot-badge"><i class="fas fa-fire"></i> Vỏ Ngàn Lớp</span>
+                    <div class="menu-img">
+                        <a href="product.html?id=menu_2">
+                            <img src="tai-nguyen/tart-trung.jpg" alt="Tart Trứng Béo Ngậy Giòn Rụm" loading="lazy">
+                        </a>
+                    </div>
+                    <div class="menu-info">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                            <span class="item-tag">🥧 Bánh Nướng Nóng</span>
+                            <span class="stock-pill"><i class="fas fa-check-circle"></i> <span>Còn bánh</span></span>
+                        </div>
+                        <h3><a href="product.html?id=menu_2" style="color:inherit; text-decoration:none;">Tart Trứng Béo Ngậy Giòn Rụm</a></h3>
+                        <div class="card-rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <span>4.9 (94)</span>
+                        </div>
+                        <p>Lớp vỏ ngàn lớp giòn tan rụm kết hợp cùng nhân kem trứng sữa nướng xém mặt thơm lừng béo ngậy chuẩn vị Hồng Kông.</p>
+                        <div class="menu-card-bottom">
+                            <div class="menu-price-row">
+                                <div class="menu-price">18.000đ</div>
+                                <span class="menu-price-original">22.000đ</span>
+                            </div>
+                            <div class="menu-card-actions">
+                                <a href="product.html?id=menu_2" class="menu-order-btn btn-view-detail" title="Xem chi tiết"><i class="fas fa-eye"></i> <span>Chi tiết</span></a>
+                                <button type="button" class="menu-order-btn btn-quick-add-cart" data-id="menu_2" title="Thêm vào giỏ"><i class="fas fa-cart-plus"></i> <span>Thêm giỏ</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Oreo Cheesecake Hũ -->
+                <div class="menu-item featured">
+                    <span class="hot-badge"><i class="fas fa-fire"></i> Yêu Thích</span>
+                    <div class="menu-img">
+                        <a href="product.html?id=menu_3">
+                            <img src="tai-nguyen/oreo-cheesecake.jpg" alt="Oreo Cheesecake" loading="lazy">
+                        </a>
+                    </div>
+                    <div class="menu-info">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                            <span class="item-tag">🍰 Bánh Lạnh Hũ</span>
+                            <span class="stock-pill"><i class="fas fa-check-circle"></i> <span>Còn bánh</span></span>
+                        </div>
+                        <h3><a href="product.html?id=menu_3" style="color:inherit; text-decoration:none;">Oreo Cheesecake Hũ</a></h3>
+                        <div class="card-rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <span>5.0 (86)</span>
+                        </div>
+                        <p>Sự kết hợp hoàn hảo giữa cream cheese béo ngậy chua dịu và vụn bánh quy Oreo giòn rụm, đóng hũ sạch sẽ tiện lợi.</p>
+                        <div class="menu-card-bottom">
+                            <div class="menu-price-row">
+                                <div class="menu-price">35.000đ</div>
+                                <span class="menu-price-original">40.000đ</span>
+                            </div>
+                            <div class="menu-card-actions">
+                                <a href="product.html?id=menu_3" class="menu-order-btn btn-view-detail" title="Xem chi tiết"><i class="fas fa-eye"></i> <span>Chi tiết</span></a>
+                                <button type="button" class="menu-order-btn btn-quick-add-cart" data-id="menu_3" title="Thêm vào giỏ"><i class="fas fa-cart-plus"></i> <span>Thêm giỏ</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Panna Cotta Trái Cây -->
+                <div class="menu-item">
+                    <span class="hot-badge"><i class="fas fa-fire"></i> Thanh Mát</span>
+                    <div class="menu-img">
+                        <a href="product.html?id=menu_4">
+                            <img src="tai-nguyen/panna-cotta.jpg" alt="Panna Cotta Trái Cây Thanh Mát" loading="lazy">
+                        </a>
+                    </div>
+                    <div class="menu-info">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                            <span class="item-tag">🍮 Tráng Miệng Ý</span>
+                            <span class="stock-pill"><i class="fas fa-check-circle"></i> <span>Còn bánh</span></span>
+                        </div>
+                        <h3><a href="product.html?id=menu_4" style="color:inherit; text-decoration:none;">Panna Cotta Trái Cây Thanh Mát</a></h3>
+                        <div class="card-rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <span>4.8 (62)</span>
+                        </div>
+                        <p>Món tráng miệng thanh mát từ nước Ý, pudding sữa mềm mịn tan ngay trên đầu lưỡi cùng sốt mứt trái cây chua ngọt.</p>
+                        <div class="menu-card-bottom">
+                            <div class="menu-price-row">
+                                <div class="menu-price">25.000đ</div>
+                                <span class="menu-price-original">30.000đ</span>
+                            </div>
+                            <div class="menu-card-actions">
+                                <a href="product.html?id=menu_4" class="menu-order-btn btn-view-detail" title="Xem chi tiết"><i class="fas fa-eye"></i> <span>Chi tiết</span></a>
+                                <button type="button" class="menu-order-btn btn-quick-add-cart" data-id="menu_4" title="Thêm vào giỏ"><i class="fas fa-cart-plus"></i> <span>Thêm giỏ</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Combo Hộp 6 Donut Quà Tặng -->
+                <div class="menu-item featured">
+                    <span class="hot-badge"><i class="fas fa-fire"></i> Mua 5 Tặng 1</span>
+                    <div class="menu-img">
+                        <a href="product.html?id=menu_5">
+                            <img src="tai-nguyen/donut-box.jpg" alt="Combo Hộp 6 Donut Quà Tặng" loading="lazy">
+                        </a>
+                    </div>
+                    <div class="menu-info">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                            <span class="item-tag">🎁 Combo Tiết Kiệm</span>
+                            <span class="stock-pill"><i class="fas fa-check-circle"></i> <span>Còn bánh</span></span>
+                        </div>
+                        <h3><a href="product.html?id=menu_5" style="color:inherit; text-decoration:none;">Combo Hộp 6 Donut Quà Tặng</a></h3>
+                        <div class="card-rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <span>5.0 (115)</span>
+                        </div>
+                        <p>Hộp quà tặng mèo Kitten Cake siêu cưng gồm 6 chiếc Donut đủ vị (Choco, Vani, Dâu tây, Matcha, Hạnh nhân). Tặng kèm thiệp nhỏ!</p>
+                        <div class="menu-card-bottom">
+                            <div class="menu-price-row">
+                                <div class="menu-price">50.000đ</div>
+                                <span class="menu-price-original">60.000đ</span>
+                            </div>
+                            <div class="menu-card-actions">
+                                <a href="product.html?id=menu_5" class="menu-order-btn btn-view-detail" title="Xem chi tiết"><i class="fas fa-eye"></i> <span>Chi tiết</span></a>
+                                <button type="button" class="menu-order-btn btn-quick-add-cart" data-id="menu_5" title="Thêm vào giỏ"><i class="fas fa-cart-plus"></i> <span>Thêm giỏ</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Hộp 4 Tart Trứng Nóng Giòn -->
+                <div class="menu-item">
+                    <span class="hot-badge"><i class="fas fa-fire"></i> Tiết Kiệm</span>
+                    <div class="menu-img">
+                        <a href="product.html?id=menu_6">
+                            <img src="tai-nguyen/tart-trung.jpg" alt="Hộp 4 Tart Trứng Nóng Giòn" loading="lazy">
+                        </a>
+                    </div>
+                    <div class="menu-info">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                            <span class="item-tag">🥧 Bánh Nướng Nóng</span>
+                            <span class="stock-pill"><i class="fas fa-check-circle"></i> <span>Còn bánh</span></span>
+                        </div>
+                        <h3><a href="product.html?id=menu_6" style="color:inherit; text-decoration:none;">Hộp 4 Tart Trứng Nóng Giòn</a></h3>
+                        <div class="card-rating">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            <span>4.9 (57)</span>
+                        </div>
+                        <p>Set 4 chiếc Tart trứng nướng nóng hổi đóng hộp sang trọng, giòn tan ngàn lớp cho bữa xế văn phòng ấm áp.</p>
+                        <div class="menu-card-bottom">
+                            <div class="menu-price-row">
+                                <div class="menu-price">65.000đ</div>
+                                <span class="menu-price-original">72.000đ</span>
+                            </div>
+                            <div class="menu-card-actions">
+                                <a href="product.html?id=menu_6" class="menu-order-btn btn-view-detail" title="Xem chi tiết"><i class="fas fa-eye"></i> <span>Chi tiết</span></a>
+                                <button type="button" class="menu-order-btn btn-quick-add-cart" data-id="menu_6" title="Thêm vào giỏ"><i class="fas fa-cart-plus"></i> <span>Thêm giỏ</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Empty State -->
@@ -193,5 +398,6 @@
     </footer>
 
     <script src="products.js"></script>
+    <script src="chat-widget.js"></script>
 </body>
 </html>

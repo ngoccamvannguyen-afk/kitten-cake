@@ -82,8 +82,6 @@ async function initSite() {
         }
     });
 
-    // Show quick admin button if logged in
-    setupAdminShortcut();
     setupQuickCartListener();
 }
 
@@ -152,7 +150,7 @@ function applyContentToDOM(data) {
         // Copyright
         const copyrightP = document.querySelector('.footer-bottom p');
         if (copyrightP) {
-            copyrightP.innerHTML = `${isEn ? '&copy; 2026 Kitten Cake Bakery. Crafted by Web Specialists.' : (g.copyright || '&copy; 2026 Kitten Cake Bakery.')} • <a href="/admin" target="_blank" style="color:inherit; opacity:0.75; text-decoration:none;"><i class="fas fa-lock"></i> <span>${isEn ? 'CMS Admin' : 'Quản trị CMS'}</span></a>`;
+            copyrightP.innerHTML = isEn ? '&copy; 2026 Kitten Cake Bakery. Crafted by Web Specialists.' : (g.copyright || '&copy; 2026 Kitten Cake Bakery.');
         }
     }
 
@@ -454,56 +452,6 @@ window.addEventListener('languageChanged', () => {
         window.KittenI18n.applyTranslations();
     }
 });
-
-// Discreet Quick Admin Access Float Button
-function setupAdminShortcut() {
-    const floatBtn = document.createElement('a');
-    floatBtn.href = '/admin/';
-    floatBtn.target = '_blank';
-    floatBtn.className = 'admin-shortcut-badge';
-    floatBtn.title = 'Mở Trang Quản Trị Website Kitten Cake CMS';
-    floatBtn.innerHTML = `<i class="fas fa-cog"></i> <span>Quản trị CMS</span>`;
-
-    const style = document.createElement('style');
-    style.textContent = `
-        .admin-shortcut-badge {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background: linear-gradient(135deg, #ff6b81 0%, #ff4757 100%);
-            color: #ffffff;
-            padding: 10px 18px;
-            border-radius: 30px;
-            font-family: 'Quicksand', sans-serif;
-            font-size: 13px;
-            font-weight: 700;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
-            z-index: 999;
-            transition: all 0.25s ease;
-            opacity: 0.85;
-        }
-        .admin-shortcut-badge:hover {
-            opacity: 1;
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(255, 71, 87, 0.6);
-            color: #ffffff;
-        }
-        .admin-shortcut-badge i {
-            font-size: 15px;
-            animation: spinCog 6s linear infinite;
-        }
-        @keyframes spinCog {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-    `;
-    document.head.appendChild(style);
-    document.body.appendChild(floatBtn);
-}
 
 // ---------------- QUICK ORDER MODAL LOGIC ----------------
 let currentSelectedOrderItem = null;

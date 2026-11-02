@@ -1,4 +1,188 @@
 // Kitten Cake - Products Catalog Controller
+const FALLBACK_CATALOG_DATA = {
+    categories: [
+        {
+            id: "cat_donut",
+            slug: "donut-signature",
+            name: "Donut Signature 10K",
+            icon: "fa-cookie-bite",
+            badge: "Hot",
+            description: "Donut ruột mềm xốp đồng giá 10k nướng tươi mỗi ngày, ngập tràn vị ngọt ngào."
+        },
+        {
+            id: "cat_baked",
+            slug: "banh-nuong-nong",
+            name: "Bánh Nướng Nóng",
+            icon: "fa-fire-alt",
+            badge: "Thơm Giòn",
+            description: "Tart trứng vỏ ngàn lớp giòn rụm ngát hương bơ Pháp."
+        },
+        {
+            id: "cat_cold",
+            slug: "banh-lanh-hu",
+            name: "Bánh Lạnh & Mousse Hũ",
+            icon: "fa-ice-cream",
+            badge: "Bestseller",
+            description: "Oreo Cheesecake béo ngậy, Panna Cotta chua ngọt đóng hũ cực tiện lợi."
+        },
+        {
+            id: "cat_combo",
+            slug: "combo-hop-qua",
+            name: "Combo & Hộp Quà Tặng",
+            icon: "fa-gift",
+            badge: "Tiết Kiệm",
+            description: "Set bánh hộp mèo Kitten Cake siêu dễ thương cho sinh nhật, tiệc lớp, quà tặng."
+        }
+    ],
+    menu: {
+        items: [
+            {
+                id: "menu_1",
+                name: "Donut Xốp Mềm Signature",
+                tag: "🍩 Món Signature",
+                categoryId: "cat_donut",
+                price: 10000,
+                originalPrice: 15000,
+                rating: 5.0,
+                reviewsCount: 128,
+                isFeatured: true,
+                badge: "Best Seller • Món Chính",
+                description: "Món bánh chủ đạo nướng tươi mỗi ngày, ruột mềm xốp phủ socola Bỉ, cốm cầu vồng, dâu tây hoặc matcha ngọt dịu.",
+                image: "tai-nguyen/donut-collection-1791974653397.jpg",
+                status: "active",
+                inStock: true,
+                flavors: [
+                    { name: "Vị Choco", image: "tai-nguyen/donut-choco.jpg" },
+                    { name: "Vị Vani", image: "tai-nguyen/donut-vani.jpg" },
+                    { name: "Vị Matcha", image: "tai-nguyen/donut-matcha.jpg" },
+                    { name: "Vị Dâu", image: "tai-nguyen/donut-dau.jpg" }
+                ],
+                details: {
+                    shelfLife: "Dùng ngon nhất trong ngày hoặc 2 ngày ngăn mát tủ lạnh.",
+                    ingredients: "Bột mì thượng hạng, bơ lạt nguyên chất, trứng gà tươi, men Pháp, sốt chocolate và matcha nhập khẩu."
+                }
+            },
+            {
+                id: "menu_2",
+                name: "Tart Trứng Béo Ngậy Giòn Rụm",
+                tag: "🥧 Bánh Nướng Nóng",
+                categoryId: "cat_baked",
+                price: 18000,
+                originalPrice: 22000,
+                rating: 4.9,
+                reviewsCount: 94,
+                isFeatured: true,
+                badge: "Vỏ Ngàn Lớp",
+                description: "Lớp vỏ ngàn lớp giòn tan rụm kết hợp cùng nhân kem trứng sữa nướng xém mặt thơm lừng béo ngậy chuẩn vị Hồng Kông.",
+                image: "tai-nguyen/tart-trung.jpg",
+                status: "active",
+                inStock: true,
+                flavors: [
+                    { name: "Tart Trứng Truyền Thống", image: "tai-nguyen/tart-trung.jpg" }
+                ],
+                details: {
+                    shelfLife: "Ngon nhất khi ăn nóng trong ngày; bảo quản ngăn mát 2 ngày, làm nóng lại bằng nồi chiên không dầu 3 phút.",
+                    ingredients: "Bột ngàn lớp cao cấp, lòng đỏ trứng gà tươi, whipping cream, sữa tươi tiệt trùng, bơ Anchor."
+                }
+            },
+            {
+                id: "menu_3",
+                name: "Oreo Cheesecake",
+                tag: "🍰 Bánh Lạnh Hũ",
+                categoryId: "cat_cold",
+                price: 35000,
+                originalPrice: 40000,
+                rating: 5.0,
+                reviewsCount: 86,
+                isFeatured: true,
+                badge: "Yêu Thích",
+                description: "Sự kết hợp hoàn hảo giữa cream cheese béo ngậy chua dịu và vụn bánh quy Oreo giòn rụm, đóng hũ sạch sẽ tiện lợi.",
+                image: "tai-nguyen/oreo-cheesecake.jpg",
+                status: "active",
+                inStock: true,
+                flavors: [
+                    { name: "Oreo Vụn Giòn", image: "tai-nguyen/oreo-cheesecake.jpg" }
+                ],
+                details: {
+                    shelfLife: "Bảo quản ngăn mát từ 3 - 5 ngày. Dùng lạnh trực tiếp.",
+                    ingredients: "Cream cheese New Zealand, bánh Oreo nguyên bản, whipping cream tươi, bơ lạt, đường ăn kiêng nhẹ."
+                }
+            },
+            {
+                id: "menu_4",
+                name: "Panna Cotta Trái Cây Thanh Mát",
+                tag: "🍮 Tráng Miệng Ý",
+                categoryId: "cat_cold",
+                price: 25000,
+                originalPrice: 30000,
+                rating: 4.8,
+                reviewsCount: 62,
+                isFeatured: false,
+                badge: "Thanh Mát",
+                description: "Món tráng miệng thanh mát từ nước Ý, pudding sữa mềm mịn tan ngay trên đầu lưỡi cùng sốt mứt trái cây chua ngọt.",
+                image: "tai-nguyen/panna-cotta.jpg",
+                status: "active",
+                inStock: true,
+                flavors: [
+                    { name: "Sốt Dâu Tây Tươi", image: "tai-nguyen/panna-cotta.jpg" },
+                    { name: "Sốt Chanh Dây Chua Ngọt", image: "tai-nguyen/panna-cotta.jpg" },
+                    { name: "Sốt Kiwi Xanh", image: "tai-nguyen/panna-cotta.jpg" }
+                ],
+                details: {
+                    shelfLife: "Dùng lạnh, bảo quản ngăn mát tủ lạnh trong 3 ngày.",
+                    ingredients: "Sữa tươi Đà Lạt, whipping cream, gelatin hữu cơ, mứt trái cây cô đặc tự nấu không chất bảo quản."
+                }
+            },
+            {
+                id: "menu_5",
+                name: "Combo Hộp 6 Donut Quà Tặng",
+                tag: "🎁 Combo Tiết Kiệm",
+                categoryId: "cat_combo",
+                price: 50000,
+                originalPrice: 60000,
+                rating: 5.0,
+                reviewsCount: 115,
+                isFeatured: true,
+                badge: "Mua 5 Tặng 1",
+                description: "Hộp quà tặng mèo Kitten Cake siêu cưng gồm 6 chiếc Donut đủ vị (Choco, Vani, Dâu tây, Matcha, Hạnh nhân). Tặng kèm thiệp nhỏ!",
+                image: "tai-nguyen/donut-box.jpg",
+                status: "active",
+                inStock: true,
+                flavors: [
+                    { name: "Set Mix 6 Vị Đầy Đủ", image: "tai-nguyen/donut-box.jpg" }
+                ],
+                details: {
+                    shelfLife: "Dùng trong 24h - 48h. Thích hợp mang tặng bạn bè, người yêu, sinh nhật.",
+                    ingredients: "Đầy đủ các vị signature Donut Kitten Cake."
+                }
+            },
+            {
+                id: "menu_6",
+                name: "Hộp 4 Tart Trứng Nóng Giòn",
+                tag: "🥧 Bánh Nướng Nóng",
+                categoryId: "cat_baked",
+                price: 65000,
+                originalPrice: 72000,
+                rating: 4.9,
+                reviewsCount: 57,
+                isFeatured: false,
+                badge: "Tiết Kiệm",
+                description: "Set 4 chiếc Tart trứng nướng nóng hổi đóng hộp sang trọng, giòn tan ngàn lớp cho bữa xế văn phòng ấm áp.",
+                image: "tai-nguyen/tart-trung.jpg",
+                status: "active",
+                inStock: true,
+                flavors: [
+                    { name: "Hộp 4 Chiếc Tiêu Chuẩn", image: "tai-nguyen/tart-trung.jpg" }
+                ],
+                details: {
+                    shelfLife: "Ăn ngon nhất khi còn ấm giòn trong ngày.",
+                    ingredients: "Trứng gà tươi, whipping cream, bơ lạt hảo hạng."
+                }
+            }
+        ]
+    }
+};
+
 let allProducts = [];
 let allCategories = [];
 let activeCategory = 'all';
@@ -110,6 +294,32 @@ async function initCatalog() {
         } catch (e) {
             console.error('Cannot load data file');
         }
+    }
+
+    if (!data || !data.menu || !data.menu.items || data.menu.items.length === 0) {
+        data = JSON.parse(JSON.stringify(FALLBACK_CATALOG_DATA));
+    } else {
+        // Chỉ giữ lại các món chính của tiệm: Donut, Tart trứng, Oreo Cheesecake, Panna Cotta
+        const validMenuIds = new Set(['menu_1', 'menu_2', 'menu_3', 'menu_4', 'menu_5', 'menu_6']);
+        data.menu.items = (data.menu.items || []).filter(item => validMenuIds.has(item.id));
+        
+        // Nếu thiếu món nào trong 6 món chính thì bổ sung từ fallback
+        const existingIds = new Set(data.menu.items.map(p => p.id));
+        FALLBACK_CATALOG_DATA.menu.items.forEach(item => {
+            if (!existingIds.has(item.id)) {
+                data.menu.items.push(item);
+            }
+        });
+
+        // Chỉ giữ lại các danh mục bánh chính thức
+        const validCatIds = new Set(['cat_donut', 'cat_baked', 'cat_cold', 'cat_combo']);
+        data.categories = (data.categories || []).filter(c => validCatIds.has(c.id));
+        const existingCatIds = new Set(data.categories.map(c => c.id));
+        FALLBACK_CATALOG_DATA.categories.forEach(cat => {
+            if (!existingCatIds.has(cat.id)) {
+                data.categories.push(cat);
+            }
+        });
     }
 
     if (data) {

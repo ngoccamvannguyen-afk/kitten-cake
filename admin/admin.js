@@ -267,7 +267,8 @@ function populateAllForms() {
         const s = siteData.shippingConfig;
         if (document.getElementById('setShipDistrict7')) document.getElementById('setShipDistrict7').value = s.district7Fee || 15000;
         if (document.getElementById('setShipOther')) document.getElementById('setShipOther').value = s.otherDistrictFee || 25000;
-        if (document.getElementById('setShipFreeMin')) document.getElementById('setShipFreeMin').value = s.freeShippingMin || 120000;
+        if (document.getElementById('setShipFreeMinQ7')) document.getElementById('setShipFreeMinQ7').value = s.district7FreeShippingMin || 129000;
+        if (document.getElementById('setShipFreeMin')) document.getElementById('setShipFreeMin').value = s.freeShippingMin || 399000;
     }
 
     // Hero Section
@@ -1313,7 +1314,8 @@ async function saveAllChanges(customMessage = '') {
     if (!siteData.shippingConfig) siteData.shippingConfig = {};
     const sD7 = getVal('setShipDistrict7'); if (sD7 !== null) siteData.shippingConfig.district7Fee = parseInt(sD7, 10) || 15000;
     const sOth = getVal('setShipOther'); if (sOth !== null) siteData.shippingConfig.otherDistrictFee = parseInt(sOth, 10) || 25000;
-    const sMin = getVal('setShipFreeMin'); if (sMin !== null) siteData.shippingConfig.freeShippingMin = parseInt(sMin, 10) || 120000;
+    const sMinQ7 = getVal('setShipFreeMinQ7'); if (sMinQ7 !== null) siteData.shippingConfig.district7FreeShippingMin = parseInt(sMinQ7, 10) || 129000;
+    const sMin = getVal('setShipFreeMin'); if (sMin !== null) siteData.shippingConfig.freeShippingMin = parseInt(sMin, 10) || 399000;
 
     // Collect Hero
     if (siteData.hero) {

@@ -59,10 +59,22 @@ app.get('/cart.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'cart.js'));
 });
 
+app.get('/products.js', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'application/javascript; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'products.js'));
+});
+
 app.get('/i18n.js', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.setHeader('Content-Type', 'application/javascript; charset=UTF-8');
   res.sendFile(path.join(__dirname, 'i18n.js'));
+});
+
+app.get('/chat-widget.js', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'application/javascript; charset=UTF-8');
+  res.sendFile(path.join(__dirname, 'chat-widget.js'));
 });
 
 app.get(['/products', '/products.html'], (req, res) => {

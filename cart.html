@@ -193,6 +193,16 @@
                             <h3><i class="fas fa-receipt"></i> <span data-i18n="summary_heading">Tóm Tắt Đơn Hàng</span></h3>
                         </div>
                         <div class="card-body">
+                            <!-- Thanh tiến trình Miễn Phí Giao Hàng -->
+                            <div id="freeshipMeterBox" class="freeship-meter-box" style="display:none;">
+                                <div class="freeship-text" id="freeshipText">
+                                    <i class="fas fa-truck"></i> <span></span>
+                                </div>
+                                <div class="freeship-progress-bar">
+                                    <div class="freeship-progress-fill" id="freeshipProgressFill" style="width: 0%;"></div>
+                                </div>
+                            </div>
+
                             <div class="summary-line">
                                 <span data-i18n="summary_subtotal">Tiền bánh:</span>
                                 <strong id="summarySubtotal">0đ</strong>
@@ -511,7 +521,8 @@
             shippingConfig: {
                 district7Fee: 15000,
                 otherDistrictFee: 25000,
-                freeShippingMin: 120000
+                freeShippingMin: 399000,
+                district7FreeShippingMin: 129000
             }
         };
         let appliedVoucher = null;
@@ -764,19 +775,67 @@
 
             if (subtotalEl) subtotalEl.textContent = window.formatVNCurrency(subtotal);
 
-            // Phí ship theo khu vực
+            // Phí ship theo khu vực & chính sách miễn ship
             const areaSelect = document.getElementById('deliveryArea');
+            const selectedArea = areaSelect ? areaSelect.value : 'q7';
             const selectedOpt = areaSelect ? areaSelect.options[areaSelect.selectedIndex] : null;
             let shippingFee = selectedOpt ? parseInt(selectedOpt.getAttribute('data-fee'), 10) : 15000;
 
-            // Miễn phí ship nếu đơn >= 120.000đ
             const isEn = window.KittenI18n?.getLang() === 'en';
-            const freeShipMin = siteSettings?.shippingConfig?.freeShippingMin || 120000;
-            if (subtotal >= freeShipMin && shippingFee > 0) {
-                shippingFee = 0;
-                if (shippingEl) shippingEl.innerHTML = `<span style="color:#2ed573;"><i class="fas fa-gift"></i> ${isEn ? 'Free (Orders > 120k)' : 'Miễn phí (Đơn > 120k)'}</span>`;
+            const isQ7 = selectedArea === 'q7';
+            const isPickup = selectedArea === 'pickup';
+
+            // Chính sách: Quận 7 miễn ship cho đơn > 129k; Khu vực khác chỉ miễn ship cho đơn > 399k
+            const freeShipMinGeneral = siteSettings?.shippingConfig?.freeShippingMin || 399000;
+            const freeShipMinQ7 = siteSettings?.shippingConfig?.district7FreeShippingMin || 129000;
+            const targetFreeMin = isQ7 ? freeShipMinQ7 : freeShipMinGeneral;
+
+            // Cập nhật thanh tiến trình Freeship Meter
+            const meterBox = document.getElementById('freeshipMeterBox');
+            const meterText = document.getElementById('freeshipText');
+            const meterFill = document.getElementById('freeshipProgressFill');
+
+            if (meterBox && meterText && meterFill) {
+                if (isPickup || subtotal === 0) {
+                    meterBox.style.display = 'none';
+                } else {
+                    meterBox.style.display = 'block';
+                    const remaining = Math.max(0, targetFreeMin - subtotal);
+                    const percent = Math.min(100, Math.round((subtotal / targetFreeMin) * 100));
+                    meterFill.style.width = percent + '%';
+
+                    if (remaining === 0) {
+                        meterFill.style.background = 'linear-gradient(90deg, #2ed573 0%, #10ac84 100%)';
+                        meterText.innerHTML = `<i class="fas fa-check-circle" style="color:#2ed573;"></i> <span style="color:#2ed573; font-weight:700;">${
+                            isEn 
+                                ? (isQ7 ? '🎉 Free shipping applied for District 7 (orders over 129k)!' : '🎉 Free shipping applied (orders over 399k)!') 
+                                : (isQ7 ? '🎉 Đã đạt điều kiện MIỄN PHÍ SHIP Quận 7 (đơn trên 129k)!' : '🎉 Đã đạt điều kiện MIỄN PHÍ SHIP (đơn trên 399k)!')
+                        }</span>`;
+                    } else {
+                        meterFill.style.background = 'linear-gradient(90deg, #ff9a9e 0%, #f6416c 100%)';
+                        const remStr = window.formatVNCurrency(remaining);
+                        meterText.innerHTML = `<i class="fas fa-truck-moving" style="color:#f6416c;"></i> <span>${
+                            isEn
+                                ? `Add <b>${remStr}</b> more to get <b>FREE SHIPPING</b> ${isQ7 ? '(District 7)' : ''}!`
+                                : `Mua thêm <b>${remStr}</b> để được <b>MIỄN PHÍ SHIP</b> ${isQ7 ? '(nội thành Quận 7)' : ''}!`
+                        }</span>`;
+                    }
+                }
+            }
+
+            // Áp dụng miễn ship nếu đủ điều kiện
+            if (!isPickup) {
+                if (subtotal >= targetFreeMin && shippingFee > 0) {
+                    shippingFee = 0;
+                    const freeLabel = isQ7 
+                        ? (isEn ? 'Free (D7 Orders > 129k)' : 'Miễn phí (Đơn Q7 > 129k)')
+                        : (isEn ? 'Free (Orders > 399k)' : 'Miễn phí (Đơn > 399k)');
+                    if (shippingEl) shippingEl.innerHTML = `<span style="color:#2ed573;"><i class="fas fa-gift"></i> ${freeLabel}</span>`;
+                } else {
+                    if (shippingEl) shippingEl.textContent = window.formatVNCurrency(shippingFee);
+                }
             } else {
-                if (shippingEl) shippingEl.textContent = window.formatVNCurrency(shippingFee);
+                if (shippingEl) shippingEl.innerHTML = `<span style="color:#2ed573;">${isEn ? 'Free (Store pick-up)' : '0đ (Nhận tại tiệm)'}</span>`;
             }
 
             // Combo Mua 5 Tặng 1 (khi giỏ hàng >= 6 chiếc bánh, tặng miễn phí chiếc có giá thấp nhất)
@@ -1039,10 +1098,19 @@
                     if (timeChoice !== 'now') fullNote.push(`[Giờ hẹn: ${timeChoice}]`);
                     if (rawNote) fullNote.push(rawNote);
 
-                    // Phí ship & giảm giá
+                    // Phí ship & giảm giá theo chính sách mới
                     const subtotal = window.KittenCart.getSubtotal();
+                    const selectedAreaVal = areaSelect ? areaSelect.value : 'q7';
                     let shippingFee = areaSelect ? parseInt(areaSelect.options[areaSelect.selectedIndex].getAttribute('data-fee'), 10) : 15000;
-                    if (subtotal >= 120000 && shippingFee > 0) shippingFee = 0;
+                    const isQ7 = selectedAreaVal === 'q7';
+                    const isPickup = selectedAreaVal === 'pickup';
+                    const freeShipMinGeneral = siteSettings?.shippingConfig?.freeShippingMin || 399000;
+                    const freeShipMinQ7 = siteSettings?.shippingConfig?.district7FreeShippingMin || 129000;
+                    const targetFreeMin = isQ7 ? freeShipMinQ7 : freeShipMinGeneral;
+
+                    if (!isPickup && subtotal >= targetFreeMin && shippingFee > 0) {
+                        shippingFee = 0;
+                    }
 
                     const promo = window.KittenCart.getPromoBuy5Get1();
                     const comboDiscount = promo.discountAmount || 0;
@@ -1212,5 +1280,6 @@
             modal.style.display = 'flex';
         }
     </script>
+    <script src="chat-widget.js"></script>
 </body>
 </html>
